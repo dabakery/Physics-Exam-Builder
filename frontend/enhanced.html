@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ESTELA Exam Builder · Problem Bank</title>
+<title>ESTELA Exam Builder · Enhanced (web)</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
@@ -217,14 +217,13 @@ body:not(.tauri) #shell{height:100vh;}
 .spin{display:inline-block;width:11px;height:11px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:_spin .55s linear infinite;vertical-align:middle;}
 @keyframes _spin{to{transform:rotate(360deg);}}
 
-/* ── Mobile / responsive ── */
+/* ── Mobile / responsive (off-canvas sidebar drawer) ── */
 #nav-toggle{display:none;font-size:1.2rem;line-height:1;padding:.28rem .5rem;}
 #nav-overlay{display:none;position:fixed;inset:0;background:rgba(26,25,22,.45);z-index:1100;}
 body.nav-open #nav-overlay{display:block;}
 @media (max-width:820px){
   html,body{font-size:16px;}
   #shell{height:100dvh;}
-  /* sidebar → off-canvas drawer */
   #sidebar{position:fixed;top:0;left:0;height:100%;width:min(86vw,330px);transform:translateX(-100%);transition:transform .24s ease;z-index:1200;box-shadow:var(--sh2);}
   body.nav-open #sidebar{transform:none;}
   #main{width:100%;min-width:0;}
@@ -233,18 +232,14 @@ body.nav-open #nav-overlay{display:block;}
   .tb-wm{font-size:1.05rem;}
   .tb-sub{display:none;}
   #content{padding:1rem .9rem 2.6rem;}
-  /* stats: grid, not a squished row */
   #stats{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border);}
   .sc{border-right:none;background:var(--surface);}
   .sc:last-child{grid-column:1/-1;}
   .ep-grid{grid-template-columns:1fr;}
-  /* comfortable touch targets */
   .btn-sm{font-size:.9rem;padding:.4rem .72rem;}
   .bc-actions{gap:.35rem;}
   .ci-step{width:28px;height:28px;font-size:1.05rem;}
-  /* wide display math shouldn't blow out the card width */
   .q-text{overflow-x:auto;}
-  /* full-screen modal on phones */
   #yaml-modal{padding:0;}
   .ym-panel{width:100%;height:100%;max-height:100%;border-radius:0;}
   .ym-head{flex-wrap:wrap;}
@@ -278,13 +273,24 @@ body.nav-open #nav-overlay{display:block;}
           Get Problem Banks <span id="dl-chev" style="font-size:.8rem;transition:transform .17s">›</span>
         </span>
         <div id="dl-panel" style="display:none;margin-top:.4rem">
-          <div id="dl-courses" style="margin-bottom:.35rem">
+          <input id="dl-repo" class="inp" type="text" spellcheck="false"
+                 placeholder="owner/repo" value="Zhongzhou/ESTELA-physics-problem-bank">
+          <div class="inp-row">
+            <input id="dl-branch" class="inp" type="text" spellcheck="false" placeholder="branch" value="main" style="flex:1">
+          </div>
+          <input id="dl-token" class="inp" type="password" spellcheck="false" style="margin-top:.35rem"
+                 placeholder="GitHub token (optional, raises 60/hr limit)">
+          <div id="dl-courses" style="margin-top:.35rem;margin-bottom:.35rem">
             <button class="btn btn-sm btn-full" onclick="fetchRemoteCourses()" id="dl-fetch-btn">Fetch available courses</button>
           </div>
           <div id="dl-checklist" style="display:none;max-height:160px;overflow-y:auto;margin-bottom:.35rem;border:1px solid var(--border);border-radius:var(--r);padding:.3rem .5rem;background:var(--surface)"></div>
-          <div id="dl-actions" style="display:none;display:flex;flex-direction:column;gap:.25rem">
-            <button class="btn btn-sm btn-p btn-full" onclick="downloadSelected()">⬇ Download selected</button>
-            <button class="btn btn-sm btn-full" id="dl-update-btn" style="display:none" onclick="updateLocalBanks()">↺ Update existing banks</button>
+          <div id="dl-actions" style="display:none;flex-direction:column;gap:.25rem">
+            <button class="btn btn-sm btn-p btn-full" onclick="loadSelectedFromGitHub()">↧ Load selected into app</button>
+            <button class="btn btn-sm btn-full" onclick="downloadSelectedZip()">⬇ Download selected as .zip</button>
+            <button class="btn btn-sm btn-full" id="dl-fsa-btn" style="display:none" onclick="saveSelectedToFolder()">📁 Save selected to a folder…</button>
+          </div>
+          <div style="font-family:var(--font-m);font-size:.78rem;color:var(--ink4);margin-top:.35rem;line-height:1.5">
+            Pulls from GitHub in-browser (git-trees API + raw files). No install.
           </div>
         </div>
       </div>
@@ -353,7 +359,7 @@ body.nav-open #nav-overlay{display:block;}
       <button id="nav-toggle" class="btn btn-icon" onclick="toggleNav()" aria-label="Open menu" title="Menu">☰</button>
       <div>
         <div class="tb-wm">Problem Bank <em>Visualizer</em></div>
-        <div class="tb-sub">ESTELA Exam Builder · Isomorphic Physics Banks · UCF / NSF-2421299</div>
+        <div class="tb-sub">ESTELA Exam Builder · Enhanced web build · UCF / NSF-2421299</div>
       </div>
     </div>
     <div id="content">
@@ -396,6 +402,7 @@ body.nav-open #nav-overlay{display:block;}
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 <script src="bank-source.js"></script>
 <script src="exam-export.js"></script>
+<script src="exam-export-plus.js"></script>
 
 <script>
 // ── Tauri window controls ───────────────────────────────────────────────────
@@ -434,34 +441,21 @@ function indexRepoRefs(data) {
 }
 
 (function initSourceUi() {
-  const hideDl = () => {
-    const dlSec = document.querySelector('.sb-sec .sb-lbl[onclick="toggleDlPanel()"]');
-    if (dlSec) dlSec.closest('.sb-sec').style.display = 'none';
-  };
   const inp = document.getElementById('path-inp');
-
-  if (S.bankSource.id === 'remote') {
-    inp.readOnly = true;
-    inp.value = S.bankSource.getDisplayPath();
-    document.getElementById('btn-choose-folder').style.display = 'none';
-    hideDl();
-    const hint = document.getElementById('empty-hint');
-    if (hint) {
-      hint.innerHTML = 'Problem banks load automatically from the remote bank service. Browse, add to cart, and preview exams — no folder needed.';
-    }
-    loadRepo().catch(e => toast('Error: ' + e));
-    return;
-  }
+  // Enhanced build: the browser "Get Problem Banks" (GitHub) panel is always
+  // available — never hidden — and offers the FS Access "save to folder" action
+  // when the browser supports it (Chromium). No window.__TAURI__ gating.
+  const fsaBtn = document.getElementById('dl-fsa-btn');
+  if (fsaBtn && window.showDirectoryPicker) fsaBtn.style.display = 'block';
 
   if (S.bankSource.id === 'bundle') {
     inp.readOnly = true;
     inp.value = S.bankSource.getDisplayPath();
     document.getElementById('btn-choose-folder').style.display = 'none';
-    hideDl();
     tuckAwaySourceSection();
     const hint = document.getElementById('empty-hint');
     if (hint) {
-      hint.innerHTML = 'Bundled problem banks load automatically. Browse, add to cart, and preview exams — no folder picker needed.';
+      hint.innerHTML = 'Bundled problem banks load automatically. Browse, add to cart, and preview or export exams — no folder picker needed. Use <b>Get Problem Banks</b> to pull the latest from GitHub.';
     }
     loadRepo().catch(e => toast('Error: ' + e));
     return;
@@ -473,9 +467,8 @@ function indexRepoRefs(data) {
   document.getElementById('btn-choose-folder').style.display = 'inline-flex';
   const hint = document.getElementById('empty-hint');
   if (hint) {
-    hint.innerHTML = 'Click <b>Choose folder</b> and select your local ESTELA problem-bank clone (repo root or <code>PHY I Mechanics</code>).';
+    hint.innerHTML = 'Click <b>Choose folder</b> to open a local ESTELA problem-bank clone, or expand <b>Get Problem Banks</b> to pull banks straight from GitHub in your browser.';
   }
-  hideDl();
 })();
 
 // ── Source section (tucked away when banks are bundled) ────────────────────
@@ -541,6 +534,7 @@ applyTheme(S.theme);
 function toggleNav() { document.body.classList.toggle('nav-open'); }
 function closeNav()  { document.body.classList.remove('nav-open'); }
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeNav(); });
+
 // restore last used path
 (function(){ const p = localStorage.getItem('estela_path'); if (p) document.getElementById('path-inp').value = p; })();
 
@@ -579,9 +573,6 @@ async function loadRepo() {
     if (S.bankSource.id === 'bundle') {
       await S.bankSource.ensureReady();
       document.getElementById('path-inp').value = S.bankSource.getDisplayPath();
-    } else if (S.bankSource.id === 'remote') {
-      document.getElementById('path-inp').value = S.bankSource.getDisplayPath();
-      // rootRef is unused by RemoteSource.scan (it reads /tree from apiBase)
     } else if (S.bankSource.id === 'directory') {
       rootRef = await S.bankSource.ensureRoot();
       document.getElementById('path-inp').value = S.bankSource.getDisplayPath();
@@ -964,19 +955,24 @@ function updateExportBtns() {
        <div style="font-family:var(--font-m);font-size:.9rem;color:var(--ink4);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.18rem">${label}</div>
        <div style="display:flex;flex-wrap:wrap;gap:.22rem">${btns}</div>
      </div>`;
-  const tauriRows = window.__TAURI__ ? (
-    row('Export Bundle', `<button class="btn btn-xs btn-p" onclick="doExportBundle()">⬇ Export All (Exams + Keys + Images)</button>`) +
+  // Enhanced build: all exporters run client-side (exam-export-plus.js) — no
+  // window.__TAURI__ gating. Bundle .zip via JSZip, .tex via Blob download,
+  // .docx as a beta Word-openable .doc.
+  const exportRows =
+    row('Export Bundle (.zip)',
+      `<button class="btn btn-xs btn-p" onclick="doExportBundlePlus()">⬇ Export All (Exams + Keys + Images)</button>`) +
     row('Export single .tex',
-      vs.map(v=>`<button class="btn btn-xs" onclick="doTex(${v},${attr('exam')})">Exam ${versionLabel(v)}</button>`).join('') +
-      vs.map(v=>`<button class="btn btn-xs" onclick="doTex(${v},${attr('key')})">Key ${versionLabel(v)}</button>`).join('')) +
-    row('Export .docx (Word)',
-      vs.map(v=>`<button class="btn btn-xs" onclick="doDocx(${v},${attr('exam')})">Exam ${versionLabel(v)}</button>`).join('') +
-      vs.map(v=>`<button class="btn btn-xs" onclick="doDocx(${v},${attr('key')})">Key ${versionLabel(v)}</button>`).join(''))
-  ) : row('Print / PDF', `<span style="font-family:var(--font-m);font-size:.82rem;color:var(--ink4)">Open a preview, then use the browser&#39;s Print → Save as PDF.</span>`);
+      vs.map(v=>`<button class="btn btn-xs" onclick="doTexPlus(${v},${attr('exam')})">Exam ${versionLabel(v)}</button>`).join('') +
+      vs.map(v=>`<button class="btn btn-xs" onclick="doTexPlus(${v},${attr('key')})">Key ${versionLabel(v)}</button>`).join('')) +
+    row('Export .docx (Word, beta)',
+      vs.map(v=>`<button class="btn btn-xs" onclick="doDocxPlus(${v},${attr('exam')})">Exam ${versionLabel(v)}</button>`).join('') +
+      vs.map(v=>`<button class="btn btn-xs" onclick="doDocxPlus(${v},${attr('key')})">Key ${versionLabel(v)}</button>`).join('') +
+      `<span style="font-family:var(--font-m);font-size:.74rem;color:var(--ink4);width:100%;margin-top:.15rem">Math via MathML — fidelity limited.</span>`) +
+    row('Print / PDF', `<span style="font-family:var(--font-m);font-size:.82rem;color:var(--ink4)">Open a preview, then use the browser&#39;s Print → Save as PDF.</span>`);
   el.innerHTML =
     row('Preview Exam', vs.map(v=>`<button class="btn btn-xs" onclick="doPreview(${v},false)">👁 ${versionLabel(v)}</button>`).join('')) +
     row('Preview Key',  vs.map(v=>`<button class="btn btn-xs" onclick="doPreview(${v},true)">👁 ${versionLabel(v)}</button>`).join('')) +
-    tauriRows;
+    exportRows;
 }
 
 function _cartBody() {
@@ -1085,6 +1081,47 @@ function dlBlob(blob, name) {
   const a = Object.assign(document.createElement('a'), {href:url, download:name});
   document.body.appendChild(a); a.click();
   setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 800);
+}
+
+// ── Enhanced client-side exporters (exam-export-plus.js) ─────────────────────
+function _titleVal() { return document.getElementById('exam-title').value || 'Exam'; }
+function _nver() { return Math.max(1, parseInt(document.getElementById('n-ver')?.value||'2')); }
+function _safeName(s) { return String(s||'exam').replace(/[^\w.-]+/g,'_').replace(/^_+|_+$/g,'') || 'exam'; }
+
+function doTexPlus(version, kind) {
+  try {
+    const cart = _cartBody();
+    const title = _titleVal();
+    const src = kind === 'key'
+      ? EstelaExamExportPlus.buildKeyLatex(cart, version, title)
+      : EstelaExamExportPlus.buildExamLatex(cart, version, title);
+    dlBlob(new Blob([src], {type:'application/x-tex;charset=utf-8'}), `${kind}_${versionLabel(version)}.tex`);
+    toast(`Downloaded ${kind}_${versionLabel(version)}.tex`);
+  } catch(e) { toast('Export failed: ' + (e && e.message ? e.message : e)); }
+}
+
+async function doExportBundlePlus() {
+  const title = _titleVal();
+  const versions = _nver();
+  toast('Building exam bundle…');
+  try {
+    const blob = await EstelaExamExportPlus.buildBundleZip(_cartBodyWithRefs(), versions, title, S.bankSource);
+    dlBlob(blob, `${_safeName(title)}-exams.zip`);
+    const imgs = blob.__imagesCopied || 0;
+    toast(`Bundle ready: ${versions} version${versions>1?'s':''} + ${imgs} image${imgs===1?'':'s'}`);
+  } catch(e) { toast('Bundle failed: ' + (e && e.message ? e.message : e)); }
+}
+
+async function doDocxPlus(version, kind) {
+  const title = _titleVal();
+  toast('Building Word .doc (beta)…');
+  try {
+    const html = kind === 'key'
+      ? EstelaExamExportPlus.buildKeyDoc(_cartBodyWithRefs(), version, title)
+      : await EstelaExamExportPlus.buildExamDoc(_cartBodyWithRefs(), version, title, S.bankSource);
+    dlBlob(new Blob([html], {type:'application/msword;charset=utf-8'}), `${kind}_${versionLabel(version)}.doc`);
+    toast(`Downloaded ${kind}_${versionLabel(version)}.doc (beta)`);
+  } catch(e) { toast('Export failed: ' + (e && e.message ? e.message : e)); }
 }
 
 // ── YAML / prompts modal ────────────────────────────────────────────────────
@@ -1235,7 +1272,7 @@ async function restoreCart(repoData) {
   } catch(e) {}
 }
 
-// ── Download banks ─────────────────────────────────────────────────────────
+// ── Get Problem Banks from GitHub (browser: git-trees API + raw files) ───────
 let _dlCourses = [];
 
 function toggleDlPanel() {
@@ -1244,32 +1281,15 @@ function toggleDlPanel() {
   const open  = panel.style.display === 'none';
   panel.style.display = open ? 'block' : 'none';
   chev.style.transform = open ? 'rotate(90deg)' : '';
-  // Show "Update existing" button only when a repo is loaded
-  const upd = document.getElementById('dl-update-btn');
-  if (upd) upd.style.display = open && Object.keys(S.repo).length ? 'block' : 'none';
 }
 
-async function fetchRemoteCourses() {
-  const btn = document.getElementById('dl-fetch-btn');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spin"></span> Fetching…';
-  try {
-    _dlCourses = await window.__TAURI__.core.invoke('fetch_remote_courses');
-    const list = document.getElementById('dl-checklist');
-    list.innerHTML = _dlCourses.map(c =>
-      `<label style="display:flex;align-items:center;gap:.4rem;padding:.2rem 0;font-size:.9rem;cursor:pointer">
-        <input type="checkbox" value="${esc(c)}" checked style="accent-color:var(--accent)"> ${esc(c)}
-       </label>`
-    ).join('');
-    list.style.display = 'block';
-    document.getElementById('dl-actions').style.display = 'flex';
-    btn.textContent = '↺ Refresh list';
-    btn.disabled = false;
-  } catch(e) {
-    toast('Error fetching courses: ' + e);
-    btn.textContent = 'Fetch available courses';
-    btn.disabled = false;
-  }
+function _ghOpts(courses) {
+  return {
+    repo: (document.getElementById('dl-repo').value || '').trim() || EstelaExamExportPlus.DEFAULT_REPO,
+    branch: (document.getElementById('dl-branch').value || '').trim() || 'main',
+    token: (document.getElementById('dl-token').value || '').trim(),
+    courses: courses || null,
+  };
 }
 
 function _selectedCourses() {
@@ -1277,32 +1297,91 @@ function _selectedCourses() {
     .map(el => el.value);
 }
 
-async function downloadSelected() {
-  const courses = _selectedCourses();
-  if (!courses.length) { toast('Select at least one course'); return; }
-  const folder = await pickSaveFolder();
-  if (!folder) return;
-  toast('Downloading… this may take a moment');
+async function fetchRemoteCourses() {
+  const btn = document.getElementById('dl-fetch-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span> Fetching…';
   try {
-    const msg = await window.__TAURI__.core.invoke('download_courses', {courses, destFolder: folder});
-    toast(msg);
-    // Auto-load the downloaded folder
-    document.getElementById('path-inp').value = folder;
-    await loadRepo();
-  } catch(e) { toast('Download failed: ' + e); }
+    const src = new EstelaExamExportPlus.GitHubSource(_ghOpts());
+    _dlCourses = await src.listCourses();
+    const list = document.getElementById('dl-checklist');
+    list.innerHTML = _dlCourses.length
+      ? _dlCourses.map(c =>
+          `<label style="display:flex;align-items:center;gap:.4rem;padding:.2rem 0;font-size:.9rem;cursor:pointer">
+            <input type="checkbox" value="${esc(c)}" checked style="accent-color:var(--accent)"> ${esc(c)}
+           </label>`).join('')
+      : '<div style="font-family:var(--font-m);font-size:.85rem;color:var(--ink4);padding:.2rem 0">No course folders found.</div>';
+    list.style.display = 'block';
+    document.getElementById('dl-actions').style.display = 'flex';
+    btn.textContent = '↺ Refresh list';
+    btn.disabled = false;
+    if (src.truncated) toast('Note: GitHub tree is truncated (very large repo)');
+  } catch(e) {
+    // clear message for rate-limit / error-object / network failures
+    toast(e && e.message ? e.message : String(e));
+    btn.textContent = 'Fetch available courses';
+    btn.disabled = false;
+  }
 }
 
-async function updateLocalBanks() {
-  const courses = Object.keys(S.repo);
-  if (!courses.length) { toast('No repo loaded'); return; }
-  const folder = document.getElementById('path-inp').value.trim();
-  if (!folder) { toast('No path set'); return; }
-  toast('Updating… this may take a moment');
+// "Download" in a tab means load the fetched banks in as the active source
+// (like RemoteSource, pointed at GitHub) — reusing browse/cart/preview/export.
+async function loadSelectedFromGitHub() {
+  const courses = _selectedCourses();
+  if (!courses.length) { toast('Select at least one course'); return; }
+  toast('Loading banks from GitHub…');
   try {
-    const msg = await window.__TAURI__.core.invoke('download_courses', {courses, destFolder: folder});
-    toast(msg);
+    S.bankSource = new EstelaExamExportPlus.GitHubSource(_ghOpts(courses));
+    const useBundle = document.getElementById('btn-use-bundle');
+    if (useBundle && window.__ESTELA_BUNDLE__) useBundle.style.display = 'block';
+    document.getElementById('path-inp').value = S.bankSource.getDisplayPath();
     await loadRepo();
-  } catch(e) { toast('Update failed: ' + e); }
+    closeNav();
+  } catch(e) { toast('Load failed: ' + (e && e.message ? e.message : e)); }
+}
+
+// Optional: a .zip of exactly what was fetched (banks + figures + QTI packages).
+async function downloadSelectedZip() {
+  const courses = _selectedCourses();
+  if (!courses.length) { toast('Select at least one course'); return; }
+  toast('Fetching & zipping… this may take a moment');
+  try {
+    const src = new EstelaExamExportPlus.GitHubSource(_ghOpts(courses));
+    const blob = await src.buildDownloadZip();
+    const name = (src.repo.split('/').pop() || 'estela-banks');
+    dlBlob(blob, `${name}.zip`);
+    toast(`Downloaded ${blob.__fileCount || 0} files as .zip`);
+  } catch(e) { toast('Download failed: ' + (e && e.message ? e.message : e)); }
+}
+
+// Chromium only: write the fetched files straight into a real folder.
+async function saveSelectedToFolder() {
+  if (!window.showDirectoryPicker) { toast('File System Access API not supported in this browser'); return; }
+  const courses = _selectedCourses();
+  if (!courses.length) { toast('Select at least one course'); return; }
+  let dir;
+  try { dir = await window.showDirectoryPicker({ mode: 'readwrite' }); }
+  catch(e) { return; } // user cancelled the picker
+  toast('Fetching & saving to folder…');
+  try {
+    const src = new EstelaExamExportPlus.GitHubSource(_ghOpts(courses));
+    const blob = await src.buildDownloadZip();
+    const zip = await JSZip.loadAsync(blob);
+    const entries = [];
+    zip.forEach((rel, entry) => { if (!entry.dir) entries.push([rel, entry]); });
+    let written = 0;
+    for (const [rel, entry] of entries) {
+      const parts = rel.split('/').filter(Boolean);
+      let cur = dir;
+      for (let i = 0; i < parts.length - 1; i++) cur = await cur.getDirectoryHandle(parts[i], { create: true });
+      const fh = await cur.getFileHandle(parts[parts.length - 1], { create: true });
+      const w = await fh.createWritable();
+      await w.write(await entry.async('uint8array'));
+      await w.close();
+      written += 1;
+    }
+    toast(`Saved ${written} files to ${dir.name}`);
+  } catch(e) { toast('Save failed: ' + (e && e.message ? e.message : e)); }
 }
 
 // ── Utilities ──────────────────────────────────────────────────────────────

@@ -36,6 +36,11 @@ htmlcov/
 # Jupyter
 .ipynb_checkpoints/
 
+# Generated standalone exam builder — ad-hoc local builds to frontend/ are ignored.
+# The PUBLISHED build lives at docs/standalone.html and IS committed
+# (served live via GitHub Pages). Rebuild it with scripts/build_standalone_html.py.
+frontend/standalone.html
+
 # OS
 .DS_Store
 Thumbs.db
