@@ -38,6 +38,8 @@ nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:.7rem 2r
 .btn-primary:hover{filter:brightness(1.08)}
 .btn-secondary{background:var(--bg2);color:var(--ink2);border:1px solid var(--border)}
 .btn-secondary:hover{background:var(--bg3)}
+.btn-alt{background:#1a4f8a;color:#fff;border:1px solid #1a4f8a;box-shadow:0 2px 8px rgba(26,79,138,.25)}
+.btn-alt:hover{filter:brightness(1.1)}
 
 /* Downloads */
 .section{max-width:820px;margin:0 auto;padding:3rem 2rem}
@@ -83,6 +85,7 @@ footer a:hover{color:var(--ink)}
 <nav>
   <a href="#" class="nav-logo">E<em>S</em>TELA Exam Builder</a>
   <div class="nav-links">
+    <a href="standalone-enhanced.html">Problem Banks</a>
     <a href="#download">Download</a>
     <a href="#usage">Usage</a>
     <a href="https://github.com/Zhongzhou/ESTELA-physics-problem-bank" target="_blank">GitHub</a>
@@ -92,9 +95,12 @@ footer a:hover{color:var(--ink)}
 <div class="hero">
   <div class="hero-badge">UCF / NSF-2421299 &nbsp;·&nbsp; Open Source</div>
   <h1>Build physics exams<br>from <em>isomorphic</em> problem banks</h1>
-  <p>A desktop app for UCF physics instructors. Browse the ESTELA problem bank, assemble exam carts, and export ready-to-print LaTeX or Word documents — multiple versions, shuffled choices, figures included.</p>
+  <p>Browse the ESTELA problem banks, choose banks for exams, and export ready-to-print LaTeX or Word documents — multiple versions, shuffled choices, figures included.</p>
   <div class="hero-btns">
-    <a href="#download" class="btn btn-primary">⬇ Download</a>
+    <div style="width:100%;display:flex;justify-content:center">
+      <a href="standalone-enhanced.html" class="btn btn-primary">View Problems and Build Exams</a>
+    </div>
+    <a href="#download" class="btn btn-alt">⬇ Download Desktop App</a>
     <a href="https://github.com/Zhongzhou/ESTELA-physics-problem-bank" class="btn btn-secondary" target="_blank">View on GitHub</a>
   </div>
 </div>
