@@ -1,4 +1,6 @@
 # Sharable Isomorphic Problem Banks for Introductory Physics
+This repository is a modification of [https://github.com/Zhongzhou/ESTELA-physics-problem-bank](https://github.com/Zhongzhou/ESTELA-physics-problem-bank) that is tuned for regular and AP level high school Physics using a foundation of exam questions that I have written over time.
+
 This repository contains isomorphic problem banks for introductory level physics that are created with the assistance of Generative AI. 
 The bank structure is currently designed so that it can be reliably converted into QTI file compatible with CANVAS new Quiz item bank.
 Creation of this repository is sponsored by:
