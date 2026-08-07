@@ -1,19 +1,15 @@
 Topic ID,Unit Name,Possible major concepts covered
-0,Vector and Math,trigonometry and vector algebra.
-1,1D Motion,"Instantaneous and average velocity, acceleration, speed, Graphical representation of motion"
-2,2D Motion,Projectile Motion. Motion in 2 and 3 dimensions. Circular Motion and Centripetal Acceleration
-3,Forces,"Hooke's law, Kinetic and Static Friction, Gravity, Tension, Contact Forces"
-4,Newton's Laws of Motion,"Free body diagram, statics and dynamics problems, Centripetal Motion"
-5,Kinetic Energy and Work,"Conservative and Non-Conservative Work, Kinetic Energy"
-6,Conservation of ME.,Potential Energy and Conservation of Mechanical Energy
-7,Momentum and Impulse,"Linear Momentum and Impulse, (Conservation of Linear Momentum for 2053)"
-8,Many-particle Systems,"Conservation of Linear Momentum, Elastic and Inelastic Collision, COM"
-9,Rotational Motion,"Rotational Kinematics, torque, Moment of Inertia and Rotational Dynamics, Rolling W/O slipping"
-10,Angular Momentum,"Angular Impulse, Angular momentum, Conservation of Angular momentum"
-11,Simple Harmonic Motion,"SHM, simple pendulum, damped harmonic oscillators, resonance"
-12,Waves and Oscillation,wave propagation and periodic motion
-13,Universal Gravity,"Universal Gravity, Planetary Motion, Kepler's Law"
-14,Fluids,Fluid Statics and Dynamics
-15,Thermal Physics,"Heat Transport/Thermal Conductivity. Specific heat, latent heat, Thermal expansion and Heat engines, Ideal gas law, kinetic theory of gas, 3 laws of thermodynamics"
-16,Modern Applications of Mechanics,Topics to be determined
-17,Units,Unit Conversion
+0,1D Motion,"Distance and displacement, speed and velocity, acceleration, kinematic equations, free fall"
+1,Graphing,"Position-time, velocity-time, and acceleration-time graphs, slope and area interpretation, translating between graph types, best-fit lines and proportional reasoning"
+2,Projectiles,"Independence of horizontal and vertical motion, horizontally launched projectiles, projectiles launched at an angle, range and maximum height, vector components"
+3,Forces,"Free-body diagrams, Newton's three laws, weight and normal force, friction, tension, spring force and Hooke's law, equilibrium, inclined planes, circular motion"
+4,Energy,"Work, kinetic energy, gravitational and elastic potential energy, conservation of energy, energy transfer and dissipation, power, simple machines and efficiency"
+5,Momentum,"Momentum and impulse, impulse-momentum theorem, conservation of momentum, elastic and inelastic collisions, explosions and recoil"
+6,Electrostatics,"Electric charge and conservation of charge, conductors and insulators, charging by friction, conduction, and induction, Coulomb's law, electric fields and field lines"
+7,Voltage,"Electric potential energy, potential difference, work done moving charges, uniform fields between parallel plates, batteries as sources of potential difference"
+8,Circuits,"Current, resistance and resistivity, Ohm's law, schematic diagrams, series and parallel circuits, equivalent resistance, electrical power and energy cost, meters"
+9,Magnetism and Induction,"Magnets and magnetic field lines, magnetic fields from currents, force on moving charges and current-carrying wires, right-hand rules, magnetic flux, electromagnetic induction"
+10,EMF,"Induced EMF, Faraday's law, Lenz's law, generators and motors, transformers, AC versus DC, power transmission"
+11,Optics,"Reflection and the law of reflection, plane and curved mirrors, refraction and Snell's law, index of refraction, total internal reflection, lenses, ray diagrams, image characteristics, the thin lens/mirror equation"
+12,Light and Waves,"Wave anatomy and the wave equation, transverse and longitudinal waves, sound and the Doppler effect, superposition and interference, standing waves and resonance, the electromagnetic spectrum, diffraction and color"
+13,Astronomy,"The solar system, gravity and orbits, Kepler's laws, phases, eclipses, and tides, stars and the H-R diagram, stellar life cycles, galaxies and cosmology"

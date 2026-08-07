@@ -2,26 +2,29 @@
 
 Isomorphic problem banks for regular (non-AP) high school physics, authored by Michael Baker.
 
-Unit folders mirror the numbering in `../PHY I Mechanics/` so the two courses stay
-cross-referenceable. `Topics.csv` is the topic *catalog* (0–17); unit folders exist only
-for topics currently in use (0–12). Add a folder when you start authoring for that topic.
+Unit folders follow this course's own teaching sequence, numbered 0–13. They do **not** line
+up with `../PHY I Mechanics/` (upstream's university sequence) or with `../AP Physics 1/` and
+`../AP Physics 2/` (College Board numbering shifted down by one) — check the target course's
+README before assuming a folder number means the same thing elsewhere.
+
+`Topics.csv` is the topic catalog for this course.
 
 ## Bank ID convention
 
     HSPHY-<UNIT>-<ABBREV>-<MMDDYY>
 
-e.g. `HSPHY-2D-PROJHT-032026` — projectile motion, max height, created 03-20-2026.
+e.g. `HSPHY-PRJ-PROJHT-032026` — projectiles, max height, created 03-20-2026.
 The bank folder, the `.yaml` inside it, and `bank_info.bank_id` all use this same string.
 
 | Unit | Code | Unit | Code |
 |---|---|---|---|
-| 0 Vector and Math | `VEC` | 7 Momentum and Impulse | `MOM` |
-| 1 1D Motion | `1DM` | 8 Many-particle Systems | `MPS` |
-| 2 2D Motion | `2D` | 9 Rotational Motion | `ROT` |
-| 3 Forces | `F` | 10 Angular Momentum | `AM` |
-| 4 Newton's Laws of Motion | `NL` | 11 Simple Harmonic Motion | `SHM` |
-| 5 Kinetic Energy and Work | `KEW` | 12 Waves and Oscillation | `WAV` |
-| 6 Conservation of ME | `CME` | | |
+| 0 1D Motion | `1DM` | 7 Voltage | `VLT` |
+| 1 Graphing | `GRA` | 8 Circuits | `CIR` |
+| 2 Projectiles | `PRJ` | 9 Magnetism and Induction | `MAG` |
+| 3 Forces | `FOR` | 10 EMF | `EMF` |
+| 4 Energy | `ENE` | 11 Optics | `OPT` |
+| 5 Momentum | `MOM` | 12 Light and Waves | `LGW` |
+| 6 Electrostatics | `EST` | 13 Astronomy | `AST` |
 
 ## Adding a bank
 
@@ -36,3 +39,12 @@ The bank folder, the `.yaml` inside it, and `bank_info.bank_id` all use this sam
 
 Folders named `Old`, `Archive`, `Drafts`, `Figure Creation`, etc. are skipped by the
 bundler — safe places to park work in progress.
+
+## Building
+
+This course is only bundled if it is passed explicitly:
+
+```bash
+python3 ../scripts/build_standalone_html.py \
+  --courses "HS Physics" "AP Physics 1" "AP Physics 2" "PHY I Mechanics"
+```

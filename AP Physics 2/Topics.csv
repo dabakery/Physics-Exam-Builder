@@ -1,0 +1,8 @@
+Topic ID,Unit Name,AP Unit,Possible major concepts covered
+8,Thermodynamics,9,"Thermal equilibrium and temperature, ideal gas law, kinetic theory of gases, internal energy, heat transfer, PV diagrams, first and second laws of thermodynamics, heat engines and entropy"
+9,"Electric Force, Field, and Potential",10,"Charge and conservation of charge, conductors and insulators, Coulomb's law, electric fields of point charges and uniform fields, electric potential energy and potential difference, equipotential lines"
+10,Electric Circuits,11,"Current, resistance and resistivity, Ohm's law, EMF and terminal voltage, series and parallel resistors, Kirchhoff's loop and junction rules, power dissipation, capacitors in circuits and RC behavior"
+11,Magnetism and Electromagnetism,12,"Magnetic fields and field lines, magnetic force on moving charges and current-carrying wires, fields from wires and loops, magnetic flux, Faraday's law and Lenz's law, induced EMF"
+12,Geometric Optics,13,"Reflection and refraction, index of refraction, Snell's law, total internal reflection, plane and curved mirrors, thin lenses, ray diagrams, the thin lens/mirror equation and magnification"
+13,"Waves, Sound, and Physical Optics",14,"Wave properties and the wave equation, transverse and longitudinal waves, sound and the Doppler effect, superposition and interference, standing waves and resonance, diffraction, double-slit and thin-film interference, polarization"
+14,Modern Physics,15,"Photoelectric effect and photon energy, wave-particle duality and de Broglie wavelength, atomic energy levels and spectra, nuclear structure, radioactive decay and half-life, mass-energy equivalence"

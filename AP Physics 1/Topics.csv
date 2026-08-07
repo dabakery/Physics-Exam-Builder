@@ -1,19 +1,9 @@
-Topic ID,Unit Name,Possible major concepts covered
-0,Vector and Math,trigonometry and vector algebra.
-1,1D Motion,"Instantaneous and average velocity, acceleration, speed, Graphical representation of motion"
-2,2D Motion,Projectile Motion. Motion in 2 and 3 dimensions. Circular Motion and Centripetal Acceleration
-3,Forces,"Hooke's law, Kinetic and Static Friction, Gravity, Tension, Contact Forces"
-4,Newton's Laws of Motion,"Free body diagram, statics and dynamics problems, Centripetal Motion"
-5,Kinetic Energy and Work,"Conservative and Non-Conservative Work, Kinetic Energy"
-6,Conservation of ME.,Potential Energy and Conservation of Mechanical Energy
-7,Momentum and Impulse,"Linear Momentum and Impulse, (Conservation of Linear Momentum for 2053)"
-8,Many-particle Systems,"Conservation of Linear Momentum, Elastic and Inelastic Collision, COM"
-9,Rotational Motion,"Rotational Kinematics, torque, Moment of Inertia and Rotational Dynamics, Rolling W/O slipping"
-10,Angular Momentum,"Angular Impulse, Angular momentum, Conservation of Angular momentum"
-11,Simple Harmonic Motion,"SHM, simple pendulum, damped harmonic oscillators, resonance"
-12,Waves and Oscillation,wave propagation and periodic motion
-13,Universal Gravity,"Universal Gravity, Planetary Motion, Kepler's Law"
-14,Fluids,Fluid Statics and Dynamics
-15,Thermal Physics,"Heat Transport/Thermal Conductivity. Specific heat, latent heat, Thermal expansion and Heat engines, Ideal gas law, kinetic theory of gas, 3 laws of thermodynamics"
-16,Modern Applications of Mechanics,Topics to be determined
-17,Units,Unit Conversion
+Topic ID,Unit Name,AP Unit,Possible major concepts covered
+0,Kinematics,1,"Scalars and vectors, position/velocity/acceleration, graphical representation of motion, motion with constant acceleration, free fall, projectile motion, relative motion"
+1,Force and Translational Dynamics,2,"Systems and center of mass, forces and free-body diagrams, Newton's first, second, and third laws, gravitational and normal forces, kinetic and static friction, spring forces and Hooke's law, circular motion and centripetal acceleration, Newton's law of universal gravitation"
+2,"Work, Energy, and Power",3,"Translational kinetic energy, work and the work-energy theorem, potential energy (gravitational and elastic), conservation of energy, open and closed systems, power"
+3,Linear Momentum,4,"Linear momentum and impulse, conservation of linear momentum, elastic and inelastic collisions, momentum of a system and center-of-mass motion"
+4,Torque and Rotational Dynamics,5,"Rotational kinematics, torque, moment of inertia (rotational inertia), Newton's second law in rotational form, rolling without slipping, equilibrium of extended bodies"
+5,Energy and Momentum of Rotating Systems,6,"Rotational kinetic energy, work and power in rotational systems, angular momentum and angular impulse, conservation of angular momentum, motion of orbiting satellites"
+6,Oscillations,7,"Simple harmonic motion, period and frequency, mass-spring and simple pendulum systems, restoring forces, energy in simple harmonic oscillators"
+7,Fluids,8,"Density and pressure, buoyancy and Archimedes' principle, Pascal's principle, fluid pressure with depth, conservation of mass (continuity equation), conservation of energy in fluid flow (Bernoulli's equation)"

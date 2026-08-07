@@ -2,26 +2,39 @@
 
 Isomorphic problem banks for AP Physics 1 (algebra-based), authored by Michael Baker.
 
-Unit folders mirror the numbering in `../PHY I Mechanics/` so the two courses stay
-cross-referenceable. `Topics.csv` is the topic *catalog* (0–17); unit folders exist only
-for topics currently in use (0–12). Add a folder when you start authoring for that topic.
+Unit folder numbers follow the College Board's AP Physics 1 unit numbering **shifted down by
+one**, so the course is numbered from 0: AP Unit 1 (Kinematics) is folder `0_Kinematics`,
+AP Unit 8 (Fluids) is folder `7_Fluids`. `../AP Physics 2/` picks up at folder 8 (AP Unit 9,
+Thermodynamics) under the same convention, so the two courses form one unbroken 0–14
+sequence.
+
+| Folder | College Board unit |
+|---|---|
+| `0_Kinematics` | 1 |
+| `1_Force and Translational Dynamics` | 2 |
+| `2_Work, Energy, and Power` | 3 |
+| `3_Linear Momentum` | 4 |
+| `4_Torque and Rotational Dynamics` | 5 |
+| `5_Energy and Momentum of Rotating Systems` | 6 |
+| `6_Oscillations` | 7 |
+| `7_Fluids` | 8 |
+
+Note this numbering no longer lines up with `../PHY I Mechanics/`, which uses upstream's
+university-course sequence. `Topics.csv` is the topic catalog for this course.
 
 ## Bank ID convention
 
     APP1-<UNIT>-<ABBREV>-<MMDDYY>
 
-e.g. `APP1-2D-PROJHT-032026` — projectile motion, max height, created 03-20-2026.
+e.g. `APP1-KIN-PROJHT-032026` — kinematics, projectile max height, created 03-20-2026.
 The bank folder, the `.yaml` inside it, and `bank_info.bank_id` all use this same string.
 
 | Unit | Code | Unit | Code |
 |---|---|---|---|
-| 0 Vector and Math | `VEC` | 7 Momentum and Impulse | `MOM` |
-| 1 1D Motion | `1DM` | 8 Many-particle Systems | `MPS` |
-| 2 2D Motion | `2D` | 9 Rotational Motion | `ROT` |
-| 3 Forces | `F` | 10 Angular Momentum | `AM` |
-| 4 Newton's Laws of Motion | `NL` | 11 Simple Harmonic Motion | `SHM` |
-| 5 Kinetic Energy and Work | `KEW` | 12 Waves and Oscillation | `WAV` |
-| 6 Conservation of ME | `CME` | | |
+| 0 Kinematics | `KIN` | 4 Torque and Rotational Dynamics | `TOR` |
+| 1 Force and Translational Dynamics | `FTD` | 5 Energy and Momentum of Rotating Systems | `ROT` |
+| 2 Work, Energy, and Power | `WEP` | 6 Oscillations | `OSC` |
+| 3 Linear Momentum | `MOM` | 7 Fluids | `FLU` |
 
 ## Adding a bank
 
@@ -36,3 +49,12 @@ The bank folder, the `.yaml` inside it, and `bank_info.bank_id` all use this sam
 
 Folders named `Old`, `Archive`, `Drafts`, `Figure Creation`, etc. are skipped by the
 bundler — safe places to park work in progress.
+
+## Building
+
+This course is only bundled if it is passed explicitly:
+
+```bash
+python3 ../scripts/build_standalone_html.py \
+  --courses "HS Physics" "AP Physics 1" "AP Physics 2" "PHY I Mechanics"
+```
