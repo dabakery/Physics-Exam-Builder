@@ -180,7 +180,7 @@ hr{border:none;border-top:1.5px solid #e0ded6;margin:.5cm 0 .7cm;}
 <body>
 <div class="sheet">
 <h1>${escapeHtml(title)} &#8212; Version ${verLabel}${label}</h1>
-<div class="meta">ESTELA Exam Builder &middot; UCF / NSF-2421299</div>
+<div class="meta">Physics Exam Builder</div>
 <hr>
 <div class="name-row">Name:&nbsp;<div class="line"></div>&nbsp;&nbsp;&nbsp;Score:&nbsp;<div class="score"></div></div>
 </div>
