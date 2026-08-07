@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
 """Build a single-file ESTELA Exam Builder with embedded problem banks (zip + base64).
 
-Bank YAMLs, figure images, and Canvas QTI packages (zips containing an
-imsmanifest.xml next to each bank YAML) are bundled so the standalone page can
-offer per-bank "Download Canvas QTI" without any backend.
+Bank YAMLs and figure images are bundled so the page runs with no backend.
+
+Canvas QTI packages (zips containing an imsmanifest.xml next to each bank YAML) are
+excluded by default in this fork -- they are already-compressed and roughly double the
+page size, and the Canvas import path is unused here. Pass --include-qti to embed them
+and restore the per-bank "Download Canvas QTI" button, which otherwise auto-hides via
+the has_qti flag computed in frontend/bank-source.js.
 """
 
 from __future__ import annotations
@@ -46,16 +50,16 @@ def is_qti_zip(path: Path) -> bool:
         return False
 
 
-def should_include_file(path: Path) -> bool:
+def should_include_file(path: Path, include_qti: bool = False) -> bool:
     ext = path.suffix.lower()
     if ext in BANK_EXT or ext in IMAGE_EXT:
         return True
-    if ext == ".zip" and is_qti_zip(path):
+    if include_qti and ext == ".zip" and is_qti_zip(path):
         return True
     return False
 
 
-def build_zip_bytes(repo_root: Path, courses: list[str]) -> bytes:
+def build_zip_bytes(repo_root: Path, courses: list[str], include_qti: bool = False) -> bytes:
     buf = io.BytesIO()
     qti_count = 0
     with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED, compresslevel=6) as zf:
@@ -73,7 +77,7 @@ def build_zip_bytes(repo_root: Path, courses: list[str]) -> bytes:
                     continue
                 if should_skip_path(parts[1:]):
                     continue
-                if not should_include_file(fpath):
+                if not should_include_file(fpath, include_qti):
                     continue
                 # nested zips (QTI packages) are already compressed — store as-is
                 if fpath.suffix.lower() == ".zip":
@@ -81,7 +85,10 @@ def build_zip_bytes(repo_root: Path, courses: list[str]) -> bytes:
                     zf.write(fpath, rel.as_posix(), compress_type=zipfile.ZIP_STORED)
                 else:
                     zf.write(fpath, rel.as_posix())
-    print(f"Embedded Canvas QTI packages: {qti_count}", file=sys.stderr)
+    if include_qti:
+        print(f"Embedded Canvas QTI packages: {qti_count}", file=sys.stderr)
+    else:
+        print("Canvas QTI packages: excluded (--include-qti to embed)", file=sys.stderr)
     return buf.getvalue()
 
 
@@ -98,6 +105,7 @@ def build_standalone_html(
     repo_root: Path,
     courses: list[str],
     label: str,
+    include_qti: bool = False,
 ) -> str:
     html = template_path.read_text(encoding="utf-8")
 
@@ -122,7 +130,7 @@ def build_standalone_html(
             (frontend_dir / "exam-export-plus.js").read_text(encoding="utf-8"),
         )
 
-    zip_bytes = build_zip_bytes(repo_root, courses)
+    zip_bytes = build_zip_bytes(repo_root, courses, include_qti)
     b64 = base64.b64encode(zip_bytes).decode("ascii")
     mb = len(zip_bytes) / (1024 * 1024)
     print(f"Bundle zip: {mb:.1f} MB ({len(b64):,} base64 chars)", file=sys.stderr)
@@ -173,6 +181,15 @@ def main() -> int:
         default=None,
         help="Output file (default: docs/standalone.html, published via GitHub Pages)",
     )
+    parser.add_argument(
+        "--include-qti",
+        action="store_true",
+        help=(
+            "Embed Canvas QTI packages so each bank offers a 'Download QTI' button. "
+            "Off by default in this fork: the QTI zips are already-compressed and roughly "
+            "double the page size. With them excluded the button auto-hides (has_qti)."
+        ),
+    )
     args = parser.parse_args()
 
     repo_root = args.repo.resolve()
@@ -185,7 +202,9 @@ def main() -> int:
         print(f"error: template not found: {template_path}", file=sys.stderr)
         return 1
 
-    html = build_standalone_html(template_path, frontend_dir, repo_root, args.courses, label)
+    html = build_standalone_html(
+        template_path, frontend_dir, repo_root, args.courses, label, args.include_qti
+    )
     output_path.write_text(html, encoding="utf-8")
     out_mb = output_path.stat().st_size / (1024 * 1024)
     print(f"Wrote {output_path} ({out_mb:.1f} MB)", file=sys.stderr)
