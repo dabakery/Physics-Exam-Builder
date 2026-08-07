@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ESTELA Exam Builder</title>
+<title>Physics Exam Builder</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -87,21 +87,21 @@ footer a:hover{color:var(--ink)}
     <a href="standalone-enhanced.html">Problem Banks</a>
     <a href="#download">Download</a>
     <a href="#usage">Usage</a>
-    <a href="https://github.com/Zhongzhou/ESTELA-physics-problem-bank" target="_blank">GitHub</a>
+    <a href="https://github.com/dabakery/Physics-Exam-Builder" target="_blank">GitHub</a>
   </div>
 </nav>
 
 <div class="hero">
   <h1>Build physics exams<br>from <em>isomorphic</em> problem banks</h1>
-  <p>Browse the ESTELA problem banks, choose banks for exams, and export ready-to-print LaTeX or Word documents — multiple versions, shuffled choices, figures included.</p>
+  <p>Browse isomorphic problem banks, choose banks for exams, and export ready-to-print LaTeX or Word documents — multiple versions, shuffled choices, figures included.</p>
   <div class="hero-btns">
     <div style="width:100%;display:flex;justify-content:center">
       <a href="standalone-enhanced.html" class="btn btn-primary">View Problems and Build Exams</a>
     </div>
     <a href="#download" class="btn btn-alt">⬇ Download Desktop App</a>
-    <a href="https://github.com/Zhongzhou/ESTELA-physics-problem-bank" class="btn btn-secondary" target="_blank">View on GitHub</a>
+    <a href="https://github.com/dabakery/Physics-Exam-Builder" class="btn btn-secondary" target="_blank">View on GitHub</a>
   </div>
-  <p style="margin-top: 2rem; font-size: 0.82rem; color: var(--ink3); font-family: var(--font-m);">Creation of this repository is supported by: National Science Foundation NSF-2421299/NSF-1845436. Gates Foundation INV-076932</p>
+  <p style="margin-top: 2rem; font-size: 0.82rem; color: var(--ink3); font-family: var(--font-m);">Adapted from the <a href="https://github.com/Zhongzhou/ESTELA-physics-problem-bank" target="_blank">ESTELA physics problem bank</a> by Zhongzhou Chen (UCF Department of Physics), used under CC BY-NC 4.0.</p>
 </div>
 
 <hr>
@@ -161,7 +161,7 @@ footer a:hover{color:var(--ink)}
 
 <div class="section">
   <div class="section-title">Supported question types</div>
-  <div class="section-sub">The following ESTELA YAML question types are supported for export.</div>
+  <div class="section-sub">The following YAML question types are supported for export.</div>
   <div class="types-grid">
     <span class="type-pill">Numerical</span>
     <span class="type-pill">Multiple Choice</span>
@@ -176,12 +176,13 @@ footer a:hover{color:var(--ink)}
 </div>
 
 <footer>
-  <p>ESTELA Exam Builder &nbsp;·&nbsp; UCF Department of Physics &nbsp;·&nbsp; NSF Award #2421299</p>
-  <p style="margin-top:.4rem"><a href="https://github.com/Zhongzhou/ESTELA-physics-problem-bank" target="_blank">github.com/Zhongzhou/ESTELA-physics-problem-bank</a></p>
+  <p>Physics Exam Builder &nbsp;·&nbsp; Michael Baker</p>
+  <p style="margin-top:.4rem"><a href="https://github.com/dabakery/Physics-Exam-Builder" target="_blank">github.com/dabakery/Physics-Exam-Builder</a></p>
+  <p style="margin-top:.4rem">Adapted from <a href="https://github.com/Zhongzhou/ESTELA-physics-problem-bank" target="_blank">ESTELA</a> (Zhongzhou Chen, UCF Department of Physics) &mdash; CC BY-NC 4.0. Not affiliated with or endorsed by UCF, the NSF, or the Gates Foundation.</p>
 </footer>
 
 <script>
-const REPO = 'Zhongzhou/ESTELA-physics-problem-bank';
+const REPO = 'dabakery/Physics-Exam-Builder';
 
 const PLATFORMS = [
   {

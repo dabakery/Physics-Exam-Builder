@@ -4,7 +4,9 @@
 
 A small, reusable integration surface that lets any website serve the ESTELA
 exam/question maker by querying problem-bank data **live** from a read-only clone
-of the upstream repo (`Zhongzhou/ESTELA-physics-problem-bank`, branch `main`).
+of a bank repo (default `dabakery/Physics-Exam-Builder`, branch `main`; set
+`ESTELA_UPSTREAM_REPO` to serve a different one, e.g. the upstream ESTELA banks at
+`Zhongzhou/ESTELA-physics-problem-bank`).
 
 The design in one line: **one browser adapter + one thin backend, with a stable
 contract between them.** The backend is deliberately dumb — git cache/refresh +
@@ -38,7 +40,7 @@ All responses include `"protocol": "estela-bank-service/v1"`.
 
 ### `GET /version`
 ```json
-{ "protocol": "estela-bank-service/v1", "repo": "Zhongzhou/ESTELA-physics-problem-bank",
+{ "protocol": "estela-bank-service/v1", "repo": "dabakery/Physics-Exam-Builder",
   "ref": "main", "sha": "<commit sha>", "fetchedAt": "2026-06-30T12:00:00Z" }
 ```
 Clients cache-bust on `sha`: when it changes, re-fetch `/tree`.

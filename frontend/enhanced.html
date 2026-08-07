@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ESTELA Exam Builder · Enhanced (web)</title>
+<title>Physics Exam Builder · Enhanced (web)</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
@@ -263,7 +263,7 @@ body.nav-open #nav-overlay{display:block;}
   <!-- Sidebar -->
   <aside id="sidebar">
     <div id="sb-top">
-      <div class="sb-wm">E<em>S</em>TELA Exam Builder</div>
+      <div class="sb-wm">Physics <em>Exam</em> Builder</div>
       <div class="sb-sub">Problem Bank Visualizer</div>
     </div>
     <div id="sb-scroll">
@@ -274,7 +274,7 @@ body.nav-open #nav-overlay{display:block;}
         </span>
         <div id="dl-panel" style="display:none;margin-top:.4rem">
           <input id="dl-repo" class="inp" type="text" spellcheck="false"
-                 placeholder="owner/repo" value="Zhongzhou/ESTELA-physics-problem-bank">
+                 placeholder="owner/repo" value="dabakery/Physics-Exam-Builder">
           <div class="inp-row">
             <input id="dl-branch" class="inp" type="text" spellcheck="false" placeholder="branch" value="main" style="flex:1">
           </div>
@@ -290,7 +290,12 @@ body.nav-open #nav-overlay{display:block;}
             <button class="btn btn-sm btn-full" id="dl-fsa-btn" style="display:none" onclick="saveSelectedToFolder()">📁 Save selected to a folder…</button>
           </div>
           <div style="font-family:var(--font-m);font-size:.78rem;color:var(--ink4);margin-top:.35rem;line-height:1.5">
-            Pulls from GitHub in-browser (git-trees API + raw files). No install.
+            <b>This sends requests to GitHub.</b> Your browser calls
+            <code>api.github.com</code> and <code>raw.githubusercontent.com</code> for the
+            owner/repo above and downloads its bank files directly. Nothing is installed,
+            and nothing is sent anywhere else. Change the repo to pull from a different
+            bank collection — e.g. the upstream ESTELA project at
+            <code>Zhongzhou/ESTELA-physics-problem-bank</code>.
           </div>
         </div>
       </div>
@@ -359,15 +364,15 @@ body.nav-open #nav-overlay{display:block;}
       <button id="nav-toggle" class="btn btn-icon" onclick="toggleNav()" aria-label="Open menu" title="Menu">☰</button>
       <div>
         <div class="tb-wm">Problem Bank <em>Visualizer</em></div>
-        <div class="tb-sub">ESTELA Exam Builder · Enhanced web build · UCF / NSF-2421299</div>
+        <div class="tb-sub">Physics Exam Builder · Enhanced web build · adapted from ESTELA (UCF)</div>
       </div>
     </div>
     <div id="content">
       <div id="empty">
         <div class="e-icon">⚛</div>
         <div class="e-h">Load a repository</div>
-        <p class="e-p" id="empty-hint">Enter the path to your local clone of the ESTELA problem bank and click <b>Load</b>.</p>
-        <div class="e-code">github.com/Zhongzhou/ESTELA-physics-problem-bank</div>
+        <p class="e-p" id="empty-hint">Enter the path to your local clone of the problem bank repository and click <b>Load</b>.</p>
+        <div class="e-code">github.com/dabakery/Physics-Exam-Builder</div>
       </div>
       <div id="banks-view" style="display:none"></div>
     </div>
@@ -467,7 +472,7 @@ function indexRepoRefs(data) {
   document.getElementById('btn-choose-folder').style.display = 'inline-flex';
   const hint = document.getElementById('empty-hint');
   if (hint) {
-    hint.innerHTML = 'Click <b>Choose folder</b> to open a local ESTELA problem-bank clone, or expand <b>Get Problem Banks</b> to pull banks straight from GitHub in your browser.';
+    hint.innerHTML = 'Click <b>Choose folder</b> to open a local problem-bank clone, or expand <b>Get Problem Banks</b> to pull banks straight from GitHub in your browser.';
   }
 })();
 

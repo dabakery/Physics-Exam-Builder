@@ -70,7 +70,7 @@
     'frontend', 'src-tauri', 'src', 'node_modules', '.github',
     'target', 'dist', 'build',
   ];
-  const DEFAULT_REPO = 'Zhongzhou/ESTELA-physics-problem-bank';
+  const DEFAULT_REPO = 'dabakery/Physics-Exam-Builder';
 
   // ── Helper resolution: prefer page globals, else local fallbacks ───────────
   const getQtype = BS.getQtype || function (q) {

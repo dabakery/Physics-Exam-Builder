@@ -17,7 +17,9 @@ Endpoints (see docs/estela-bank-service-protocol-v1.md):
 Upstream is cloned/fetched only — this service NEVER writes to the upstream repo.
 
 Configuration (environment variables, all optional):
-    ESTELA_UPSTREAM_REPO   default "Zhongzhou/ESTELA-physics-problem-bank"
+    ESTELA_UPSTREAM_REPO   default "dabakery/Physics-Exam-Builder"
+                           (set to "Zhongzhou/ESTELA-physics-problem-bank" to serve
+                            the upstream ESTELA banks instead)
     ESTELA_BRANCH          default "main"
     ESTELA_CACHE_DIR       default "<this dir>/.cache/estela-bank"
     ESTELA_TTL_SECONDS     default "300"  (lazy pull on read when cache older than this; 0 disables)
@@ -51,7 +53,7 @@ PROTOCOL = "estela-bank-service/v1"
 
 # ── Config ────────────────────────────────────────────────────────────────────
 
-UPSTREAM_REPO = os.environ.get("ESTELA_UPSTREAM_REPO", "Zhongzhou/ESTELA-physics-problem-bank")
+UPSTREAM_REPO = os.environ.get("ESTELA_UPSTREAM_REPO", "dabakery/Physics-Exam-Builder")
 BRANCH = os.environ.get("ESTELA_BRANCH", "main")
 CACHE_DIR = Path(
     os.environ.get("ESTELA_CACHE_DIR", str(Path(__file__).resolve().parent / ".cache" / "estela-bank"))

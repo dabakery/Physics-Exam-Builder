@@ -1244,7 +1244,7 @@ hr{{border:none;border-top:1.5px solid #e0ded6;margin:.5cm 0 .7cm;}}
 <body>
 <div class="sheet">
 <h1>{title} &#8212; Version {version}{label}</h1>
-<div class="meta">ESTELA Exam Builder &middot; UCF / NSF-2421299</div>
+<div class="meta">Physics Exam Builder &middot; adapted from ESTELA (UCF) &middot; CC BY-NC 4.0</div>
 <hr>
 <div class="name-row">Name:&nbsp;<div class="line"></div>&nbsp;&nbsp;&nbsp;Score:&nbsp;<div class="score"></div></div>
 </div>
@@ -1316,18 +1316,21 @@ fn export_exam_bundle(cart: Value, versions: i64, title: String, dest_folder: St
 // Remote download commands
 // ══════════════════════════════════════════════════════════════════════════════
 
-const UPSTREAM_REPO: &str = "Zhongzhou/ESTELA-physics-problem-bank";
+// Bank repository the desktop app downloads from. Point this at a different
+// owner/repo to pull a different bank collection (e.g. the upstream ESTELA
+// project at "Zhongzhou/ESTELA-physics-problem-bank").
+const BANK_REPO: &str = "dabakery/Physics-Exam-Builder";
 
 #[tauri::command]
 async fn fetch_remote_courses() -> Result<Vec<String>, String> {
     let client = reqwest::Client::builder()
-        .user_agent("ESTELA-Exam-Builder")
+        .user_agent("Physics-Exam-Builder")
         .build()
         .map_err(|e| e.to_string())?;
 
     let url = format!(
         "https://api.github.com/repos/{}/contents/",
-        UPSTREAM_REPO
+        BANK_REPO
     );
     let mut req = client
         .get(&url)
@@ -1382,13 +1385,13 @@ async fn fetch_remote_courses() -> Result<Vec<String>, String> {
 #[tauri::command]
 async fn download_courses(courses: Vec<String>, dest_folder: String) -> Result<String, String> {
     let client = reqwest::Client::builder()
-        .user_agent("ESTELA-Exam-Builder")
+        .user_agent("Physics-Exam-Builder")
         .build()
         .map_err(|e| e.to_string())?;
 
     let zip_url = format!(
         "https://github.com/{}/archive/refs/heads/main.zip",
-        UPSTREAM_REPO
+        BANK_REPO
     );
     let resp = client
         .get(&zip_url)
@@ -1410,7 +1413,7 @@ async fn download_courses(courses: Vec<String>, dest_folder: String) -> Result<S
     let cursor = std::io::Cursor::new(bytes);
     let mut archive = zip::ZipArchive::new(cursor).map_err(|e| e.to_string())?;
 
-    // Detect the root prefix from the first ZIP entry (e.g. "ESTELA-physics-problem-bank-main/")
+    // Detect the root prefix from the first ZIP entry (e.g. "Physics-Exam-Builder-main/")
     let prefix = (0..archive.len())
         .find_map(|i| {
             let file = archive.by_index(i).ok()?;

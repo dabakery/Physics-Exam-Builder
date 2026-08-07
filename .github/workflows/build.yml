@@ -93,12 +93,12 @@ jobs:
         run: |
           ARCH=$(echo "${{ matrix.rust-target }}" | cut -d- -f1)
           cd "src-tauri/target/${{ matrix.rust-target }}/release/bundle/macos"
-          zip -r "../ESTELA-Exam-Builder-${ARCH}-macOS.zip" "ESTELA Exam Builder.app"
+          zip -r "../Physics-Exam-Builder-${ARCH}-macOS.zip" "Physics Exam Builder.app"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: estela-${{ matrix.rust-target }}
+          name: physics-exam-builder-${{ matrix.rust-target }}
           path: src-tauri/target/${{ matrix.rust-target }}/release/bundle/
           if-no-files-found: warn
 

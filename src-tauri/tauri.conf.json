@@ -1,7 +1,7 @@
 {
-  "productName": "ESTELA Exam Builder",
+  "productName": "Physics Exam Builder",
   "version": "0.1.0",
-  "identifier": "edu.ucf.estela",
+  "identifier": "io.github.dabakery.physics-exam-builder",
   "build": {
     "frontendDist": "../frontend"
   },
@@ -22,7 +22,7 @@
     "windows": [
       {
         "label": "main",
-        "title": "ESTELA Exam Builder",
+        "title": "Physics Exam Builder",
         "width": 1280,
         "height": 820,
         "minWidth": 900,

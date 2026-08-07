@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ESTELA Exam Builder · Problem Bank</title>
+<title>Physics Exam Builder · Problem Bank</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
@@ -268,7 +268,7 @@ body.nav-open #nav-overlay{display:block;}
   <!-- Sidebar -->
   <aside id="sidebar">
     <div id="sb-top">
-      <div class="sb-wm">E<em>S</em>TELA Exam Builder</div>
+      <div class="sb-wm">Physics <em>Exam</em> Builder</div>
       <div class="sb-sub">Problem Bank Visualizer</div>
     </div>
     <div id="sb-scroll">
@@ -353,15 +353,15 @@ body.nav-open #nav-overlay{display:block;}
       <button id="nav-toggle" class="btn btn-icon" onclick="toggleNav()" aria-label="Open menu" title="Menu">☰</button>
       <div>
         <div class="tb-wm">Problem Bank <em>Visualizer</em></div>
-        <div class="tb-sub">ESTELA Exam Builder · Isomorphic Physics Banks · UCF / NSF-2421299</div>
+        <div class="tb-sub">Physics Exam Builder · Isomorphic Physics Banks · adapted from ESTELA (UCF)</div>
       </div>
     </div>
     <div id="content">
       <div id="empty">
         <div class="e-icon">⚛</div>
         <div class="e-h">Load a repository</div>
-        <p class="e-p" id="empty-hint">Enter the path to your local clone of the ESTELA problem bank and click <b>Load</b>.</p>
-        <div class="e-code">github.com/Zhongzhou/ESTELA-physics-problem-bank</div>
+        <p class="e-p" id="empty-hint">Enter the path to your local clone of the problem bank repository and click <b>Load</b>.</p>
+        <div class="e-code">github.com/dabakery/Physics-Exam-Builder</div>
       </div>
       <div id="banks-view" style="display:none"></div>
     </div>
@@ -473,7 +473,7 @@ function indexRepoRefs(data) {
   document.getElementById('btn-choose-folder').style.display = 'inline-flex';
   const hint = document.getElementById('empty-hint');
   if (hint) {
-    hint.innerHTML = 'Click <b>Choose folder</b> and select your local ESTELA problem-bank clone (repo root or <code>PHY I Mechanics</code>).';
+    hint.innerHTML = 'Click <b>Choose folder</b> and select your local problem-bank clone (repo root or <code>PHY I Mechanics</code>).';
   }
   hideDl();
 })();

@@ -21,7 +21,7 @@ uvicorn app:app --host 0.0.0.0 --port 8787
 #   ...or: python app.py
 ```
 
-On first start it clones `Zhongzhou/ESTELA-physics-problem-bank@main` into
+On first start it clones `dabakery/Physics-Exam-Builder@main` into
 `.cache/estela-bank/` (fetch-only; it never pushes upstream). Then:
 
 ```bash
@@ -48,7 +48,7 @@ Make sure `ESTELA_CORS_ORIGINS` allows the page's origin.
 
 | Variable | Default | Meaning |
 |---|---|---|
-| `ESTELA_UPSTREAM_REPO` | `Zhongzhou/ESTELA-physics-problem-bank` | `owner/repo` to clone |
+| `ESTELA_UPSTREAM_REPO` | `dabakery/Physics-Exam-Builder` | `owner/repo` to clone. Set to `Zhongzhou/ESTELA-physics-problem-bank` to serve the upstream ESTELA banks. |
 | `ESTELA_BRANCH` | `main` | branch to pin |
 | `ESTELA_CACHE_DIR` | `bank-service/.cache/estela-bank` | on-disk clone location |
 | `ESTELA_TTL_SECONDS` | `300` | lazy pull on read when cache older than this; `0` disables |
