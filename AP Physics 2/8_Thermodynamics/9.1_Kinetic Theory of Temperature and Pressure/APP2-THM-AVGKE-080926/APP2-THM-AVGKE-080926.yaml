@@ -1,0 +1,63 @@
+bank_info:
+    title: Average Translational Kinetic Energy from Temperature
+    bank_id: APP2-THM-AVGKE-080926
+    description: |-
+      Isomorphic numerical problems for AP Physics 2, College Board Unit 9
+      Topic 9.1. Students compute the average translational kinetic energy of a
+      single gas molecule from the absolute temperature of the sample using
+      <latex>K_{avg} = \frac{3}{2} k_B T</latex>.
+
+      The target idea is that this quantity depends only on absolute
+      temperature and is independent of the identity of the gas. The common
+      errors are using a Celsius temperature and assuming a heavier gas gives a
+      larger average kinetic energy at the same temperature.
+    date created: 08-09-2026
+    status: ready # Only use 'draft', 'ready', 'deployed', and 'deprecated' for this field. 'draft' and 'deprecated' files won't be parsed by the exam builder.
+    learning objectives:
+        - THM-KTTP-1 # Relate average translational kinetic energy to absolute temperature
+    generation prompts:
+        - prompt 1: |
+            (q1 drafted as a worked reference example. Further isomorphs should
+            vary the gas species and the temperature, and should sometimes give
+            the temperature in degrees Celsius so the conversion to kelvin is
+            part of the solution.)
+        - formatting prompt: "../../../../Templates/YAML_formatting_prompt.md"
+    updates:
+        - update 1: (08-09-2026) Bank created; q1 moved here from the initial template scaffold.
+    generation details:
+            model:
+            version:
+            last updated: 08-09-2026
+    authors:
+        - Michael Baker
+
+questions:
+
+- numerical:
+    id: q1
+    title: Average Kinetic Energy of a Helium Atom
+    points: 3
+    text: |
+      A sealed rigid container holds helium gas at a temperature of
+      <latex>320</latex> K. Treat the helium as an ideal gas. The Boltzmann
+      constant is <latex>1.38 \times 10^{-23}</latex> J/K.
+
+      Find the average translational kinetic energy of one helium atom, in
+      joules. Round your answer to two significant figures.
+    answer:
+        value: 6.6e-21
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          The average translational kinetic energy of a gas molecule depends
+          only on absolute temperature:
+          <latex>
+          K_{avg} = \frac{3}{2} k_B T
+          </latex>
+          Substituting <latex>k_B = 1.38 \times 10^{-23}</latex> J/K and
+          <latex>T = 320</latex> K gives
+          <latex>K_{avg} = 6.6 \times 10^{-21}</latex> J. Note the result is
+          independent of the identity of the gas.
+        on_correct: Correct.
+        on_incorrect: Check whether you used absolute temperature in kelvin.

@@ -1,0 +1,83 @@
+bank_info:
+    title: Scaling of Kinetic Energy and RMS Speed with Temperature
+    bank_id: APP2-THM-TRMS-080926
+    description: |-
+      Isomorphic conceptual problems for AP Physics 2, College Board Unit 9
+      Topic 9.1. The absolute temperature of a sealed ideal gas is changed by a
+      known factor and students state how the average translational kinetic
+      energy and the root-mean-square speed each respond.
+
+      The target idea is the difference in scaling between the two quantities:
+      <latex>K_{avg} \propto T</latex> but
+      <latex>v_{rms} \propto \sqrt{T}</latex>. The common error is to assume
+      both scale the same way.
+    date created: 08-09-2026
+    status: ready # Only use 'draft', 'ready', 'deployed', and 'deprecated' for this field. 'draft' and 'deprecated' files won't be parsed by the exam builder.
+    learning objectives:
+        - THM-KTTP-1 # Relate average translational kinetic energy to absolute temperature
+        - THM-KTTP-2 # Relate molecular speed distribution to temperature and molar mass
+    generation prompts:
+        - prompt 1: |
+            (q1 drafted as a worked reference example. Further isomorphs should
+            vary the scaling factor — halved, tripled, quadrupled — and should
+            sometimes ask for the temperature change required to produce a
+            stated change in v_rms, which reverses the direction of the
+            reasoning.)
+        - formatting prompt: "../../../../Templates/YAML_formatting_prompt.md"
+    updates:
+        - update 1: (08-09-2026) Bank created; q1 moved here from the initial template scaffold.
+    generation details:
+            model:
+            version:
+            last updated: 08-09-2026
+    authors:
+        - Michael Baker
+
+questions:
+
+- multiple_choice:
+    id: q1
+    title: Effect of Doubling Absolute Temperature
+    points: 2
+    text: |
+      An ideal gas is sealed in a rigid container. The absolute temperature of
+      the gas is doubled. What happens to the average translational kinetic
+      energy of the molecules, and to their root-mean-square speed?
+    answers:
+    - answer:
+        text: |
+          The average kinetic energy doubles and the rms speed increases by a
+          factor of <latex>\sqrt{2}</latex>.
+        correct: true
+    - answer:
+        text: Both the average kinetic energy and the rms speed double.
+        correct: false
+    - answer:
+        text: |
+          The average kinetic energy increases by a factor of
+          <latex>\sqrt{2}</latex> and the rms speed doubles.
+        correct: false
+    - answer:
+        text: |
+          The average kinetic energy doubles and the rms speed is unchanged,
+          because the container is rigid.
+        correct: false
+    feedback:
+        general: |
+          Average translational kinetic energy is directly proportional to
+          absolute temperature,
+          <latex>K_{avg} = \frac{3}{2} k_B T</latex>, so doubling
+          <latex>T</latex> doubles it. The root-mean-square speed follows
+          <latex>
+          v_{rms} = \sqrt{\frac{3 k_B T}{m}}
+          </latex>
+          so it grows as <latex>\sqrt{T}</latex> and increases by a factor of
+          <latex>\sqrt{2}</latex>. A rigid container fixes the volume, not the
+          molecular speeds.
+        on_correct: |
+          Correct. Kinetic energy scales with <latex>T</latex>, speed with
+          <latex>\sqrt{T}</latex>.
+        on_incorrect: |
+          The two quantities do not scale the same way — compare
+          <latex>K_{avg} \propto T</latex> with
+          <latex>v_{rms} \propto \sqrt{T}</latex>.

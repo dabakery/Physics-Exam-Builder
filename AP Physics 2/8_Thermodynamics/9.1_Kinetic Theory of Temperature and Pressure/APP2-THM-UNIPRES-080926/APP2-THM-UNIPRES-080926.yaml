@@ -1,0 +1,217 @@
+bank_info:
+    title: Uniform Gas Pressure on Container Walls
+    bank_id: APP2-THM-UNIPRES-080926
+    description: |-
+      Isomorphic conceptual problems for AP Physics 2, College Board Unit 9
+      Topic 9.1. Students are shown a closed container whose surfaces have
+      unequal areas and asked to compare the pressure the enclosed gas exerts
+      on each surface. The target idea is that the pressure of a gas in
+      equilibrium is the same at every wall and does not depend on the area of
+      the surface it acts on — area determines the total force, not the
+      pressure.
+
+      The common misconception is to conflate pressure with force, and so to
+      reason that the larger surface must experience the greater pressure (or,
+      inverting the relationship, the smaller one).
+    date created: 08-09-2026
+    status: ready # Only use 'draft', 'ready', 'deployed', and 'deprecated' for this field. 'draft' and 'deprecated' files won't be parsed by the exam builder.
+    learning objectives:
+        - THM-KTTP-3 # Explain gas pressure as the result of molecular collisions with the walls
+        - THM-KTTP-4 # Distinguish pressure from force; recognise pressure as uniform throughout a gas in equilibrium
+    generation prompts: # The following are the prompts that generated the questions in the problem bank.
+        - prompt 1: |
+            (q1 authored directly by Michael Baker — no LLM generation.)
+        - prompt 2: |
+            (q2-q4 authored directly by Michael Baker as isomorphs of q1. Each
+            varies the container geometry and the area ratio, and q2/q4 switch
+            the quantity asked for from pressure to total force so the solution
+            requires applying F = PA rather than only recognising that pressure
+            is uniform.)
+        - formatting prompt: "../../../../Templates/YAML_formatting_prompt.md"
+    updates:
+        - update 1: (08-09-2026) Michael Baker authored the source question q1.
+        - update 2: (08-09-2026) Added isomorphs q2-q4 (box/force, flask/neck, force ratio).
+    generation details:
+            model:
+            version:
+            last updated: 08-09-2026
+    authors:
+        - Michael Baker
+
+questions:
+
+- multiple_choice:
+    id: q1
+    title: Pressure on the Top and Side of a Closed Cylinder
+    points: 1
+    text: |
+      A closed cylindrical container is filled with a monatomic ideal gas at
+      room temperature. The area of the circular top surface of the container
+      is <latex>A</latex> and the area of the cylindrical side of the container
+      is <latex>2A</latex>, as indicated in the figure. Which of the following
+      statements about the pressure exerted by the gas on the top and side of
+      the container is correct?
+    figure: figure_folder/q-1.png # not yet created — see "Figures" note below
+    answers:
+    - answer:
+        text: The gas exerts zero pressure on the top and side.
+        correct: false
+    - answer:
+        text: The gas exerts the same nonzero pressure on the top and the side.
+        correct: true
+    - answer:
+        text: The gas exerts a greater pressure on the top than on the side.
+        correct: false
+    - answer:
+        text: The gas exerts a greater pressure on the side than on the top.
+        correct: false
+    feedback:
+        general: |
+          The pressure of an ideal gas in equilibrium is the same throughout the
+          gas, so the pressure at the container walls is the same everywhere.
+          Pressure is force per unit area, so the larger side surface does
+          experience a larger total force — but the pressure, the force per unit
+          area, is identical on both surfaces.
+        on_correct: |
+          Correct. The pressure of an ideal gas is the same throughout the gas,
+          so the pressure at the container walls is the same everywhere.
+        on_incorrect: |
+          Careful to distinguish pressure from force. The side has twice the
+          area, so it experiences twice the total force — but the same pressure.
+
+- multiple_choice:
+    id: q2
+    title: Total Force on Two Faces of a Sealed Box
+    points: 1
+    text: |
+      A sealed rectangular box is filled with a monatomic ideal gas at room
+      temperature. The area of the bottom face of the box is <latex>A</latex>
+      and the area of one of the side faces is <latex>3A</latex>, as indicated
+      in the figure. Which of the following statements about the total force
+      exerted by the gas on the bottom face and on that side face is correct?
+    figure: figure_folder/q-2.png # not yet created
+    answers:
+    - answer:
+        text: The gas exerts the same total force on both faces.
+        correct: false
+    - answer:
+        text: |
+          The gas exerts three times as much total force on the side face as on
+          the bottom face.
+        correct: true
+    - answer:
+        text: |
+          The gas exerts three times as much total force on the bottom face as
+          on the side face.
+        correct: false
+    - answer:
+        text: The gas exerts zero total force on both faces.
+        correct: false
+    feedback:
+        general: |
+          The pressure is the same everywhere in the gas, but force is pressure
+          times area: <latex>F = PA</latex>. The side face has three times the
+          area of the bottom face, so it experiences three times the total
+          force even though the pressure on it is identical.
+        on_correct: |
+          Correct. Equal pressure over triple the area gives triple the force.
+        on_incorrect: |
+          The pressure is the same on both faces — but the question asks about
+          total force, and <latex>F = PA</latex> makes force proportional to area.
+
+- multiple_choice:
+    id: q3
+    title: Pressure in a Flask with a Narrow Neck
+    points: 1
+    text: |
+      A sealed glass flask consists of a wide spherical bulb joined to a narrow
+      cylindrical neck, and is filled with a monatomic ideal gas at room
+      temperature. The inner wall area of the bulb is <latex>5A</latex> and the
+      inner wall area of the neck is <latex>A</latex>, as indicated in the
+      figure. Which of the following statements about the pressure exerted by
+      the gas on the bulb wall and on the neck wall is correct?
+    figure: figure_folder/q-3.png # not yet created
+    answers:
+    - answer:
+        text: The gas exerts a greater pressure on the neck wall than on the bulb wall.
+        correct: false
+    - answer:
+        text: The gas exerts a greater pressure on the bulb wall than on the neck wall.
+        correct: false
+    - answer:
+        text: The gas exerts the same nonzero pressure on both walls.
+        correct: true
+    - answer:
+        text: |
+          The gas exerts pressure on the bulb wall only, because the neck is too
+          narrow for the molecules to strike it.
+        correct: false
+    feedback:
+        general: |
+          A gas in equilibrium has the same pressure throughout, regardless of
+          the shape of the container or how narrow any part of it is. Narrowing
+          a channel raises the speed of a flowing fluid, but this gas is not
+          flowing — it is a sealed container in equilibrium, so the pressure at
+          the neck wall equals the pressure at the bulb wall.
+        on_correct: |
+          Correct. Container shape does not affect the pressure of a gas in
+          equilibrium.
+        on_incorrect: |
+          Do not carry over intuition about flowing fluids. The gas here is
+          sealed and in equilibrium, so the pressure is uniform throughout.
+
+- multiple_choice:
+    id: q4
+    title: Force on the Larger Face Given the Force on the Smaller
+    points: 1
+    text: |
+      A sealed container of monatomic ideal gas has one face of area
+      <latex>A</latex> and a second face of area <latex>4A</latex>, as
+      indicated in the figure. The gas exerts a total force of magnitude
+      <latex>F</latex> on the smaller face. What is the magnitude of the total
+      force the gas exerts on the larger face?
+    figure: figure_folder/q-4.png # not yet created
+    answers:
+    - answer:
+        text: <latex>F/4</latex>
+        correct: false
+    - answer:
+        text: <latex>F</latex>
+        correct: false
+    - answer:
+        text: <latex>2F</latex>
+        correct: false
+    - answer:
+        text: <latex>4F</latex>
+        correct: true
+    feedback:
+        general: |
+          The pressure is the same on both faces, so
+          <latex>P = F/A</latex> on the smaller face and the same
+          <latex>P</latex> acts on the larger face. Then
+          <latex>
+          F_{large} = P(4A) = \frac{F}{A}(4A) = 4F
+          </latex>
+        on_correct: |
+          Correct. Equal pressure acting over four times the area gives four
+          times the force.
+        on_incorrect: |
+          Start from the fact that the pressure is identical on both faces, then
+          apply <latex>F = PA</latex> to each.
+
+# ── Notes for the next pass (delete once resolved) ────────────────────────────
+#
+# Figures: figure_folder/ does not exist yet. Create it beside this YAML and add
+#   q-1.png … q-4.png with those exact names — flat, no subfolders. Until then
+#   the questions render without figures (silently) and the Markdown export
+#   emits *[Figure: q-N.png]* placeholders.
+#
+# Isomorph design, for reference when extending the bank. Every variant holds
+#   the same target idea (pressure is uniform; pressure is not force) but changes
+#   something in the SOLUTION rather than just the nouns:
+#     q1  cylinder, top A vs side 2A      — compare PRESSURE          → equal
+#     q2  box, bottom A vs side 3A        — compare FORCE             → 3x
+#     q3  flask, bulb 5A vs neck A        — compare PRESSURE, and must
+#                                            reject flowing-fluid intuition
+#     q4  faces A and 4A, force F given   — COMPUTE the second force  → 4F
+#   Distractor sets are kept parallel so difficulty stays comparable.
