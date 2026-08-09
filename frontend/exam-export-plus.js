@@ -711,10 +711,15 @@ ${rows.join('\n')}
   }
 
   /**
-   * Build the full bundle as a JSZip Blob. Mirrors export_exam_bundle: for N
-   * versions, every exam+key .tex plus the referenced figures, laid out as
-   * Exams/, Keys/, Images/. \includegraphics uses the figure basename and the
-   * exam \graphicspath is set to ../Images/ so the paths resolve from Exams/.
+   * Build the full bundle as a JSZip Blob: for N versions, every exam+key as
+   * Markdown plus the referenced figures, laid out as Exams/, Keys/, Images/.
+   *
+   * Markdown rather than .tex because Google Docs is the destination — import
+   * each Exams/*.md, render with the Auto-LaTeX Equations add-on, then insert
+   * the Images/ files where the `*[Figure: name.png]*` placeholders sit (the
+   * Markdown export cannot embed them; Docs will not resolve a relative path).
+   * Single-file .tex export is still available separately via buildExamLatex /
+   * buildKeyLatex, which this no longer calls.
    * @returns {Promise<Blob>}
    */
   async function buildBundleZip(cart, versions, title, bankSource) {
@@ -749,15 +754,19 @@ ${rows.join('\n')}
     }
 
     const nv = Math.max(1, Number(versions) || 1);
+    let unbalanced = 0;
     for (let v = 1; v <= nv; v++) {
-      const examTex = buildExamLatex(cart, v, title, { graphicspathDirs: ['../Images/'] });
-      const keyTex = buildKeyLatex(cart, v, title);
-      examsDir.file(`exam_${versionLabel(v)}.tex`, examTex);
-      keysDir.file(`key_${versionLabel(v)}.tex`, keyTex);
+      const examMd = buildExamMarkdown(cart, v, title);
+      const keyMd = buildKeyMarkdown(cart, v, title);
+      if (!auditMathDelims(examMd).balanced) unbalanced += 1;
+      if (!auditMathDelims(keyMd).balanced) unbalanced += 1;
+      examsDir.file(`exam_${versionLabel(v)}.md`, examMd);
+      keysDir.file(`key_${versionLabel(v)}.md`, keyMd);
     }
 
     const blob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE' });
     blob.__imagesCopied = imagesCopied; // informational
+    blob.__unbalanced = unbalanced;     // files whose math delimiters do not pair
     return blob;
   }
 

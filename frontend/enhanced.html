@@ -969,7 +969,8 @@ function updateExportBtns() {
       vs.map(v=>`<button class="btn btn-xs" onclick="doMdPlus(${v},${attr('key')})">Key ${versionLabel(v)}</button>`).join('') +
       `<span style="font-family:var(--font-m);font-size:.74rem;color:var(--ink4);width:100%;margin-top:.15rem">Import to Google Docs, then run the <b>Auto-LaTeX Equations</b> add-on to render the <code>$…$</code> math. Turn on the add-on&#39;s single-<code>$</code> delimiter setting first. Figures are listed by filename, not embedded.</span>`) +
     row('Export Bundle (.zip)',
-      `<button class="btn btn-xs" onclick="doExportBundlePlus()">⬇ Export All (Exams + Keys + Images)</button>`) +
+      `<button class="btn btn-xs" onclick="doExportBundlePlus()">⬇ Export All (Exams + Keys + Images)</button>` +
+      `<span style="font-family:var(--font-m);font-size:.74rem;color:var(--ink4);width:100%;margin-top:.15rem">Every version as <code>.md</code> in Exams/ and Keys/, plus the figure files in Images/ to insert where the placeholders sit.</span>`) +
     row('Export single .tex',
       vs.map(v=>`<button class="btn btn-xs" onclick="doTexPlus(${v},${attr('exam')})">Exam ${versionLabel(v)}</button>`).join('') +
       vs.map(v=>`<button class="btn btn-xs" onclick="doTexPlus(${v},${attr('key')})">Key ${versionLabel(v)}</button>`).join('')) +
@@ -1138,7 +1139,10 @@ async function doExportBundlePlus() {
     const blob = await EstelaExamExportPlus.buildBundleZip(_cartBodyWithRefs(), versions, title, S.bankSource);
     dlBlob(blob, `${_safeName(title)}-exams.zip`);
     const imgs = blob.__imagesCopied || 0;
-    toast(`Bundle ready: ${versions} version${versions>1?'s':''} + ${imgs} image${imgs===1?'':'s'}`);
+    const bad = blob.__unbalanced || 0;
+    toast(bad
+      ? `⚠ Bundle ready (${versions} version${versions>1?'s':''} + ${imgs} image${imgs===1?'':'s'}), but ${bad} file${bad===1?' has':'s have'} unbalanced math delimiters — check for a stray $.`
+      : `Bundle ready: ${versions} version${versions>1?'s':''} + ${imgs} image${imgs===1?'':'s'}`);
   } catch(e) { toast('Bundle failed: ' + (e && e.message ? e.message : e)); }
 }
 
