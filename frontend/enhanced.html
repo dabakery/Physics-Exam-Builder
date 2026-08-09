@@ -964,8 +964,12 @@ function updateExportBtns() {
   // window.__TAURI__ gating. Bundle .zip via JSZip, .tex via Blob download,
   // .docx as a beta Word-openable .doc.
   const exportRows =
+    row('Export .md → Google Docs (recommended)',
+      vs.map(v=>`<button class="btn btn-xs btn-p" onclick="doMdPlus(${v},${attr('exam')})">Exam ${versionLabel(v)}</button>`).join('') +
+      vs.map(v=>`<button class="btn btn-xs" onclick="doMdPlus(${v},${attr('key')})">Key ${versionLabel(v)}</button>`).join('') +
+      `<span style="font-family:var(--font-m);font-size:.74rem;color:var(--ink4);width:100%;margin-top:.15rem">Import to Google Docs, then run the <b>Auto-LaTeX Equations</b> add-on to render the <code>$…$</code> math. Turn on the add-on&#39;s single-<code>$</code> setting. Figures are listed by filename, not embedded.</span>`) +
     row('Export Bundle (.zip)',
-      `<button class="btn btn-xs btn-p" onclick="doExportBundlePlus()">⬇ Export All (Exams + Keys + Images)</button>`) +
+      `<button class="btn btn-xs" onclick="doExportBundlePlus()">⬇ Export All (Exams + Keys + Images)</button>`) +
     row('Export single .tex',
       vs.map(v=>`<button class="btn btn-xs" onclick="doTexPlus(${v},${attr('exam')})">Exam ${versionLabel(v)}</button>`).join('') +
       vs.map(v=>`<button class="btn btn-xs" onclick="doTexPlus(${v},${attr('key')})">Key ${versionLabel(v)}</button>`).join('')) +
@@ -1102,6 +1106,22 @@ function doTexPlus(version, kind) {
       : EstelaExamExportPlus.buildExamLatex(cart, version, title);
     dlBlob(new Blob([src], {type:'application/x-tex;charset=utf-8'}), `${kind}_${versionLabel(version)}.tex`);
     toast(`Downloaded ${kind}_${versionLabel(version)}.tex`);
+  } catch(e) { toast('Export failed: ' + (e && e.message ? e.message : e)); }
+}
+
+// Markdown → Google Docs. Math stays as literal `$…$` so the Auto-LaTeX
+// Equations add-on can render it after import; units are folded into the math
+// by exam-export-plus.js so a value and its unit render as one equation.
+function doMdPlus(version, kind) {
+  try {
+    const cart = _cartBody();
+    const title = _titleVal();
+    const src = kind === 'key'
+      ? EstelaExamExportPlus.buildKeyMarkdown(cart, version, title)
+      : EstelaExamExportPlus.buildExamMarkdown(cart, version, title);
+    dlBlob(new Blob([src], {type:'text/markdown;charset=utf-8'}),
+           `${_safeName(title)}_${kind}_${versionLabel(version)}.md`);
+    toast(`Downloaded ${kind}_${versionLabel(version)}.md`);
   } catch(e) { toast('Export failed: ' + (e && e.message ? e.message : e)); }
 }
 
