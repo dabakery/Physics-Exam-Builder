@@ -967,7 +967,7 @@ function updateExportBtns() {
     row('Export .md → Google Docs (recommended)',
       vs.map(v=>`<button class="btn btn-xs btn-p" onclick="doMdPlus(${v},${attr('exam')})">Exam ${versionLabel(v)}</button>`).join('') +
       vs.map(v=>`<button class="btn btn-xs" onclick="doMdPlus(${v},${attr('key')})">Key ${versionLabel(v)}</button>`).join('') +
-      `<span style="font-family:var(--font-m);font-size:.74rem;color:var(--ink4);width:100%;margin-top:.15rem">Import to Google Docs, then run the <b>Auto-LaTeX Equations</b> add-on to render the <code>$$…$$</code> math — that is the add-on&#39;s default delimiter, so no settings change is needed. Figures are listed by filename, not embedded.</span>`) +
+      `<span style="font-family:var(--font-m);font-size:.74rem;color:var(--ink4);width:100%;margin-top:.15rem">Import to Google Docs, then run the <b>Auto-LaTeX Equations</b> add-on to render the <code>$…$</code> math. Turn on the add-on&#39;s single-<code>$</code> delimiter setting first. Figures are listed by filename, not embedded.</span>`) +
     row('Export Bundle (.zip)',
       `<button class="btn btn-xs" onclick="doExportBundlePlus()">⬇ Export All (Exams + Keys + Images)</button>`) +
     row('Export single .tex',
@@ -1119,9 +1119,14 @@ function doMdPlus(version, kind) {
     const src = kind === 'key'
       ? EstelaExamExportPlus.buildKeyMarkdown(cart, version, title)
       : EstelaExamExportPlus.buildExamMarkdown(cart, version, title);
+    // One stray delimiter makes the Auto-LaTeX add-on pair everything after it
+    // inside-out, so surface it here rather than shipping a broken file.
+    const audit = EstelaExamExportPlus.auditMathDelims(src);
     dlBlob(new Blob([src], {type:'text/markdown;charset=utf-8'}),
            `${_safeName(title)}_${kind}_${versionLabel(version)}.md`);
-    toast(`Downloaded ${kind}_${versionLabel(version)}.md`);
+    toast(audit.balanced
+      ? `Downloaded ${kind}_${versionLabel(version)}.md`
+      : `⚠ ${kind}_${versionLabel(version)}.md downloaded, but math delimiters are unbalanced (${audit.count}). Equations will render inside-out — check the source for a stray $.`);
   } catch(e) { toast('Export failed: ' + (e && e.message ? e.message : e)); }
 }
 

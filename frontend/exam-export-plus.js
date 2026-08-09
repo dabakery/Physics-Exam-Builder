@@ -478,15 +478,39 @@ ${rows.join('\n')}
   //
   // Google Docs' Markdown import has no math support, so the delimiters survive
   // as literal text — which is exactly what the Auto-LaTeX Equations add-on
-  // consumes. MD_DELIM is `$$`, the add-on's default; the add-on also has an
-  // advanced/beta setting for single `$`, and switching this constant to '$'
-  // targets that mode instead. Every math span — inline and display, exam and
-  // answer key — goes through MD_DELIM, so the two modes never mix. If you
-  // change it, also update the add-on hint in frontend/enhanced.html and step 5
-  // in docs/index.html, which name the setting explicitly.
+  // consumes.
+  //
+  // MD_DELIM is single `$`, which requires turning on the add-on's advanced
+  // delimiter setting. That is deliberate, not laziness about the `$$` default:
+  // several banks already contain author-written `$…$` math alongside the
+  // <latex> tags — e.g. `(which is $R/2$)` and `$\vec{L}$` in
+  // PHY1-ROT-RDTT-11262025 and PHY1-AM-AMPMA-11022025. In single-`$` mode those
+  // render for free; in `$$` mode they would land in the document as literal
+  // `$R/2$` text.
+  //
+  // The add-on pairs delimiters sequentially across the whole document, so ONE
+  // stray delimiter inverts everything after it — prose becomes math and math
+  // becomes literal text. auditMathDelims() below exists to catch that before
+  // it reaches Google Docs. Every math span (inline, display, exam, key) goes
+  // through MD_DELIM so the modes can never mix. If you change it, update the
+  // add-on hint in frontend/enhanced.html and step 5 in docs/index.html too.
   // ══════════════════════════════════════════════════════════════════════════
 
-  const MD_DELIM = '$$';
+  const MD_DELIM = '$';
+
+  /**
+   * Count math delimiters and report whether they pair up. An odd count means
+   * the Auto-LaTeX add-on will pair a closing delimiter with the next opening
+   * one and render the document inside-out, so callers should warn rather than
+   * hand the user a silently broken file.
+   */
+  function auditMathDelims(md) {
+    const s = String(md == null ? '' : md);
+    const count = MD_DELIM === '$$'
+      ? (s.match(/\$\$/g) || []).length
+      : (s.match(/(?<!\\)\$/g) || []).length;
+    return { count, balanced: count % 2 === 0 };
+  }
 
   // Unit tokens, longest-first so `mol`/`min`/`ms`/`mm` win over bare `m`.
   const UNIT_BASE =
@@ -1308,7 +1332,7 @@ ${bodyHtml}
     html2tex, latexEscapeText, tolStr, stripRoundInstruction, qToLatex,
     buildExamLatex, buildKeyLatex,
     // markdown (Google Docs + Auto-LaTeX Equations)
-    MD_DELIM, unitToLatex, latexToMathMd, mdText, qToMarkdown,
+    MD_DELIM, auditMathDelims, unitToLatex, latexToMathMd, mdText, qToMarkdown,
     buildExamMarkdown, buildKeyMarkdown,
     // bundle
     dataUrlToBytes, buildBundleZip,
