@@ -476,12 +476,14 @@ ${rows.join('\n')}
   // ══════════════════════════════════════════════════════════════════════════
   // A2) Markdown export — for Google Docs import + "Auto-LaTeX Equations"
   //
-  // Google Docs' Markdown import has no math support, so `$...$` survives as
-  // literal text — which is exactly what the Auto-LaTeX Equations add-on
-  // consumes. Delimiters are SINGLE `$` (the add-on's advanced/beta setting)
-  // for both inline and display math; `$$` is never emitted, since the add-on
-  // in single-`$` mode reads `$$x$$` as an empty equation followed by stray
-  // text. Change MD_DELIM if you switch the add-on back to `$$` mode.
+  // Google Docs' Markdown import has no math support, so the delimiters survive
+  // as literal text — which is exactly what the Auto-LaTeX Equations add-on
+  // consumes. MD_DELIM is `$$`, the add-on's default; the add-on also has an
+  // advanced/beta setting for single `$`, and switching this constant to '$'
+  // targets that mode instead. Every math span — inline and display, exam and
+  // answer key — goes through MD_DELIM, so the two modes never mix. If you
+  // change it, also update the add-on hint in frontend/enhanced.html and step 5
+  // in docs/index.html, which name the setting explicitly.
   // ══════════════════════════════════════════════════════════════════════════
 
   const MD_DELIM = '$$';
@@ -618,7 +620,7 @@ ${rows.join('\n')}
         if (qtype === 'numerical') {
           const ans = qdata.answer || {};
           const val = ans.value == null ? '?' : String(ans.value);
-          rows.push(`${qNum}. $${val}${tolStr(ans.tolerance || '', ans.margin_type || '')}$`);
+          rows.push(`${qNum}. ${MD_DELIM}${val}${tolStr(ans.tolerance || '', ans.margin_type || '')}${MD_DELIM}`);
         } else if (qtype === 'multiple_choice' || qtype === 'multiple_answers') {
           const ansVal = qdata.answers || [];
           const answerList = extractMcAnswers(ansVal);

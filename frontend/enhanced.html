@@ -967,7 +967,7 @@ function updateExportBtns() {
     row('Export .md → Google Docs (recommended)',
       vs.map(v=>`<button class="btn btn-xs btn-p" onclick="doMdPlus(${v},${attr('exam')})">Exam ${versionLabel(v)}</button>`).join('') +
       vs.map(v=>`<button class="btn btn-xs" onclick="doMdPlus(${v},${attr('key')})">Key ${versionLabel(v)}</button>`).join('') +
-      `<span style="font-family:var(--font-m);font-size:.74rem;color:var(--ink4);width:100%;margin-top:.15rem">Import to Google Docs, then run the <b>Auto-LaTeX Equations</b> add-on to render the <code>$…$</code> math. Turn on the add-on&#39;s single-<code>$</code> setting. Figures are listed by filename, not embedded.</span>`) +
+      `<span style="font-family:var(--font-m);font-size:.74rem;color:var(--ink4);width:100%;margin-top:.15rem">Import to Google Docs, then run the <b>Auto-LaTeX Equations</b> add-on to render the <code>$$…$$</code> math — that is the add-on&#39;s default delimiter, so no settings change is needed. Figures are listed by filename, not embedded.</span>`) +
     row('Export Bundle (.zip)',
       `<button class="btn btn-xs" onclick="doExportBundlePlus()">⬇ Export All (Exams + Keys + Images)</button>`) +
     row('Export single .tex',
