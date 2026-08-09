@@ -85,7 +85,10 @@ footer a:hover{color:var(--ink)}
   <a href="#" class="nav-logo">Physics <em>Exam</em> Builder</a>
   <div class="nav-links">
     <a href="standalone-enhanced.html">Problem Banks</a>
+    <!-- Desktop app hidden — the browser build is the supported path.
+         Restore this link (and the #download section + loadRelease() below) to bring it back.
     <a href="#download">Download</a>
+    -->
     <a href="#usage">Usage</a>
     <a href="https://github.com/dabakery/Physics-Exam-Builder" target="_blank">GitHub</a>
   </div>
@@ -93,18 +96,25 @@ footer a:hover{color:var(--ink)}
 
 <div class="hero">
   <h1>Build physics exams<br>from <em>isomorphic</em> problem banks</h1>
-  <p>Browse isomorphic problem banks, choose banks for exams, and export ready-to-print LaTeX or Word documents — multiple versions, shuffled choices, figures included.</p>
+  <p>Browse isomorphic problem banks, choose banks for exams, and export straight to Google Docs, LaTeX, or print — multiple versions, shuffled choices, figures included.</p>
   <div class="hero-btns">
     <div style="width:100%;display:flex;justify-content:center">
       <a href="standalone-enhanced.html" class="btn btn-primary">View Problems and Build Exams</a>
     </div>
-    <a href="#download" class="btn btn-alt">⬇ Download Desktop App</a>
+    <!-- <a href="#download" class="btn btn-alt">⬇ Download Desktop App</a> -->
     <a href="https://github.com/dabakery/Physics-Exam-Builder" class="btn btn-secondary" target="_blank">View on GitHub</a>
   </div>
   <p style="margin-top: 2rem; font-size: 0.82rem; color: var(--ink3); font-family: var(--font-m);">Adapted from the <a href="https://github.com/Zhongzhou/ESTELA-physics-problem-bank" target="_blank">ESTELA physics problem bank</a> by Zhongzhou Chen (UCF Department of Physics), used under CC BY-NC 4.0.</p>
 </div>
 
 <hr>
+
+<!-- ── Desktop app download — hidden, not deleted ───────────────────────────
+     The Tauri desktop build still exists in src-tauri/ and still releases via
+     .github/workflows/build.yml on v* tags. It is simply not advertised here:
+     the browser build does everything this workflow needs. To bring it back,
+     uncomment this section, the nav link, the hero button, and the
+     loadRelease() call at the bottom of this file.
 
 <div class="section" id="download">
   <div class="section-title">Download</div>
@@ -115,23 +125,24 @@ footer a:hover{color:var(--ink)}
 </div>
 
 <hr>
+-->
 
 <div class="section" id="usage">
   <div class="section-title">Getting started</div>
-  <div class="section-sub">From download to a ready-to-print exam in under a minute.</div>
+  <div class="section-sub">From problem bank to an editable Google Doc in under a minute — entirely in the browser.</div>
   <div class="steps">
     <div class="step">
       <div class="step-n">1</div>
       <div class="step-body">
-        <h3>Get the problem banks</h3>
-        <p>Clone the repository or use the built-in <b>Get Problem Banks</b> panel in the app sidebar to download individual courses directly.</p>
+        <h3>Open the builder</h3>
+        <p>Click <b>View Problems and Build Exams</b> above. The problem banks are already bundled into the page — nothing to install, download, or clone.</p>
       </div>
     </div>
     <div class="step">
       <div class="step-n">2</div>
       <div class="step-body">
-        <h3>Load a repository</h3>
-        <p>Enter the path to your local clone in the <b>Repository</b> field and click <b>Load</b>. All banks are scanned automatically.</p>
+        <h3>Load the banks</h3>
+        <p>Click <b>Use bundled banks</b> to browse everything shipped with the page. To pull banks live from GitHub instead, open <b>Get Problem Banks</b> in the sidebar.</p>
       </div>
     </div>
     <div class="step">
@@ -144,13 +155,14 @@ footer a:hover{color:var(--ink)}
     <div class="step">
       <div class="step-n">4</div>
       <div class="step-body">
-        <h3>Export</h3>
-        <p>Set the exam title and number of versions. Export options:</p>
+        <h3>Export to Google Docs</h3>
+        <p>Set the exam title and number of versions, then use <b>Export .md → Google Docs</b> for each exam and answer key. Export options:</p>
         <ul style="margin-top:.4rem;padding-left:1.2rem;font-size:.92rem;color:var(--ink3);line-height:1.9">
+          <li><b>.md</b> — <b>recommended.</b> Markdown for Google Docs, math preserved as <code>$…$</code></li>
           <li><b>Preview</b> — renders the exam in your browser with KaTeX math</li>
           <li><b>.tex</b> — LaTeX source for each exam and answer key version</li>
-          <li><b>Export Bundle</b> — all versions + keys + figures in one folder</li>
-          <li><b>.docx</b> — Word document (equations as unicode, figures embedded)</li>
+          <li><b>Export Bundle</b> — all versions + keys + figures in one .zip</li>
+          <li><b>.doc</b> — Word document, beta; math fidelity is limited</li>
         </ul>
       </div>
     </div>
