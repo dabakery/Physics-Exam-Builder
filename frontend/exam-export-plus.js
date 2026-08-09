@@ -511,41 +511,52 @@ ${rows.join('\n')}
       out += ch;
     }
     if (run) out += '^{' + run + '}';
-    return out.replace(/\s*·\s*/g, '\\cdot ').replace(/\s+/g, '');
+    // Collapse whitespace FIRST, then insert `\cdot ` — the trailing space is
+    // load-bearing: `\cdot` run into the next letter reads as `\cdotm`.
+    return out.replace(/\s+/g, '').replace(/·/g, '\\cdot ');
   }
 
   /**
-   * Pull a unit that trails a math span into that span, so the number and its
-   * unit render as one equation instead of "[equation] plain-text-unit".
+   * Inline `<latex>…</latex>`, plus any unit that immediately follows it and
+   * belongs inside the math:
    *
-   *   `$9.81$ m/s²`  →  `$9.81\,\mathrm{m/s^{2}}$`
+   *   `<latex>9.81</latex> m/s²`  →  `$9.81\,\mathrm{m/s^{2}}$`
    *
-   * The trailing `(?![A-Za-z])` guard is what keeps "5 m from the wall" and
-   * "in newtons" from being read as units.
+   * Matching the tag and the unit in ONE pattern is deliberate. An earlier
+   * version post-processed `$…$` spans *after* conversion, which let prose
+   * between two separate math spans be read as math: in
+   * `tension (<latex>T</latex>) and weight (<latex>W</latex>)` it paired the
+   * closing `$` of the first with the opening `$` of the second, matched
+   * `$) and weight ($` as the equation, and absorbed `W` as its unit.
+   * Anchoring on the tags makes that impossible — the lazy `[\s\S]*?` cannot
+   * cross a `</latex>`.
+   *
+   * The unit group is optional and guarded by `(?![A-Za-z])`, which is what
+   * keeps "in newtons", "is the", and "degrees" from being read as units while
+   * still absorbing the real "5 m from the wall".
    */
-  const TRAILING_UNIT_RE = new RegExp(
-    '\\$([^$\\n]+?)\\$([ \\t]*)(' + UNIT_EXPR + ')(?![A-Za-z])', 'g');
+  const INLINE_UNIT_RE = new RegExp(
+    '<latex>([\\s\\S]*?)<\\/latex>([ \\t]*)(' + UNIT_EXPR + ')?(?![A-Za-z])', 'g');
 
-  function wrapUnits(md) {
-    return String(md == null ? '' : md).replace(
-      TRAILING_UNIT_RE,
-      (m, math, gap, unit) => '$' + math.trim() + '\\,\\mathrm{' + unitToLatex(unit) + '}$');
-  }
-
-  /** `<latex>…</latex>` → `$…$` (single-delimiter, block and inline alike). */
+  /** `<latex>…</latex>` → `$…$`, absorbing adjacent units. */
   function latexToMathMd(text) {
     let t = String(text == null ? '' : text);
+    // Block math first — its own paragraph, units are not a factor.
     t = t.replace(/<latex>\s*\n([\s\S]*?)\n\s*<\/latex>/g,
       (m, inner) => '\n\n' + MD_DELIM + inner.trim().replace(/\s+/g, ' ') + MD_DELIM + '\n\n');
-    t = t.replace(/<latex>([\s\S]*?)<\/latex>/g,
-      (m, inner) => MD_DELIM + inner.trim() + MD_DELIM);
-    t = t.replace(/\*\*([\s\S]*?)\*\*/g, '**$1**');
+    t = t.replace(INLINE_UNIT_RE, (m, inner, gap, unit) => {
+      const math = inner.trim();
+      if (!math) return m;
+      return unit
+        ? MD_DELIM + math + '\\,\\mathrm{' + unitToLatex(unit) + '}' + MD_DELIM
+        : MD_DELIM + math + MD_DELIM;
+    });
     return t;
   }
 
-  /** Full text pipeline for one field: math delimiters, then unit absorption. */
+  /** Full text pipeline for one field. */
   function mdText(raw) {
-    return wrapUnits(latexToMathMd(raw)).replace(/[ \t]+\n/g, '\n').trim();
+    return latexToMathMd(raw).replace(/[ \t]+\n/g, '\n').trim();
   }
 
   /** One question as Markdown. Mirrors qToLatex's structure and shuffling. */
@@ -607,7 +618,7 @@ ${rows.join('\n')}
         if (qtype === 'numerical') {
           const ans = qdata.answer || {};
           const val = ans.value == null ? '?' : String(ans.value);
-          rows.push(`${qNum}. ${wrapUnits('$' + val + '$' + tolStr(ans.tolerance || '', ans.margin_type || ''))}`);
+          rows.push(`${qNum}. $${val}${tolStr(ans.tolerance || '', ans.margin_type || '')}$`);
         } else if (qtype === 'multiple_choice' || qtype === 'multiple_answers') {
           const ansVal = qdata.answers || [];
           const answerList = extractMcAnswers(ansVal);
@@ -1295,7 +1306,7 @@ ${bodyHtml}
     html2tex, latexEscapeText, tolStr, stripRoundInstruction, qToLatex,
     buildExamLatex, buildKeyLatex,
     // markdown (Google Docs + Auto-LaTeX Equations)
-    MD_DELIM, unitToLatex, wrapUnits, latexToMathMd, mdText, qToMarkdown,
+    MD_DELIM, unitToLatex, latexToMathMd, mdText, qToMarkdown,
     buildExamMarkdown, buildKeyMarkdown,
     // bundle
     dataUrlToBytes, buildBundleZip,
