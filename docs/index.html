@@ -166,6 +166,15 @@ footer a:hover{color:var(--ink)}
         </ul>
       </div>
     </div>
+    <div class="step">
+      <div class="step-n">5</div>
+      <div class="step-body">
+        <h3>Render the math in Google Docs</h3>
+        <p>In Google Drive, <b>File → Import</b> (or right-click → Open with → Google Docs) the <code>.md</code> file. The equations arrive as literal <code>$…$</code> text, because Google Docs&#39; Markdown import has no math support of its own.</p>
+        <p style="margin-top:.5rem">Install the <b>Auto-LaTeX Equations</b> add-on, open its sidebar, enable the single-<code>$</code> delimiter option under its advanced settings, and click <b>Render Equations</b>. Every <code>$…$</code> becomes a typeset equation, and the surrounding text stays fully editable.</p>
+        <p style="margin-top:.5rem;font-size:.88rem;color:var(--ink4)">Units are folded into the math automatically, so <code>9.81 m/s²</code> renders as one equation rather than an equation followed by loose text. Figures are referenced by filename — export the <b>Bundle (.zip)</b> to get the image files and insert them where marked.</p>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -272,7 +281,9 @@ async function loadRelease() {
   }
 }
 
-loadRelease();
+// Desktop-app release fetch — disabled along with the #download section above.
+// Re-enable together with that section (its DOM targets live there).
+// loadRelease();
 </script>
 </body>
 </html>
