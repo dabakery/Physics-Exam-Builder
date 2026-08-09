@@ -12,6 +12,19 @@
     return String(n);
   }
 
+  /**
+   * `6.6e-21` → `6.6 \\times 10^{-21}`. YAML parses an exponential literal as a
+   * number and `String(n)` gives JS `e` notation, which is meaningless in math
+   * mode. A string `value:` is passed through so an author can hand-write LaTeX.
+   */
+  function numToLatex(v) {
+    if (v == null) return '';
+    if (typeof v === 'string') return v;
+    const str = String(v);
+    const m = /^(-?\d*\.?\d+)e([+-]?\d+)$/i.exec(str);
+    return m ? `${m[1]} \\times 10^{${Number(m[2])}}` : str;
+  }
+
   function answersHaveLock(answers) {
     if (!Array.isArray(answers)) return false;
     return answers.some((a) => a?.answer?.lock === true);
@@ -89,16 +102,14 @@
         } else if (qtype === 'numerical') {
           if (includeAnswers) {
             const ans = qdata.answer || {};
-            let val = ans.value;
-            if (val != null && typeof val !== 'string') val = String(val);
-            val = val || '';
+            const val = numToLatex(ans.value);
             const tol = ans.tolerance || '';
             const mt = ans.margin_type || '';
             const ts = tol
               ? ` &plusmn; ${tol}${mt === 'percent' ? '%' : ''}`
               : '';
             if (val && val !== 'null') {
-              ansHtml = `<div class="ans-ok"><b>Answer:</b> ${val}${ts}</div>`;
+              ansHtml = `<div class="ans-ok"><b>Answer:</b> $${val}$${ts}</div>`;
             }
           } else {
             ansHtml = '<div class="ans-space"></div>';
@@ -202,6 +213,7 @@ ${partsHtml}
 
   global.EstelaExamExport = {
     versionLabel,
+    numToLatex,
     getQtype,
     latexToHtml,
     extractMcAnswers,

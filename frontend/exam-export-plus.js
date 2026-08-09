@@ -436,9 +436,7 @@ ${body}
         const qNum = rows.length + 1;
         if (qtype === 'numerical') {
           const ans = qdata.answer || {};
-          let val;
-          if (ans.value == null) val = '?';
-          else val = typeof ans.value === 'string' ? ans.value : String(ans.value);
+          const val = ans.value == null ? '?' : numToLatex(ans.value);
           const tol = ans.tolerance || '';
           const mt = ans.margin_type || '';
           rows.push(`  \\item $${val}${tolStr(tol, mt)}$`);
@@ -634,12 +632,13 @@ ${rows.join('\n')}
    * math mode. A string `value:` in the YAML is passed through untouched, so an
    * author can still hand-write the LaTeX.
    */
-  function numToLatex(v) {
+  const numToLatex = EX.numToLatex || function (v) {
+    if (v == null) return '';
     if (typeof v === 'string') return v;
     const str = String(v);
     const m = /^(-?\d*\.?\d+)e([+-]?\d+)$/i.exec(str);
     return m ? `${m[1]} \\times 10^{${Number(m[2])}}` : str;
-  }
+  };
 
   /** One question as Markdown. Mirrors qToLatex's structure and shuffling. */
   function qToMarkdown(q, num, version, figName) {
@@ -940,7 +939,7 @@ ${bodyHtml}
         let ans;
         if (qtype === 'numerical') {
           const a = qdata.answer || {};
-          let val = a.value == null ? '?' : (typeof a.value === 'string' ? a.value : String(a.value));
+          const val = a.value == null ? '?' : numToLatex(a.value);
           const tol = a.tolerance || '';
           const mt = a.margin_type || '';
           const ts = tol ? ` ± ${tol}${mt === 'percent' ? '%' : ''}` : '';
@@ -1013,13 +1012,13 @@ ${bodyHtml}
         }
       } else if (qtype === 'numerical') {
         const ans = qdata.answer || {};
-        let val = ans.value;
-        if (val != null && typeof val !== 'string') val = String(val);
-        val = val || '';
+        let val = ans.value == null ? '' : numToLatex(ans.value);
         const tol = ans.tolerance || '';
         const mt = ans.margin_type || '';
         const ts = tol ? ` ± ${tol}${mt === 'percent' ? '%' : ''}` : '';
-        if (val && val !== 'null') answers.push({ label: 'Answer', text: `${val}${ts}`, correct: true });
+        // Wrapped in $…$ so KaTeX renders the exponent; the preview panel runs
+        // renderMathInElement over this text.
+        if (val && val !== 'null') answers.push({ label: 'Answer', text: `$${val}$${ts}`, correct: true });
       } else if (qtype === 'true_false') {
         answers.push({ label: 'Answer', text: qdata.answer ? 'True' : 'False', correct: true });
       }
