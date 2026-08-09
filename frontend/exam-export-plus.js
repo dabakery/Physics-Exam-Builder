@@ -527,19 +527,51 @@ ${rows.join('\n')}
     '⁺': '+', '⁻': '-',
   };
 
-  /** `m/s²` → `m/s^{2}` so it is valid inside math mode. */
-  function unitToLatex(u) {
-    let out = '';
-    let run = '';
-    for (const ch of String(u)) {
-      if (SUP_MAP[ch] != null) { run += SUP_MAP[ch]; continue; }
-      if (run) { out += '^{' + run + '}'; run = ''; }
-      out += ch;
+  /**
+   * Google Docs' Markdown import applies CommonMark backslash-escaping, which
+   * silently eats the backslash before any ASCII punctuation: `\,` arrives as a
+   * bare comma, `\%` as `%` (which then starts a LaTeX comment), `\\` as `\`.
+   * The banks are full of these — 173 `\,`, 157 `\!`, 42 each of `\(` and `\)`,
+   * 237 `\\`. Doubling the backslash means the importer's unescape leaves
+   * exactly one behind, so the add-on receives the LaTeX that was intended.
+   */
+  const MD_ESCAPABLE_RE = /\\([!-\/:-@\[-`{-~])/g;
+  function mdEscapeLatex(s) {
+    return String(s == null ? '' : s).replace(MD_ESCAPABLE_RE, '\\\\$1');
+  }
+
+  /** One unit term (`s²`, `kg`, `s^2`) → `\mathrm{s}^{2}`. */
+  function unitTermToLatex(t) {
+    let base = '', exp = '';
+    for (const ch of String(t)) {
+      if (SUP_MAP[ch] != null) exp += SUP_MAP[ch];
+      else base += ch;
     }
-    if (run) out += '^{' + run + '}';
-    // Collapse whitespace FIRST, then insert `\cdot ` — the trailing space is
-    // load-bearing: `\cdot` run into the next letter reads as `\cdotm`.
-    return out.replace(/\s+/g, '').replace(/·/g, '\\cdot ');
+    const caret = /^([^^]+)\^\{?(-?\d+)\}?$/.exec(base);
+    if (caret) return '\\mathrm{' + caret[1] + '}^{' + caret[2] + '}';
+    return exp ? '\\mathrm{' + base + '}^{' + exp + '}'
+               : '\\mathrm{' + base + '}';
+  }
+
+  /**
+   * `N·m²/kg²` → `\mathrm{N}\cdot\mathrm{m}^{2}/\mathrm{kg}^{2}`.
+   *
+   * Each unit gets its own `\mathrm{}` and the operators sit OUTSIDE it. An
+   * earlier version wrapped the whole expression — `\mathrm{N\cdot m^{2}}` —
+   * but `\cdot` is a math-mode command and `\mathrm{}` is text mode, so the
+   * add-on's renderer failed on it and emitted stray `\(` `\)` artifacts.
+   */
+  function unitToLatex(u) {
+    return String(u == null ? '' : u)
+      .replace(/\s+/g, '')
+      .split(/([·*\/])/)
+      .filter((piece) => piece !== '')
+      .map((piece) => {
+        if (piece === '·' || piece === '*') return '\\cdot ';
+        if (piece === '/') return '/';
+        return unitTermToLatex(piece);
+      })
+      .join('');
   }
 
   /**
@@ -569,13 +601,12 @@ ${rows.join('\n')}
     let t = String(text == null ? '' : text);
     // Block math first — its own paragraph, units are not a factor.
     t = t.replace(/<latex>\s*\n([\s\S]*?)\n\s*<\/latex>/g,
-      (m, inner) => '\n\n' + MD_DELIM + inner.trim().replace(/\s+/g, ' ') + MD_DELIM + '\n\n');
+      (m, inner) => '\n\n' + MD_DELIM + mdEscapeLatex(inner.trim().replace(/\s+/g, ' ')) + MD_DELIM + '\n\n');
     t = t.replace(INLINE_UNIT_RE, (m, inner, gap, unit) => {
       const math = inner.trim();
       if (!math) return m;
-      return unit
-        ? MD_DELIM + math + '\\,\\mathrm{' + unitToLatex(unit) + '}' + MD_DELIM
-        : MD_DELIM + math + MD_DELIM;
+      const withUnit = unit ? math + '\\ ' + unitToLatex(unit) : math;
+      return MD_DELIM + mdEscapeLatex(withUnit) + MD_DELIM;
     });
     return t;
   }
@@ -644,7 +675,7 @@ ${rows.join('\n')}
         if (qtype === 'numerical') {
           const ans = qdata.answer || {};
           const val = ans.value == null ? '?' : String(ans.value);
-          rows.push(`${qNum}. ${MD_DELIM}${val}${tolStr(ans.tolerance || '', ans.margin_type || '')}${MD_DELIM}`);
+          rows.push(`${qNum}. ${MD_DELIM}${mdEscapeLatex(val + tolStr(ans.tolerance || '', ans.margin_type || ''))}${MD_DELIM}`);
         } else if (qtype === 'multiple_choice' || qtype === 'multiple_answers') {
           const ansVal = qdata.answers || [];
           const answerList = extractMcAnswers(ansVal);
@@ -1332,7 +1363,8 @@ ${bodyHtml}
     html2tex, latexEscapeText, tolStr, stripRoundInstruction, qToLatex,
     buildExamLatex, buildKeyLatex,
     // markdown (Google Docs + Auto-LaTeX Equations)
-    MD_DELIM, auditMathDelims, unitToLatex, latexToMathMd, mdText, qToMarkdown,
+    MD_DELIM, auditMathDelims, mdEscapeLatex, unitTermToLatex, unitToLatex,
+    latexToMathMd, mdText, qToMarkdown,
     buildExamMarkdown, buildKeyMarkdown,
     // bundle
     dataUrlToBytes, buildBundleZip,
