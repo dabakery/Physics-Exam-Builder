@@ -35,7 +35,9 @@ The bank folder, the `.yaml` inside it, and `bank_info.bank_id` all use this sam
 
 ## Adding a bank
 
-1. `mkdir "<N_Unit Name>/APP2-<UNIT>-<ABBREV>-<MMDDYY>"`
+1. `mkdir -p "<N_Unit Name>/<CB subtopic>/APP2-<UNIT>-<ABBREV>-<MMDDYY>"` — the subtopic
+   folder is what the site's third filter shows, e.g. `9.1_Kinetic Theory of Temperature and Pressure`.
+   See `Topics.csv` for the College Board subtopic list for each unit.
 2. Copy `../Templates/Problem-bank-template.yaml` into it, rename to match the folder.
 3. Fill in `bank_info` (title, bank_id, learning objectives, authors, generation prompts).
 4. Write questions per `../Templates/YAML_problem_types.md`. Math uses `<latex>...</latex>`.

@@ -90,6 +90,19 @@ Beyond the YAML schema in [`Templates/`](./Templates/), these rules come from ho
 banks are actually rendered and exported. Breaking them mostly fails *silently* — the file
 downloads fine and the damage only shows up in Google Docs.
 
+**Bank folders may sit one level deeper for a subtopic.** The sidebar filters
+Course → Chapter → Topic, and that third level comes from the folder layout:
+
+```
+AP Physics 2/8_Thermodynamics/9.1_Kinetic Theory.../APP2-THM-KTTP-080926/…yaml   ← filterable
+PHY I Mechanics/3_Forces/PHY1-F-OFKF-030625/…yaml                                ← flat, still fine
+```
+
+The level is optional. A bank directly under the chapter folder simply reports no subtopic
+and renders exactly as before, so `PHY I Mechanics/` is left flat on purpose — it is upstream
+content and extra folders there would conflict on every upstream merge. The Topic dropdown
+hides itself when the selected chapter has no subtopics.
+
 **`status:` gates visibility.** Only `ready` and `deployed` are parsed by the builder;
 `draft` and `deprecated` are skipped entirely. New banks start as `draft` and stay invisible
 until you flip them. Folders named `Old`, `Archive`, `Drafts`, `Figure Creation`, etc. are

@@ -1198,7 +1198,12 @@ ${bodyHtml}
             (z) => z.startsWith(bankDirPath) && z.toLowerCase().endsWith('.zip')
               && !z.slice(bankDirPath.length).includes('/')
           );
-          banks.push({ path: p, meta, bankRef });
+          // Same optional subtopic level the bundle/directory sources record.
+          const relFromTopic = p.slice(`${course}/${topic}/`.length).split('/');
+          banks.push({
+            path: p, meta, bankRef,
+            subtopic: BS.subtopicOf ? BS.subtopicOf(relFromTopic) : (relFromTopic.length >= 3 ? relFromTopic[0] : ''),
+          });
         }
         if (banks.length) {
           if (!result[course]) result[course] = {};

@@ -309,7 +309,10 @@ body.nav-open #nav-overlay{display:block;}
         <select id="fc" class="sel" onchange="onFilterChange()">
           <option value="">All courses</option>
         </select>
-        <select id="ft" class="sel" style="display:none" onchange="renderBanks()">
+        <select id="ft" class="sel" style="display:none" onchange="onTopicChange()">
+          <option value="">All chapters</option>
+        </select>
+        <select id="fs" class="sel" style="display:none" onchange="renderBanks()">
           <option value="">All topics</option>
         </select>
         <div id="type-filter" style="margin-top:.4rem;display:flex;flex-wrap:wrap;gap:.22rem"></div>
@@ -649,12 +652,37 @@ function onFilterChange() {
   const ft = document.getElementById('ft');
   if (course && S.repo[course]) {
     ft.style.display = 'block';
-    ft.innerHTML = '<option value="">All topics</option>';
+    ft.innerHTML = '<option value="">All chapters</option>';
     Object.keys(S.repo[course]).forEach(t => {
       const o = document.createElement('option'); o.value = t; o.textContent = t; ft.appendChild(o);
     });
   } else {
     ft.style.display = 'none';
+  }
+  onTopicChange();
+}
+
+// Third filter level. `subtopic` is optional — banks that sit directly under a
+// chapter folder report '' and are grouped under "(no topic)". The select stays
+// hidden unless the chosen chapter actually has subtopics, so flat courses like
+// PHY I Mechanics look exactly as they did before.
+function onTopicChange() {
+  const course = document.getElementById('fc').value;
+  const topic = document.getElementById('ft').value;
+  const fs = document.getElementById('fs');
+  const subs = new Set();
+  if (course && topic && S.repo[course] && S.repo[course][topic]) {
+    for (const b of S.repo[course][topic]) if (b.subtopic) subs.add(b.subtopic);
+  }
+  if (subs.size) {
+    fs.style.display = 'block';
+    fs.innerHTML = '<option value="">All topics</option>';
+    [...subs].sort().forEach(t => {
+      const o = document.createElement('option'); o.value = t; o.textContent = t; fs.appendChild(o);
+    });
+  } else {
+    fs.style.display = 'none';
+    fs.value = '';
   }
   renderBanks();
 }
@@ -674,6 +702,7 @@ function bcls(t) {
 function renderBanks() {
   const fc = document.getElementById('fc').value;
   const ft = document.getElementById('ft').value;
+  const fs = document.getElementById('fs').value;
   const q = S.search.toLowerCase();
   let html = statsHTML();
 
@@ -681,24 +710,39 @@ function renderBanks() {
     if (fc && course !== fc) continue;
     for (const [topic, banks] of Object.entries(topics)) {
       if (ft && topic !== ft) continue;
-      const textFiltered = q ? banks.filter(b => {
+      const subFiltered = fs ? banks.filter(b => (b.subtopic || '') === fs) : banks;
+      const textFiltered = q ? subFiltered.filter(b => {
         const m = b.meta;
         return (m.title||'').toLowerCase().includes(q) ||
                (m.bank_id||'').toLowerCase().includes(q) ||
                (m.description||'').toLowerCase().includes(q) ||
                topic.toLowerCase().includes(q) ||
+               (b.subtopic||'').toLowerCase().includes(q) ||
                (m.lo||[]).some(l => String(l).toLowerCase().includes(q));
-      }) : banks;
+      }) : subFiltered;
       const filtered = S.typeFilter.size === 0 ? textFiltered
         : textFiltered.filter(b => Object.keys(b.meta.q_types||{}).some(t => S.typeFilter.has(t)));
       if (!filtered.length) continue;
-      html += `<div class="topic-rule">
-        <span class="tr-c">${course}</span>
-        <span class="tr-t">${topic}</span>
-        <span class="tr-l"></span>
-        <span class="tr-n">${filtered.length} bank${filtered.length!==1?'s':''}</span>
-      </div>`;
-      html += filtered.map(b => bankCardHTML(b, topic)).join('');
+
+      // Group by the optional third level. Banks with no subtopic keep the old
+      // flat presentation — one rule for the chapter, then the cards.
+      const groups = new Map();
+      for (const b of filtered) {
+        const key = b.subtopic || '';
+        if (!groups.has(key)) groups.set(key, []);
+        groups.get(key).push(b);
+      }
+      const keys = [...groups.keys()].sort((a, b) => (a === '' ? -1 : b === '' ? 1 : a.localeCompare(b)));
+      for (const key of keys) {
+        const group = groups.get(key);
+        html += `<div class="topic-rule">
+          <span class="tr-c">${course}</span>
+          <span class="tr-t">${topic}${key ? ` <span style="opacity:.55">›</span> ${key}` : ''}</span>
+          <span class="tr-l"></span>
+          <span class="tr-n">${group.length} bank${group.length!==1?'s':''}</span>
+        </div>`;
+        html += group.map(b => bankCardHTML(b, topic)).join('');
+      }
     }
   }
 

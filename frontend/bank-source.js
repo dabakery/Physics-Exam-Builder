@@ -99,6 +99,23 @@
     return Array.isArray(data?.questions);
   }
 
+  /**
+   * Optional third classification level: `<Course>/<Unit>/<Subtopic>/<BANK>/x.yaml`.
+   *
+   * `relParts` is the path from the unit folder down to (and including) the YAML
+   * file. A bank sitting directly under the unit — `[BANK, x.yaml]` — has no
+   * subtopic and returns ''. One extra folder — `[Subtopic, BANK, x.yaml]` —
+   * yields that folder as the subtopic. Deeper nesting takes the first segment.
+   *
+   * The level is optional on purpose: `PHY I Mechanics/` is upstream content and
+   * adding folders there would conflict on every upstream merge, so it stays
+   * flat and simply reports no subtopic.
+   */
+  function subtopicOf(relParts) {
+    const parts = Array.isArray(relParts) ? relParts.filter(Boolean) : [];
+    return parts.length >= 3 ? parts[0] : '';
+  }
+
   function bankMeta(data) {
     const info = data?.bank_info || {};
     const qs = Array.isArray(data?.questions) ? data.questions : [];
@@ -528,7 +545,7 @@
         const zipFiles = files.filter((f) => f.name.toLowerCase().endsWith('.zip'));
         bankRef.handle.qtiZipFiles = zipFiles;
         bankRef.meta.has_qti = zipFiles.length > 0;
-        banks.push({ path: displayPath, meta: bankRef.meta, bankRef });
+        banks.push({ path: displayPath, meta: bankRef.meta, bankRef, subtopic: subtopicOf(relFromTopic) });
       }
 
       for (const { name, handle } of subdirs.reverse()) {
@@ -710,7 +727,7 @@
           && !z.slice(bankDir.length).includes('/')
       );
       const bankRef = makeRef(p, meta, bankDir);
-      banks.push({ path: p, meta, bankRef });
+      banks.push({ path: p, meta, bankRef, subtopic: subtopicOf(relFromTopic) });
     }
     banks.sort((a, b) => a.path.localeCompare(b.path));
     return banks;
@@ -1128,6 +1145,7 @@
   }
 
   global.EstelaBankSource = {
+    subtopicOf,
     SKIP_DIRS,
     SKIP_COURSES,
     getQtype,
