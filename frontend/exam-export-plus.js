@@ -484,7 +484,7 @@ ${rows.join('\n')}
   // text. Change MD_DELIM if you switch the add-on back to `$$` mode.
   // ══════════════════════════════════════════════════════════════════════════
 
-  const MD_DELIM = '$';
+  const MD_DELIM = '$$';
 
   // Unit tokens, longest-first so `mol`/`min`/`ms`/`mm` win over bare `m`.
   const UNIT_BASE =
