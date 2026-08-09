@@ -611,9 +611,34 @@ ${rows.join('\n')}
     return t;
   }
 
-  /** Full text pipeline for one field. */
+  /**
+   * Full text pipeline for one field.
+   *
+   * YAML block scalars (`text: |`) preserve the author's hard line wrapping, so
+   * a question arrives with newlines mid-sentence. Left alone, a wrapped answer
+   * choice splits across lines and breaks the `A.` / `B.` list apart on import.
+   * Single newlines collapse to spaces; blank lines survive, which is what keeps
+   * paragraph breaks and block math on their own lines.
+   */
   function mdText(raw) {
-    return latexToMathMd(raw).replace(/[ \t]+\n/g, '\n').trim();
+    return latexToMathMd(raw)
+      .replace(/[ \t]+\n/g, '\n')
+      .replace(/([^\n])\n(?!\n)/g, '$1 ')
+      .replace(/[ \t]{2,}/g, ' ')
+      .trim();
+  }
+
+  /**
+   * `6.6e-21` → `6.6 \times 10^{-21}`. YAML parses an exponential literal as a
+   * number, and `String(n)` gives JS `e` notation, which renders verbatim in
+   * math mode. A string `value:` in the YAML is passed through untouched, so an
+   * author can still hand-write the LaTeX.
+   */
+  function numToLatex(v) {
+    if (typeof v === 'string') return v;
+    const str = String(v);
+    const m = /^(-?\d*\.?\d+)e([+-]?\d+)$/i.exec(str);
+    return m ? `${m[1]} \\times 10^{${Number(m[2])}}` : str;
   }
 
   /** One question as Markdown. Mirrors qToLatex's structure and shuffling. */
@@ -674,7 +699,7 @@ ${rows.join('\n')}
         const qNum = rows.length + 1;
         if (qtype === 'numerical') {
           const ans = qdata.answer || {};
-          const val = ans.value == null ? '?' : String(ans.value);
+          const val = ans.value == null ? '?' : numToLatex(ans.value);
           rows.push(`${qNum}. ${MD_DELIM}${mdEscapeLatex(val + tolStr(ans.tolerance || '', ans.margin_type || ''))}${MD_DELIM}`);
         } else if (qtype === 'multiple_choice' || qtype === 'multiple_answers') {
           const ansVal = qdata.answers || [];
@@ -1373,7 +1398,7 @@ ${bodyHtml}
     buildExamLatex, buildKeyLatex,
     // markdown (Google Docs + Auto-LaTeX Equations)
     MD_DELIM, auditMathDelims, mdEscapeLatex, unitTermToLatex, unitToLatex,
-    latexToMathMd, mdText, qToMarkdown,
+    latexToMathMd, mdText, numToLatex, qToMarkdown,
     buildExamMarkdown, buildKeyMarkdown,
     // bundle
     dataUrlToBytes, buildBundleZip,
