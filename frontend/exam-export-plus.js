@@ -474,6 +474,159 @@ ${rows.join('\n')}
   }
 
   // ══════════════════════════════════════════════════════════════════════════
+  // A2) Markdown export — for Google Docs import + "Auto-LaTeX Equations"
+  //
+  // Google Docs' Markdown import has no math support, so `$...$` survives as
+  // literal text — which is exactly what the Auto-LaTeX Equations add-on
+  // consumes. Delimiters are SINGLE `$` (the add-on's advanced/beta setting)
+  // for both inline and display math; `$$` is never emitted, since the add-on
+  // in single-`$` mode reads `$$x$$` as an empty equation followed by stray
+  // text. Change MD_DELIM if you switch the add-on back to `$$` mode.
+  // ══════════════════════════════════════════════════════════════════════════
+
+  const MD_DELIM = '$';
+
+  // Unit tokens, longest-first so `mol`/`min`/`ms`/`mm` win over bare `m`.
+  const UNIT_BASE =
+    '(?:kg|mol|rad|min|Hz|Pa|km|cm|mm|nm|ms|°C|°F|Ω|[NJWAVCKTLmsg°])';
+  // Exponent: unicode superscripts (m/s²) or caret form (m/s^2, m/s^{-1}).
+  const UNIT_SUP = '(?:[\\u00b2\\u00b3\\u00b9\\u2070\\u2074-\\u2079\\u207a\\u207b]+|\\^-?\\d+|\\^\\{-?\\d+\\})?';
+  const UNIT_TERM = UNIT_BASE + UNIT_SUP;
+  // Compound units: N·m, kg·m/s, N·m²/kg²
+  const UNIT_EXPR = UNIT_TERM + '(?:\\s*[·*/]\\s*' + UNIT_TERM + ')*';
+
+  const SUP_MAP = {
+    '²': '2', '³': '3', '¹': '1', '⁰': '0', '⁴': '4',
+    '⁵': '5', '⁶': '6', '⁷': '7', '⁸': '8', '⁹': '9',
+    '⁺': '+', '⁻': '-',
+  };
+
+  /** `m/s²` → `m/s^{2}` so it is valid inside math mode. */
+  function unitToLatex(u) {
+    let out = '';
+    let run = '';
+    for (const ch of String(u)) {
+      if (SUP_MAP[ch] != null) { run += SUP_MAP[ch]; continue; }
+      if (run) { out += '^{' + run + '}'; run = ''; }
+      out += ch;
+    }
+    if (run) out += '^{' + run + '}';
+    return out.replace(/\s*·\s*/g, '\\cdot ').replace(/\s+/g, '');
+  }
+
+  /**
+   * Pull a unit that trails a math span into that span, so the number and its
+   * unit render as one equation instead of "[equation] plain-text-unit".
+   *
+   *   `$9.81$ m/s²`  →  `$9.81\,\mathrm{m/s^{2}}$`
+   *
+   * The trailing `(?![A-Za-z])` guard is what keeps "5 m from the wall" and
+   * "in newtons" from being read as units.
+   */
+  const TRAILING_UNIT_RE = new RegExp(
+    '\\$([^$\\n]+?)\\$([ \\t]*)(' + UNIT_EXPR + ')(?![A-Za-z])', 'g');
+
+  function wrapUnits(md) {
+    return String(md == null ? '' : md).replace(
+      TRAILING_UNIT_RE,
+      (m, math, gap, unit) => '$' + math.trim() + '\\,\\mathrm{' + unitToLatex(unit) + '}$');
+  }
+
+  /** `<latex>…</latex>` → `$…$` (single-delimiter, block and inline alike). */
+  function latexToMathMd(text) {
+    let t = String(text == null ? '' : text);
+    t = t.replace(/<latex>\s*\n([\s\S]*?)\n\s*<\/latex>/g,
+      (m, inner) => '\n\n' + MD_DELIM + inner.trim().replace(/\s+/g, ' ') + MD_DELIM + '\n\n');
+    t = t.replace(/<latex>([\s\S]*?)<\/latex>/g,
+      (m, inner) => MD_DELIM + inner.trim() + MD_DELIM);
+    t = t.replace(/\*\*([\s\S]*?)\*\*/g, '**$1**');
+    return t;
+  }
+
+  /** Full text pipeline for one field: math delimiters, then unit absorption. */
+  function mdText(raw) {
+    return wrapUnits(latexToMathMd(raw)).replace(/[ \t]+\n/g, '\n').trim();
+  }
+
+  /** One question as Markdown. Mirrors qToLatex's structure and shuffling. */
+  function qToMarkdown(q, num, version, figName) {
+    const qtype = getQtype(q);
+    const qdata = q[qtype] || {};
+    let body = mdText(qdata.text || '');
+    if (qtype === 'numerical') body = stripRoundInstruction(body);
+
+    const out = [`**${num}.** ${body}`, ''];
+    if (figName) out.push(`*[Figure: ${figName}]*`, '');
+
+    if (qtype === 'numerical') {
+      out.push('_Show your work below._', '');
+    } else if (qtype === 'multiple_choice' || qtype === 'multiple_answers') {
+      const answersVal = qdata.answers || [];
+      const answerList = extractMcAnswers(answersVal);
+      if (!answersHaveLock(answersVal)) seededShuffle(answerList, seedFor(version, num));
+      answerList.forEach(([, atxt], j) => {
+        out.push(`${String.fromCharCode(65 + j)}. ${mdText(atxt)}`);
+      });
+      out.push('');
+    } else if (qtype === 'true_false') {
+      out.push('A. True', 'B. False', '');
+    }
+    return out.join('\n');
+  }
+
+  const MD_CREDIT =
+    'Physics Exam Builder · adapted from ESTELA (UCF) · CC BY-NC 4.0';
+
+  /** Full exam as Markdown, ready for Google Docs import. */
+  function buildExamMarkdown(cart, version, title) {
+    const picked = [];
+    for (const item of (Array.isArray(cart) ? cart : [])) {
+      for (const q of pickItemQuestions(item, version)) picked.push(q);
+    }
+    const body = picked.map((q, idx) => {
+      const qtype = getQtype(q);
+      const qdata = q[qtype] || {};
+      const figName = qdata.figure ? basename(qdata.figure) : null;
+      return qToMarkdown(q, idx + 1, version, figName);
+    }).join('\n');
+
+    return `# ${title} — Version ${versionLabel(version)}\n\n`
+      + `${MD_CREDIT}\n\n`
+      + `Name: ______________________________   Score: ________\n\n`
+      + `---\n\n${body}`;
+  }
+
+  /** Answer key as Markdown. Same answer/shuffle logic as buildKeyLatex. */
+  function buildKeyMarkdown(cart, version, title) {
+    const rows = [];
+    for (const item of (Array.isArray(cart) ? cart : [])) {
+      for (const q of pickItemQuestions(item, version)) {
+        const qtype = getQtype(q);
+        const qdata = q[qtype] || {};
+        const qNum = rows.length + 1;
+        if (qtype === 'numerical') {
+          const ans = qdata.answer || {};
+          const val = ans.value == null ? '?' : String(ans.value);
+          rows.push(`${qNum}. ${wrapUnits('$' + val + '$' + tolStr(ans.tolerance || '', ans.margin_type || ''))}`);
+        } else if (qtype === 'multiple_choice' || qtype === 'multiple_answers') {
+          const ansVal = qdata.answers || [];
+          const answerList = extractMcAnswers(ansVal);
+          if (!answersHaveLock(ansVal)) seededShuffle(answerList, seedFor(version, qNum));
+          const letters = [];
+          answerList.forEach(([, , correct], j) => { if (correct) letters.push(String.fromCharCode(65 + j)); });
+          rows.push(`${qNum}. ${letters.length ? letters.join(', ') : '?'}`);
+        } else if (qtype === 'true_false') {
+          rows.push(`${qNum}. ${qdata.answer ? 'True' : 'False'}`);
+        } else {
+          rows.push(`${qNum}. [See rubric]`);
+        }
+      }
+    }
+    return `# ${title} — Answer Key — Version ${versionLabel(version)}\n\n`
+      + `${MD_CREDIT}\n\n---\n\n${rows.join('\n')}\n`;
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════
   // B) Bundle export — Exams/ Keys/ Images/ in one .zip (port of export_exam_bundle)
   // ══════════════════════════════════════════════════════════════════════════
 
@@ -1141,6 +1294,9 @@ ${bodyHtml}
     // LaTeX
     html2tex, latexEscapeText, tolStr, stripRoundInstruction, qToLatex,
     buildExamLatex, buildKeyLatex,
+    // markdown (Google Docs + Auto-LaTeX Equations)
+    MD_DELIM, unitToLatex, wrapUnits, latexToMathMd, mdText, qToMarkdown,
+    buildExamMarkdown, buildKeyMarkdown,
     // bundle
     dataUrlToBytes, buildBundleZip,
     // docx (beta)
