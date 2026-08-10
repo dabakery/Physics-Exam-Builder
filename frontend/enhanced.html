@@ -268,6 +268,8 @@ body.nav-open #nav-overlay{display:block;}
     </div>
     <div id="sb-scroll">
 
+  <!-- Hidden for now: remote (GitHub) bank fetch. Also commented out in frontend/index.html.
+
       <div class="sb-sec">
         <span class="sb-lbl" style="cursor:pointer;user-select:none;display:flex;align-items:center;justify-content:space-between" onclick="toggleDlPanel()">
           Get Problem Banks <span id="dl-chev" style="font-size:.8rem;transition:transform .17s">›</span>
@@ -299,6 +301,8 @@ body.nav-open #nav-overlay{display:block;}
           </div>
         </div>
       </div>
+
+    -->
 
       <div class="sb-sec" id="repo-sec">
         <span class="sb-lbl" id="repo-lbl">Repository</span>
@@ -463,7 +467,7 @@ function indexRepoRefs(data) {
     tuckAwaySourceSection();
     const hint = document.getElementById('empty-hint');
     if (hint) {
-      hint.innerHTML = 'Bundled problem banks load automatically. Browse, add to cart, and preview or export exams — no folder picker needed. Use <b>Get Problem Banks</b> to pull the latest from GitHub.';
+      hint.innerHTML = 'Bundled problem banks load automatically. Browse, add to cart, and preview or export exams.';
     }
     loadRepo().catch(e => toast('Error: ' + e));
     return;
@@ -475,7 +479,7 @@ function indexRepoRefs(data) {
   document.getElementById('btn-choose-folder').style.display = 'inline-flex';
   const hint = document.getElementById('empty-hint');
   if (hint) {
-    hint.innerHTML = 'Click <b>Choose folder</b> to open a local problem-bank clone, or expand <b>Get Problem Banks</b> to pull banks straight from GitHub in your browser.';
+    hint.innerHTML = 'Click <b>Choose folder</b> to open a local problem-bank clone.';
   }
 })();
 
