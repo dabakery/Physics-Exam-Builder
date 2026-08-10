@@ -127,11 +127,15 @@ body:not(.tauri) #shell{height:100vh;}
 .ep-btns{display:flex;flex-wrap:wrap;gap:.28rem;}
 
 /* ── Topic rule ── */
-.topic-rule{display:flex;align-items:center;gap:.6rem;margin:1.7rem 0 .6rem;}
-.tr-c{font-family:var(--font-d);font-size:1.1rem;color:var(--ink);white-space:nowrap;}
-.tr-t{font-family:var(--font-m);font-size:.92rem;color:var(--ink3);letter-spacing:.04em;white-space:nowrap;}
-.tr-l{flex:1;height:1px;background:var(--border);}
-.tr-n{font-family:var(--font-m);font-size:.9rem;color:var(--ink4);white-space:nowrap;}
+/* The topic title is the only long text here, so it is the only item allowed to
+   wrap — the short course/count labels stay whole. Without min-width:0 the
+   title's min-content width would keep the row wider than #content and scroll
+   the page sideways on narrow screens. */
+.topic-rule{display:flex;align-items:center;gap:.6rem;margin:1.7rem 0 .6rem;flex-wrap:wrap;}
+.tr-c{font-family:var(--font-d);font-size:1.1rem;color:var(--ink);white-space:nowrap;flex-shrink:0;}
+.tr-t{font-family:var(--font-m);font-size:.92rem;color:var(--ink3);letter-spacing:.04em;flex:0 1 auto;min-width:0;overflow-wrap:anywhere;}
+.tr-l{flex:1 1 1.5rem;min-width:0;height:1px;background:var(--border);}
+.tr-n{font-family:var(--font-m);font-size:.9rem;color:var(--ink4);white-space:nowrap;flex-shrink:0;margin-left:auto;}
 
 /* ── Bank card ── */
 .bank-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:.85rem 1rem .85rem 1.2rem;margin-bottom:.3rem;box-shadow:var(--sh);position:relative;transition:box-shadow .15s,transform .12s;}
