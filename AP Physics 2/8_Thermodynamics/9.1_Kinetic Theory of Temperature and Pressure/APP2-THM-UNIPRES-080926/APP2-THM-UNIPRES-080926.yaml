@@ -46,22 +46,22 @@ questions:
     points: 1
     text: |
       A closed cylindrical container is filled with a monatomic ideal gas at
-      room temperature. The area of the circular top surface of the container
-      is <latex>A</latex> and the area of the cylindrical side of the container
-      is <latex>2A</latex>, as indicated in the figure. Which of the following
+      room temperature. The radius of the circular top surface of the container
+      is <latex>r</latex> and the height of the cylindrical side of the container
+      is <latex>2r</latex>, as indicated in the figure. Which of the following
       statements about the pressure exerted by the gas on the top and side of
       the container is correct?
     figure: figure_folder/q-1.png # not yet created — see "Figures" note below
     answers:
+    - answer:
+        text: The gas exerts a greater pressure on the top than on the side.
+        correct: false
     - answer:
         text: The gas exerts zero pressure on the top and side.
         correct: false
     - answer:
         text: The gas exerts the same nonzero pressure on the top and the side.
         correct: true
-    - answer:
-        text: The gas exerts a greater pressure on the top than on the side.
-        correct: false
     - answer:
         text: The gas exerts a greater pressure on the side than on the top.
         correct: false
@@ -70,14 +70,14 @@ questions:
           The pressure of an ideal gas in equilibrium is the same throughout the
           gas, so the pressure at the container walls is the same everywhere.
           Pressure is force per unit area, so the larger side surface does
-          experience a larger total force — but the pressure, the force per unit
-          area, is identical on both surfaces.
+          experience a larger total force, but the pressure (the force per unit
+          area) is identical on both surfaces.
         on_correct: |
           Correct. The pressure of an ideal gas is the same throughout the gas,
           so the pressure at the container walls is the same everywhere.
         on_incorrect: |
           Careful to distinguish pressure from force. The side has twice the
-          area, so it experiences twice the total force — but the same pressure.
+          area, so it experiences twice the total force, but the same pressure.
 
 - multiple_choice:
     id: q2
