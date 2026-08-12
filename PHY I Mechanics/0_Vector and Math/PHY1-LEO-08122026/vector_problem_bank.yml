@@ -1,0 +1,547 @@
+bank_info:
+    title: Vector Addition and Subtraction with Three Vectors.
+    bank_id: PHY1-VECGEN-20260811T203554Z
+    description: |-
+      The problem bank asks students to calculate the vector operation of three vectors, given their magnitude and direction. One of those vectors has an angle defined with respect to the y-axis. There are three distractors each problem: Direct addition of magnitude with two randomly chosen angles, and ignoring the angle with the y-axis (swapped components of one of the vectors.)
+    date_created: 2026-08-11
+
+questions:
+  - multiple_choice:
+      id: q1
+      title: Resultant Vector from Mixed-Axis Angles 1
+      points: 1
+      text: |
+        You are given three vectors:
+        <ul>
+        <li>Vector <latex>\vec{A}</latex> has a magnitude of 8.0 units at <b><latex>36^\circ</latex> from the positive y-axis</b>.</li>
+        <li>Vector <latex>\vec{B}</latex> has a magnitude of 11.0 units at <b><latex>-108^\circ</latex> from the negative x-axis</b>.</li>
+        <li>Vector <latex>\vec{C}</latex> has a magnitude of 18.0 units at <b><latex>59^\circ</latex> from the negative y-axis</b>.</li>
+        </ul>
+        Calculate the resultant vector <latex>\vec{R}</latex> from the operation <latex>\vec{R} = \vec{C} - \vec{B} - \vec{A}</latex>. Choose the option that has the correct magnitude and angle.
+      figure: figures/q-1.png
+      answers:
+        - answer:
+            text: 'Magnitude = 31.1 units, Angle = <latex>302.6^\circ</latex>'
+            correct: true
+        - answer:
+            text: 'Magnitude = 1.0 units, Angle = <latex>268.2^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 16.0 units, Angle = <latex>91.6^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 1.0 units, Angle = <latex>36.4^\circ</latex>'
+            correct: false
+
+  - multiple_choice:
+      id: q2
+      title: Resultant Vector from Mixed-Axis Angles 2
+      points: 1
+      text: |
+        You are given three vectors:
+        <ul>
+        <li>Vector <latex>\vec{A}</latex> has a magnitude of 10.0 units at <b><latex>-168^\circ</latex> from the positive y-axis</b>.</li>
+        <li>Vector <latex>\vec{B}</latex> has a magnitude of 18.0 units at <b><latex>-123^\circ</latex> from the negative x-axis</b>.</li>
+        <li>Vector <latex>\vec{C}</latex> has a magnitude of 14.0 units at <b><latex>-124^\circ</latex> from the positive x-axis</b>.</li>
+        </ul>
+        Calculate the resultant vector <latex>\vec{R}</latex> from the operation <latex>\vec{R} = \vec{C} + \vec{B} + \vec{A}</latex>. Choose the option that has the correct magnitude and angle.
+      figure: figures/q-2.png
+      answers:
+        - answer:
+            text: 'Magnitude = 7.5 units, Angle = <latex>302.8^\circ</latex>'
+            correct: true
+        - answer:
+            text: 'Magnitude = 42.0 units, Angle = <latex>185.4^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 14.9 units, Angle = <latex>229.1^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 42.0 units, Angle = <latex>108.4^\circ</latex>'
+            correct: false
+
+  - multiple_choice:
+      id: q3
+      title: Resultant Vector from Mixed-Axis Angles 3
+      points: 1
+      text: |
+        You are given three vectors:
+        <ul>
+        <li>Vector <latex>\vec{A}</latex> has a magnitude of 15.0 units at <b><latex>-5^\circ</latex> from the positive y-axis</b>.</li>
+        <li>Vector <latex>\vec{B}</latex> has a magnitude of 16.0 units at <b><latex>-169^\circ</latex> from the negative x-axis</b>.</li>
+        <li>Vector <latex>\vec{C}</latex> has a magnitude of 9.0 units at <b><latex>144^\circ</latex> from the positive y-axis</b>.</li>
+        </ul>
+        Calculate the resultant vector <latex>\vec{R}</latex> from the operation <latex>\vec{R} = \vec{C} + \vec{A} + \vec{B}</latex>. Choose the option that has the correct magnitude and angle.
+      figure: figures/q-3.png
+      answers:
+        - answer:
+            text: 'Magnitude = 15.9 units, Angle = <latex>42.4^\circ</latex>'
+            correct: true
+        - answer:
+            text: 'Magnitude = 40.0 units, Angle = <latex>261.6^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 25.5 units, Angle = <latex>353.4^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 25.5 units, Angle = <latex>239.3^\circ</latex>'
+            correct: false
+
+  - multiple_choice:
+      id: q4
+      title: Resultant Vector from Mixed-Axis Angles 4
+      points: 1
+      text: |
+        You are given three vectors:
+        <ul>
+        <li>Vector <latex>\vec{A}</latex> has a magnitude of 16.0 units at <b><latex>86^\circ</latex> from the positive y-axis</b>.</li>
+        <li>Vector <latex>\vec{B}</latex> has a magnitude of 19.0 units at <b><latex>88^\circ</latex> from the negative x-axis</b>.</li>
+        <li>Vector <latex>\vec{C}</latex> has a magnitude of 13.0 units at <b><latex>159^\circ</latex> from the negative x-axis</b>.</li>
+        </ul>
+        Calculate the resultant vector <latex>\vec{R}</latex> from the operation <latex>\vec{R} = \vec{C} + \vec{B} + \vec{A}</latex>. Choose the option that has the correct magnitude and angle.
+      figure: figures/q-4.png
+      answers:
+        - answer:
+            text: 'Magnitude = 23.0 units, Angle = <latex>258.7^\circ</latex>'
+            correct: true
+        - answer:
+            text: 'Magnitude = 48.0 units, Angle = <latex>99.9^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 41.6 units, Angle = <latex>287.6^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 41.6 units, Angle = <latex>197.8^\circ</latex>'
+            correct: false
+
+  - multiple_choice:
+      id: q5
+      title: Resultant Vector from Mixed-Axis Angles 5
+      points: 1
+      text: |
+        You are given three vectors:
+        <ul>
+        <li>Vector <latex>\vec{A}</latex> has a magnitude of 14.0 units at <b><latex>119^\circ</latex> from the positive y-axis</b>.</li>
+        <li>Vector <latex>\vec{B}</latex> has a magnitude of 14.0 units at <b><latex>-168^\circ</latex> from the negative x-axis</b>.</li>
+        <li>Vector <latex>\vec{C}</latex> has a magnitude of 20.0 units at <b><latex>79^\circ</latex> from the negative x-axis</b>.</li>
+        </ul>
+        Calculate the resultant vector <latex>\vec{R}</latex> from the operation <latex>\vec{R} = \vec{A} - \vec{B} - \vec{C}</latex>. Choose the option that has the correct magnitude and angle.
+      figure: figures/q-5.png
+      answers:
+        - answer:
+            text: 'Magnitude = 24.3 units, Angle = <latex>155.8^\circ</latex>'
+            correct: true
+        - answer:
+            text: 'Magnitude = 20.0 units, Angle = <latex>206.3^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 11.4 units, Angle = <latex>184.3^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 11.4 units, Angle = <latex>37.1^\circ</latex>'
+            correct: false
+
+  - multiple_choice:
+      id: q6
+      title: Resultant Vector from Mixed-Axis Angles 6
+      points: 1
+      text: |
+        You are given three vectors:
+        <ul>
+        <li>Vector <latex>\vec{A}</latex> has a magnitude of 9.0 units at <b><latex>84^\circ</latex> from the positive y-axis</b>.</li>
+        <li>Vector <latex>\vec{B}</latex> has a magnitude of 11.0 units at <b><latex>32^\circ</latex> from the negative x-axis</b>.</li>
+        <li>Vector <latex>\vec{C}</latex> has a magnitude of 13.0 units at <b><latex>-51^\circ</latex> from the positive y-axis</b>.</li>
+        </ul>
+        Calculate the resultant vector <latex>\vec{R}</latex> from the operation <latex>\vec{R} = \vec{A} - \vec{C} + \vec{B}</latex>. Choose the option that has the correct magnitude and angle.
+      figure: figures/q-6.png
+      answers:
+        - answer:
+            text: 'Magnitude = 31.2 units, Angle = <latex>204.7^\circ</latex>'
+            correct: true
+        - answer:
+            text: 'Magnitude = 7.0 units, Angle = <latex>61.4^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 29.5 units, Angle = <latex>231.2^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 7.0 units, Angle = <latex>344.5^\circ</latex>'
+            correct: false
+
+  - multiple_choice:
+      id: q7
+      title: Resultant Vector from Mixed-Axis Angles 7
+      points: 1
+      text: |
+        You are given three vectors:
+        <ul>
+        <li>Vector <latex>\vec{A}</latex> has a magnitude of 17.0 units at <b><latex>-112^\circ</latex> from the positive x-axis</b>.</li>
+        <li>Vector <latex>\vec{B}</latex> has a magnitude of 10.0 units at <b><latex>-66^\circ</latex> from the negative y-axis</b>.</li>
+        <li>Vector <latex>\vec{C}</latex> has a magnitude of 20.0 units at <b><latex>-59^\circ</latex> from the positive y-axis</b>.</li>
+        </ul>
+        Calculate the resultant vector <latex>\vec{R}</latex> from the operation <latex>\vec{R} = \vec{A} + \vec{B} + \vec{C}</latex>. Choose the option that has the correct magnitude and angle.
+      figure: figures/q-7.png
+      answers:
+        - answer:
+            text: 'Magnitude = 9.7 units, Angle = <latex>279.8^\circ</latex>'
+            correct: true
+        - answer:
+            text: 'Magnitude = 47.0 units, Angle = <latex>81.2^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 16.1 units, Angle = <latex>143.1^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 47.0 units, Angle = <latex>118.0^\circ</latex>'
+            correct: false
+
+  - multiple_choice:
+      id: q8
+      title: Resultant Vector from Mixed-Axis Angles 8
+      points: 1
+      text: |
+        You are given three vectors:
+        <ul>
+        <li>Vector <latex>\vec{A}</latex> has a magnitude of 16.0 units at <b><latex>37^\circ</latex> from the positive y-axis</b>.</li>
+        <li>Vector <latex>\vec{B}</latex> has a magnitude of 9.0 units at <b><latex>21^\circ</latex> from the negative x-axis</b>.</li>
+        <li>Vector <latex>\vec{C}</latex> has a magnitude of 20.0 units at <b><latex>174^\circ</latex> from the negative y-axis</b>.</li>
+        </ul>
+        Calculate the resultant vector <latex>\vec{R}</latex> from the operation <latex>\vec{R} = \vec{A} + \vec{C} + \vec{B}</latex>. Choose the option that has the correct magnitude and angle.
+      figure: figures/q-8.png
+      answers:
+        - answer:
+            text: 'Magnitude = 33.5 units, Angle = <latex>118.4^\circ</latex>'
+            correct: true
+        - answer:
+            text: 'Magnitude = 45.0 units, Angle = <latex>166.0^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 11.8 units, Angle = <latex>80.9^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 11.8 units, Angle = <latex>352.4^\circ</latex>'
+            correct: false
+
+  - multiple_choice:
+      id: q9
+      title: Resultant Vector from Mixed-Axis Angles 9
+      points: 1
+      text: |
+        You are given three vectors:
+        <ul>
+        <li>Vector <latex>\vec{A}</latex> has a magnitude of 18.0 units at <b><latex>-170^\circ</latex> from the positive y-axis</b>.</li>
+        <li>Vector <latex>\vec{B}</latex> has a magnitude of 8.0 units at <b><latex>161^\circ</latex> from the negative x-axis</b>.</li>
+        <li>Vector <latex>\vec{C}</latex> has a magnitude of 8.0 units at <b><latex>-17^\circ</latex> from the negative x-axis</b>.</li>
+        </ul>
+        Calculate the resultant vector <latex>\vec{R}</latex> from the operation <latex>\vec{R} = \vec{A} + \vec{B} + \vec{C}</latex>. Choose the option that has the correct magnitude and angle.
+      figure: figures/q-9.png
+      answers:
+        - answer:
+            text: 'Magnitude = 18.2 units, Angle = <latex>279.6^\circ</latex>'
+            correct: true
+        - answer:
+            text: 'Magnitude = 34.0 units, Angle = <latex>101.3^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 18.0 units, Angle = <latex>170.9^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 18.0 units, Angle = <latex>244.1^\circ</latex>'
+            correct: false
+
+  - multiple_choice:
+      id: q10
+      title: Resultant Vector from Mixed-Axis Angles 10
+      points: 1
+      text: |
+        You are given three vectors:
+        <ul>
+        <li>Vector <latex>\vec{A}</latex> has a magnitude of 9.0 units at <b><latex>140^\circ</latex> from the positive x-axis</b>.</li>
+        <li>Vector <latex>\vec{B}</latex> has a magnitude of 8.0 units at <b><latex>177^\circ</latex> from the negative y-axis</b>.</li>
+        <li>Vector <latex>\vec{C}</latex> has a magnitude of 9.0 units at <b><latex>77^\circ</latex> from the negative y-axis</b>.</li>
+        </ul>
+        Calculate the resultant vector <latex>\vec{R}</latex> from the operation <latex>\vec{R} = \vec{C} - \vec{A} + \vec{B}</latex>. Choose the option that has the correct magnitude and angle.
+      figure: figures/q-10.png
+      answers:
+        - answer:
+            text: 'Magnitude = 16.1 units, Angle = <latex>0.6^\circ</latex>'
+            correct: true
+        - answer:
+            text: 'Magnitude = 8.0 units, Angle = <latex>22.2^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 24.8 units, Angle = <latex>83.9^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 8.0 units, Angle = <latex>135.2^\circ</latex>'
+            correct: false
+
+  - multiple_choice:
+      id: q11
+      title: Resultant Vector from Mixed-Axis Angles 11
+      points: 1
+      text: |
+        You are given three vectors:
+        <ul>
+        <li>Vector <latex>\vec{A}</latex> has a magnitude of 14.0 units at <b><latex>171^\circ</latex> from the positive x-axis</b>.</li>
+        <li>Vector <latex>\vec{B}</latex> has a magnitude of 12.0 units at <b><latex>36^\circ</latex> from the negative y-axis</b>.</li>
+        <li>Vector <latex>\vec{C}</latex> has a magnitude of 20.0 units at <b><latex>-157^\circ</latex> from the negative x-axis</b>.</li>
+        </ul>
+        Calculate the resultant vector <latex>\vec{R}</latex> from the operation <latex>\vec{R} = \vec{A} - \vec{B} - \vec{C}</latex>. Choose the option that has the correct magnitude and angle.
+      figure: figures/q-11.png
+      answers:
+        - answer:
+            text: 'Magnitude = 39.5 units, Angle = <latex>174.1^\circ</latex>'
+            correct: true
+        - answer:
+            text: 'Magnitude = 18.0 units, Angle = <latex>278.2^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 26.2 units, Angle = <latex>207.1^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 26.2 units, Angle = <latex>278.9^\circ</latex>'
+            correct: false
+
+  - multiple_choice:
+      id: q12
+      title: Resultant Vector from Mixed-Axis Angles 12
+      points: 1
+      text: |
+        You are given three vectors:
+        <ul>
+        <li>Vector <latex>\vec{A}</latex> has a magnitude of 20.0 units at <b><latex>159^\circ</latex> from the positive y-axis</b>.</li>
+        <li>Vector <latex>\vec{B}</latex> has a magnitude of 18.0 units at <b><latex>-10^\circ</latex> from the negative x-axis</b>.</li>
+        <li>Vector <latex>\vec{C}</latex> has a magnitude of 20.0 units at <b><latex>-34^\circ</latex> from the positive y-axis</b>.</li>
+        </ul>
+        Calculate the resultant vector <latex>\vec{R}</latex> from the operation <latex>\vec{R} = \vec{B} + \vec{A} + \vec{C}</latex>. Choose the option that has the correct magnitude and angle.
+      figure: figures/q-12.png
+      answers:
+        - answer:
+            text: 'Magnitude = 13.7 units, Angle = <latex>175.7^\circ</latex>'
+            correct: true
+        - answer:
+            text: 'Magnitude = 58.0 units, Angle = <latex>319.6^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 28.2 units, Angle = <latex>153.6^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 58.0 units, Angle = <latex>343.6^\circ</latex>'
+            correct: false
+
+  - multiple_choice:
+      id: q13
+      title: Resultant Vector from Mixed-Axis Angles 13
+      points: 1
+      text: |
+        You are given three vectors:
+        <ul>
+        <li>Vector <latex>\vec{A}</latex> has a magnitude of 15.0 units at <b><latex>142^\circ</latex> from the positive x-axis</b>.</li>
+        <li>Vector <latex>\vec{B}</latex> has a magnitude of 8.0 units at <b><latex>98^\circ</latex> from the negative y-axis</b>.</li>
+        <li>Vector <latex>\vec{C}</latex> has a magnitude of 8.0 units at <b><latex>-41^\circ</latex> from the positive y-axis</b>.</li>
+        </ul>
+        Calculate the resultant vector <latex>\vec{R}</latex> from the operation <latex>\vec{R} = \vec{B} + \vec{C} - \vec{A}</latex>. Choose the option that has the correct magnitude and angle.
+      figure: figures/q-13.png
+      answers:
+        - answer:
+            text: 'Magnitude = 25.1 units, Angle = <latex>355.2^\circ</latex>'
+            correct: true
+        - answer:
+            text: 'Magnitude = 1.0 units, Angle = <latex>258.5^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 25.9 units, Angle = <latex>39.1^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 1.0 units, Angle = <latex>55.7^\circ</latex>'
+            correct: false
+
+  - multiple_choice:
+      id: q14
+      title: Resultant Vector from Mixed-Axis Angles 14
+      points: 1
+      text: |
+        You are given three vectors:
+        <ul>
+        <li>Vector <latex>\vec{A}</latex> has a magnitude of 20.0 units at <b><latex>-6^\circ</latex> from the positive y-axis</b>.</li>
+        <li>Vector <latex>\vec{B}</latex> has a magnitude of 12.0 units at <b><latex>133^\circ</latex> from the negative x-axis</b>.</li>
+        <li>Vector <latex>\vec{C}</latex> has a magnitude of 10.0 units at <b><latex>73^\circ</latex> from the positive y-axis</b>.</li>
+        </ul>
+        Calculate the resultant vector <latex>\vec{R}</latex> from the operation <latex>\vec{R} = \vec{A} + \vec{B} + \vec{C}</latex>. Choose the option that has the correct magnitude and angle.
+      figure: figures/q-14.png
+      answers:
+        - answer:
+            text: 'Magnitude = 14.1 units, Angle = <latex>87.1^\circ</latex>'
+            correct: true
+        - answer:
+            text: 'Magnitude = 42.0 units, Angle = <latex>24.0^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 13.3 units, Angle = <latex>6.7^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 42.0 units, Angle = <latex>195.4^\circ</latex>'
+            correct: false
+
+  - multiple_choice:
+      id: q15
+      title: Resultant Vector from Mixed-Axis Angles 15
+      points: 1
+      text: |
+        You are given three vectors:
+        <ul>
+        <li>Vector <latex>\vec{A}</latex> has a magnitude of 11.0 units at <b><latex>-48^\circ</latex> from the positive y-axis</b>.</li>
+        <li>Vector <latex>\vec{B}</latex> has a magnitude of 14.0 units at <b><latex>73^\circ</latex> from the negative x-axis</b>.</li>
+        <li>Vector <latex>\vec{C}</latex> has a magnitude of 15.0 units at <b><latex>-50^\circ</latex> from the positive x-axis</b>.</li>
+        </ul>
+        Calculate the resultant vector <latex>\vec{R}</latex> from the operation <latex>\vec{R} = \vec{A} - \vec{B} - \vec{C}</latex>. Choose the option that has the correct magnitude and angle.
+      figure: figures/q-15.png
+      answers:
+        - answer:
+            text: 'Magnitude = 32.3 units, Angle = <latex>85.3^\circ</latex>'
+            correct: true
+        - answer:
+            text: 'Magnitude = 18.0 units, Angle = <latex>186.2^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 25.9 units, Angle = <latex>62.5^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 18.0 units, Angle = <latex>241.5^\circ</latex>'
+            correct: false
+
+  - multiple_choice:
+      id: q16
+      title: Resultant Vector from Mixed-Axis Angles 16
+      points: 1
+      text: |
+        You are given three vectors:
+        <ul>
+        <li>Vector <latex>\vec{A}</latex> has a magnitude of 14.0 units at <b><latex>119^\circ</latex> from the positive y-axis</b>.</li>
+        <li>Vector <latex>\vec{B}</latex> has a magnitude of 19.0 units at <b><latex>101^\circ</latex> from the negative x-axis</b>.</li>
+        <li>Vector <latex>\vec{C}</latex> has a magnitude of 18.0 units at <b><latex>39^\circ</latex> from the positive y-axis</b>.</li>
+        </ul>
+        Calculate the resultant vector <latex>\vec{R}</latex> from the operation <latex>\vec{R} = \vec{A} - \vec{C} + \vec{B}</latex>. Choose the option that has the correct magnitude and angle.
+      figure: figures/q-16.png
+      answers:
+        - answer:
+            text: 'Magnitude = 39.5 units, Angle = <latex>273.9^\circ</latex>'
+            correct: true
+        - answer:
+            text: 'Magnitude = 15.0 units, Angle = <latex>108.1^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 45.6 units, Angle = <latex>340.2^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 45.6 units, Angle = <latex>67.1^\circ</latex>'
+            correct: false
+
+  - multiple_choice:
+      id: q17
+      title: Resultant Vector from Mixed-Axis Angles 17
+      points: 1
+      text: |
+        You are given three vectors:
+        <ul>
+        <li>Vector <latex>\vec{A}</latex> has a magnitude of 9.0 units at <b><latex>-35^\circ</latex> from the positive y-axis</b>.</li>
+        <li>Vector <latex>\vec{B}</latex> has a magnitude of 12.0 units at <b><latex>-12^\circ</latex> from the negative x-axis</b>.</li>
+        <li>Vector <latex>\vec{C}</latex> has a magnitude of 13.0 units at <b><latex>57^\circ</latex> from the negative y-axis</b>.</li>
+        </ul>
+        Calculate the resultant vector <latex>\vec{R}</latex> from the operation <latex>\vec{R} = \vec{A} - \vec{B} + \vec{C}</latex>. Choose the option that has the correct magnitude and angle.
+      figure: figures/q-17.png
+      answers:
+        - answer:
+            text: 'Magnitude = 27.9 units, Angle = <latex>355.5^\circ</latex>'
+            correct: true
+        - answer:
+            text: 'Magnitude = 10.0 units, Angle = <latex>258.6^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 30.3 units, Angle = <latex>271.8^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 30.3 units, Angle = <latex>169.4^\circ</latex>'
+            correct: false
+
+  - multiple_choice:
+      id: q18
+      title: Resultant Vector from Mixed-Axis Angles 18
+      points: 1
+      text: |
+        You are given three vectors:
+        <ul>
+        <li>Vector <latex>\vec{A}</latex> has a magnitude of 16.0 units at <b><latex>23^\circ</latex> from the positive y-axis</b>.</li>
+        <li>Vector <latex>\vec{B}</latex> has a magnitude of 13.0 units at <b><latex>158^\circ</latex> from the negative x-axis</b>.</li>
+        <li>Vector <latex>\vec{C}</latex> has a magnitude of 19.0 units at <b><latex>-128^\circ</latex> from the negative x-axis</b>.</li>
+        </ul>
+        Calculate the resultant vector <latex>\vec{R}</latex> from the operation <latex>\vec{R} = \vec{A} - \vec{C} - \vec{B}</latex>. Choose the option that has the correct magnitude and angle.
+      figure: figures/q-18.png
+      answers:
+        - answer:
+            text: 'Magnitude = 30.4 units, Angle = <latex>171.2^\circ</latex>'
+            correct: true
+        - answer:
+            text: 'Magnitude = 16.0 units, Angle = <latex>20.3^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 18.7 units, Angle = <latex>241.1^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 18.7 units, Angle = <latex>150.4^\circ</latex>'
+            correct: false
+
+  - multiple_choice:
+      id: q19
+      title: Resultant Vector from Mixed-Axis Angles 19
+      points: 1
+      text: |
+        You are given three vectors:
+        <ul>
+        <li>Vector <latex>\vec{A}</latex> has a magnitude of 12.0 units at <b><latex>48^\circ</latex> from the positive y-axis</b>.</li>
+        <li>Vector <latex>\vec{B}</latex> has a magnitude of 10.0 units at <b><latex>127^\circ</latex> from the negative x-axis</b>.</li>
+        <li>Vector <latex>\vec{C}</latex> has a magnitude of 10.0 units at <b><latex>95^\circ</latex> from the positive x-axis</b>.</li>
+        </ul>
+        Calculate the resultant vector <latex>\vec{R}</latex> from the operation <latex>\vec{R} = \vec{A} - \vec{C} - \vec{B}</latex>. Choose the option that has the correct magnitude and angle.
+      figure: figures/q-19.png
+      answers:
+        - answer:
+            text: 'Magnitude = 15.3 units, Angle = <latex>156.7^\circ</latex>'
+            correct: true
+        - answer:
+            text: 'Magnitude = 8.0 units, Angle = <latex>338.9^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 11.3 units, Angle = <latex>284.8^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 8.0 units, Angle = <latex>291.1^\circ</latex>'
+            correct: false
+
+  - multiple_choice:
+      id: q20
+      title: Resultant Vector from Mixed-Axis Angles 20
+      points: 1
+      text: |
+        You are given three vectors:
+        <ul>
+        <li>Vector <latex>\vec{A}</latex> has a magnitude of 18.0 units at <b><latex>136^\circ</latex> from the positive y-axis</b>.</li>
+        <li>Vector <latex>\vec{B}</latex> has a magnitude of 17.0 units at <b><latex>-175^\circ</latex> from the negative x-axis</b>.</li>
+        <li>Vector <latex>\vec{C}</latex> has a magnitude of 9.0 units at <b><latex>-161^\circ</latex> from the negative y-axis</b>.</li>
+        </ul>
+        Calculate the resultant vector <latex>\vec{R}</latex> from the operation <latex>\vec{R} = \vec{B} - \vec{C} + \vec{A}</latex>. Choose the option that has the correct magnitude and angle.
+      figure: figures/q-20.png
+      answers:
+        - answer:
+            text: 'Magnitude = 21.3 units, Angle = <latex>290.2^\circ</latex>'
+            correct: true
+        - answer:
+            text: 'Magnitude = 26.0 units, Angle = <latex>218.2^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 20.7 units, Angle = <latex>50.2^\circ</latex>'
+            correct: false
+        - answer:
+            text: 'Magnitude = 20.7 units, Angle = <latex>194.8^\circ</latex>'
+            correct: false
