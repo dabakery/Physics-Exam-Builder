@@ -428,6 +428,7 @@ body.nav-open #nav-overlay{display:block;}
 <script src="bank-source.js"></script>
 <script src="exam-export.js"></script>
 <script src="exam-export-plus.js"></script>
+<script src="exam-quiz.js"></script>
 
 <script>
 // ── Tauri window controls ───────────────────────────────────────────────────
@@ -1049,6 +1050,9 @@ function updateExportBtns() {
   el.innerHTML =
     row('Preview Exam', vs.map(v=>`<button class="btn btn-xs" onclick="doPreview(${v},false)">👁 ${versionLabel(v)}</button>`).join('')) +
     row('Preview Key',  vs.map(v=>`<button class="btn btn-xs" onclick="doPreview(${v},true)">👁 ${versionLabel(v)}</button>`).join('')) +
+    row('Take Quiz (on-site)',
+      vs.map(v=>`<button class="btn btn-xs" onclick="doQuiz(${v})">▶ ${versionLabel(v)}</button>`).join('') +
+      `<span style="font-family:var(--font-m);font-size:.74rem;color:var(--ink4);width:100%;margin-top:.15rem">Take an interactive quiz and get instant feedback.</span>`) +
     exportRows;
 }
 
@@ -1150,6 +1154,21 @@ async function doPreview(version, includeAnswers) {
       setTimeout(() => URL.revokeObjectURL(url), 120000);
     }
     toast('Opened preview');
+  } catch(e) { toast('Error: ' + e); }
+}
+
+// ── Interactive quiz (exam-quiz.js — fork-local, enhanced build only) ───────
+// Same cart and version windowing as the exporters, so Quiz vN matches Exam vN.
+async function doQuiz(version) {
+  try {
+    await EstelaExamQuiz.open({
+      cart: _cartBodyWithRefs(),
+      version,
+      title: document.getElementById('exam-title').value || 'Exam',
+      bankSource: S.bankSource,
+      renderMath,
+      toast,
+    });
   } catch(e) { toast('Error: ' + e); }
 }
 

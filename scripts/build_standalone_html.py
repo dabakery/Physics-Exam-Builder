@@ -130,6 +130,15 @@ def build_standalone_html(
             (frontend_dir / "exam-export-plus.js").read_text(encoding="utf-8"),
         )
 
+    # Fork-local interactive quiz mode, enhanced template only. Same
+    # reference-it-to-get-it rule as above.
+    quiz_tag = '<script src="exam-quiz.js"></script>'
+    if quiz_tag in html:
+        html = inline_script(
+            html, "exam-quiz.js",
+            (frontend_dir / "exam-quiz.js").read_text(encoding="utf-8"),
+        )
+
     zip_bytes = build_zip_bytes(repo_root, courses, include_qti)
     b64 = base64.b64encode(zip_bytes).decode("ascii")
     mb = len(zip_bytes) / (1024 * 1024)
