@@ -43,8 +43,11 @@ answer options, as Exam *vN*, so it doubles as a self-check against a printed ve
 |---|---|
 | `numerical` | Graded against `value`, honouring `tolerance` and `margin_type: percent`. Answers with no declared tolerance fall back to ±1%. Units typed after the number are ignored |
 | `multiple_choice` | Graded, single selection |
-| `multiple_answers` | Graded, exact set match — no partial credit |
-| `categorization` | Displayed but not interactive; excluded from the score |
+| `multiple_answers` | Graded, exact set match with no partial credit |
+| `categorization` | Graded. One dropdown per item asking which category it belongs to, with the full category descriptions listed above. All items must be placed correctly |
+
+That covers every question type the banks currently use, which is all 688 questions
+across the 32 ready and deployed banks.
 
 Scope and limits, by design:
 

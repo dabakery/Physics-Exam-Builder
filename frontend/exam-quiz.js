@@ -11,9 +11,11 @@
  *     practice tool, NOT an assessment of record.
  *   - Nothing is persisted or collected. A refresh discards the attempt.
  *
- * Phase 1 grades numerical, multiple_choice and multiple_answers (819 of the
- * corpus's 910 questions). Other types still render, marked as not scored, so
- * they are visibly excluded rather than silently dropped.
+ * Grades every question type the live corpus actually contains: numerical (331),
+ * multiple_choice (162), multiple_answers (112) and categorization (83), which
+ * is all 688 questions across the 32 ready/deployed banks. Any other type still
+ * renders, marked as not scored, so it is visibly excluded rather than silently
+ * dropped.
  *
  * There is no upstream counterpart to this file, so it never conflicts on an
  * upstream merge. Everything it needs is already exported by bank-source.js
@@ -22,7 +24,15 @@
 (function (global) {
   'use strict';
 
-  const GRADABLE = new Set(['multiple_choice', 'multiple_answers', 'numerical']);
+  const GRADABLE = new Set([
+    'multiple_choice', 'multiple_answers', 'numerical', 'categorization',
+  ]);
+
+  /* Longest category description allowed in a <select> option before it is
+     truncated. The full text is always available in the legend above the items.
+     Category descriptions run to 143 characters and contain no math, so plain
+     truncated text in an option is safe. */
+  const OPTION_MAX = 70;
 
   /* Applied when a numerical answer declares no tolerance (42 of 498 do not).
      Relative, so it scales with magnitude the way significant figures do. */
@@ -105,6 +115,28 @@
         } else if (qtype === 'numerical') {
           entry.numeric = numericSpec(qdata.answer || {});
           entry.scored = !!entry.numeric;
+        } else if (qtype === 'categorization') {
+          /* Canvas models this as buckets holding items, and buildCategorizationGroups
+             flattens it that way: real categories carry correct:true, and the optional
+             distractor bucket carries correct:false. The quiz inverts it — one dropdown
+             per item asking which category it belongs to. That is the only orientation
+             that generalises, since a category may hold several items (26 hold two,
+             36 hold three, 12 hold four) and a per-category dropdown could not express
+             that. No item text repeats across categories, so each item has exactly one
+             right answer. */
+          const groups = global.EstelaBankSource.buildCategorizationGroups(qdata);
+          const cats = groups.filter(g => g.correct !== false);
+          const dump = groups.find(g => g.correct === false);
+
+          const cells = [];
+          cats.forEach((g, ci) => (g.items || []).forEach(t => cells.push({ text: t, cat: ci })));
+          if (dump) (dump.items || []).forEach(t => cells.push({ text: t, cat: -1 }));
+          EX.seededShuffle(cells, seedFor(version, qNum));
+
+          entry.categories = cats.map(g => g.title);
+          entry.cells = cells;
+          entry.hasNone = !!dump;
+          entry.scored = cats.length > 0 && cells.length > 0;
         }
 
         qNum += 1;
@@ -152,6 +184,19 @@
       return { state: ok ? 'correct' : 'incorrect', given };
     }
 
+    if (item.type === 'categorization') {
+      // All-or-nothing, matching multiple_answers. Every item must be placed.
+      const resp = (item.response && typeof item.response === 'object') ? item.response : {};
+      const answered = item.cells.filter((_c, i) => resp[i] !== undefined && resp[i] !== '');
+      if (!answered.length) return { state: 'blank' };
+      const ok = item.cells.every((cell, i) => {
+        const v = resp[i];
+        if (v === undefined || v === '') return false;
+        return v === 'none' ? cell.cat === -1 : Number(v) === cell.cat;
+      });
+      return { state: ok ? 'correct' : 'incorrect' };
+    }
+
     const picked = item.response instanceof Set ? item.response : new Set();
     if (!picked.size) return { state: 'blank' };
 
@@ -172,6 +217,14 @@
     return String(s == null ? '' : s)
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;');
+  }
+
+  /* <option> text is plain text, so tags are stripped rather than rendered.
+     Category descriptions carry no math, so nothing is lost here; the legend
+     above the rows shows the full description as HTML. */
+  function shorten(html, max) {
+    const plain = String(html == null ? '' : html).replace(/<[^>]*>/g, '').trim();
+    return plain.length > max ? `${plain.slice(0, max - 1).trimEnd()}…` : plain;
   }
 
   function expectedText(spec) {
@@ -216,6 +269,37 @@
                oninput="EstelaExamQuiz.onType(${item.num},this.value)">
         ${reveal ? `<span class="qz-expected">Expected ${esc(expectedText(item.numeric))}</span>` : ''}
       </div>`;
+    } else if (item.cells) {
+      const resp = (item.response && typeof item.response === 'object') ? item.response : {};
+      const legend = item.categories.map((title, i) =>
+        `<li><span class="qz-cat-key">${i + 1}</span><span>${title}</span></li>`).join('');
+      // Build the option list per row so the chosen value is marked directly,
+      // rather than by patching a shared string.
+      const optionsFor = (sel) => {
+        const opt = (value, label) =>
+          `<option value="${value}"${String(value) === sel ? ' selected' : ''}>${label}</option>`;
+        return opt('', 'Choose…')
+          + item.categories.map((title, i) =>
+              opt(i, `${i + 1}. ${esc(shorten(title, OPTION_MAX))}`)).join('')
+          + (item.hasNone ? opt('none', 'None of these') : '');
+      };
+
+      const rows = item.cells.map((cell, i) => {
+        const sel = resp[i] === undefined ? '' : String(resp[i]);
+        return `<div class="qz-cat-row">
+          <span class="qz-cat-item">${cell.text}</span>
+          <select class="sel qz-cat-sel" ${graded ? 'disabled' : ''}
+                  onchange="EstelaExamQuiz.onCategorize(${item.num},${i},this.value)">
+            ${optionsFor(sel)}
+          </select>
+        </div>`;
+      }).join('');
+
+      inputs = `<div class="qz-cats">
+        <div class="qz-cats-lbl">Categories</div>
+        <ol class="qz-cat-legend">${legend}</ol>
+      </div>
+      <div class="qz-cat-rows">${rows}</div>`;
     } else {
       inputs = `<div class="qz-unscored">${esc(item.typeLabel)} questions are not
         interactive yet — this one is shown for reference and left out of the score.</div>`;
@@ -307,6 +391,13 @@
     if (item) item.response = value;
   }
 
+  function onCategorize(num, cellIdx, value) {
+    const item = Q && Q.items.find(i => i.num === num);
+    if (!item) return;
+    if (!item.response || typeof item.response !== 'object') item.response = {};
+    item.response[cellIdx] = value;
+  }
+
   /* ── lifecycle ─────────────────────────────────────────────────────────── */
 
   function submit() {
@@ -388,6 +479,15 @@
 .qz-mark{font-family:var(--font-m);font-size:.74rem;margin-left:.4rem;padding:.02rem .3rem;border-radius:var(--r);vertical-align:middle;}
 .qz-mark-ok{color:#2e8c5a;background:rgba(46,140,90,.14);}
 .qz-num-inp{max-width:15rem;}
+.qz-cats{background:var(--bg3);border-radius:var(--r);padding:.5rem .7rem;margin-bottom:.6rem;}
+.qz-cats-lbl{font-family:var(--font-m);font-size:.76rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink4);margin-bottom:.3rem;}
+.qz-cat-legend{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.28rem;}
+.qz-cat-legend li{display:flex;gap:.5rem;align-items:flex-start;color:var(--ink2);font-size:.92rem;line-height:1.45;}
+.qz-cat-key{font-family:var(--font-m);font-size:.78rem;font-weight:600;color:var(--ink);background:var(--surface);border:1px solid var(--border);border-radius:var(--r);min-width:1.35rem;text-align:center;flex-shrink:0;}
+.qz-cat-row{display:flex;align-items:center;gap:.6rem;padding:.3rem 0;border-bottom:1px solid var(--border);}
+.qz-cat-row:last-child{border-bottom:none;}
+.qz-cat-item{flex:1;min-width:0;color:var(--ink2);line-height:1.45;overflow-wrap:anywhere;}
+.qz-cat-sel{flex:0 0 auto;max-width:15rem;}
 .qz-expected{font-family:var(--font-m);font-size:.82rem;color:var(--ink4);margin-left:.5rem;}
 .qz-unscored{font-family:var(--font-m);font-size:.82rem;color:var(--ink4);line-height:1.5;}
 .qz-fb{margin-top:.5rem;padding:.5rem .6rem;border-radius:var(--r);background:var(--bg3);color:var(--ink2);font-size:.94rem;line-height:1.55;}
@@ -397,6 +497,10 @@
   #quiz-modal{padding:0;}
   .qz-panel{width:100%;height:100%;max-height:100%;border-radius:0;}
   .qz-num-inp{max-width:100%;}
+  /* item above its dropdown, both full width — a side-by-side select would be
+     squeezed to a few characters on a phone */
+  .qz-cat-row{flex-direction:column;align-items:stretch;gap:.3rem;padding:.45rem 0;}
+  .qz-cat-sel{max-width:100%;width:100%;}
 }`;
     document.head.appendChild(style);
 
@@ -415,5 +519,5 @@
     document.body.appendChild(modal);
   }
 
-  global.EstelaExamQuiz = { open, close, submit, retry, onPick, onType };
+  global.EstelaExamQuiz = { open, close, submit, retry, onPick, onType, onCategorize };
 })(typeof window !== 'undefined' ? window : globalThis);
