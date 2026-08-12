@@ -792,7 +792,6 @@ function bankCardHTML(b, topic) {
   const {path,meta} = b;
   const inCart = S.cart.some(c=>c.path===path);
   const isExp  = S.expanded.has(path);
-  const hasCat = 'categorization' in (meta.q_types || {});
   const badges = Object.entries(meta.q_types)
     .map(([t,n])=>`<span class="badge ${bcls(t)}">${TS[t]||t.slice(0,3).toUpperCase()} ×${n}</span>`)
     .join('') + (inCart?'<span class="badge bd-ok">✓ cart</span>':'');
@@ -829,10 +828,7 @@ function bankCardHTML(b, topic) {
         <button class="btn btn-sm" onclick="toggleExp(${attr(path)},${attr(topic)})">
           ${isExp?'▾ Collapse':'▸ Preview'}
         </button>
-        ${hasCat
-          ? `<button class="btn btn-sm" disabled style="opacity:.45;cursor:not-allowed" title="Not supported on paper tests">Not supported</button>`
-          : `<button class="btn btn-sm${!inCart?' btn-p':''}" onclick="toggleCart(${attr(path)},${attr(topic)})">${inCart?'− Remove':'+ Add'}</button>`
-        }
+        <button class="btn btn-sm${!inCart?' btn-p':''}" onclick="toggleCart(${attr(path)},${attr(topic)})">${inCart?'− Remove':'+ Add'}</button>
       </div>
     </div>
     ${qSection}
