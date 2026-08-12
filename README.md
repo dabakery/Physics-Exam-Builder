@@ -36,6 +36,31 @@ option, and shows the expected numerical value. A wrong or blank answer gets the
 `on_incorrect` hint and nothing else, so **Try again** stays worth doing. The student's own
 selections stay on screen either way.
 
+### Get help button
+
+Each question can carry a **Get help** button that hands the question to a Gemini Gem set up
+as a Socratic Physics tutor. It copies a prompt to the clipboard, shows a confirmation, and
+opens the Gem in a new tab for the student to paste into.
+
+To turn it on, set `TUTOR_URL` at the top of
+[`frontend/exam-quiz.js`](./frontend/exam-quiz.js) to the Gem's public share URL. While that
+constant is empty the button is not rendered, so the page never shows a link that goes
+nowhere.
+
+The copied text reads:
+
+```
+I need help with this Physics problem from AP Physics 2. The question is <question text>
+```
+
+The course name comes from the bank's course folder, and `<latex>` tags are converted to
+`$…$` and `$$…$$` so the tutor parses the math. The correct answer is never included.
+
+The paste step is required because Gemini has no supported URL parameter for pre-filling a
+prompt, and `gemini.google.com` sends `x-frame-options: DENY`, so it cannot be embedded in a
+frame either. Browser extensions that add `?prompt=` support exist, but relying on one would
+mean every student needs it installed.
+
 Quiz *vN* draws exactly the same questions, in the same order and with the same shuffled
 answer options, as Exam *vN*, so it doubles as a self-check against a printed version.
 

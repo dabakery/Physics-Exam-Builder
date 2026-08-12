@@ -24,6 +24,26 @@
 (function (global) {
   'use strict';
 
+  /* ── Physics Tutor Gem ──────────────────────────────────────────────────────
+     Public share URL of the Gemini Gem students are sent to. PASTE IT HERE.
+     While this is empty the "Get help" button is not rendered at all, so the
+     page never ships a button that goes nowhere.
+
+     Gemini has no supported URL parameter for pre-filling the prompt box, and
+     gemini.google.com sends x-frame-options: DENY so it cannot be embedded
+     either. Copying to the clipboard and letting the student paste is the only
+     approach that needs no browser extension. */
+  const TUTOR_URL = 'https://gemini.google.com/gem/3916ac7e53b6';
+
+  /* Folder name → what the student should see in the prompt. Anything not
+     listed falls back to the folder name as written. */
+  const COURSE_LABELS = {
+    'HS Physics': 'high school Physics',
+    'AP Physics 1': 'AP Physics 1',
+    'AP Physics 2': 'AP Physics 2',
+    'PHY I Mechanics': 'PHY I Mechanics',
+  };
+
   const GRADABLE = new Set([
     'multiple_choice', 'multiple_answers', 'numerical', 'categorization',
   ]);
@@ -87,6 +107,8 @@
           type: qtype,
           typeLabel: BS.typeLabel(qtype),
           bankId: (item.meta || {}).bank_id || '',
+          course: courseLabelFor(item.path),
+          rawText: qdata.text || '',   // untouched source, for the tutor prompt
           body: BS.latexToHtml(qdata.text || ''),
           figUrl,
           feedback: {
@@ -219,6 +241,64 @@
       .replace(/"/g, '&quot;');
   }
 
+  /* ── "Get help" prompt ─────────────────────────────────────────────────── */
+
+  /* The path's first segment is the course folder (bank-source.js:740 derives it
+     the same way), but a local-folder source can hand back an absolute path, so
+     match any known course name anywhere in the path before falling back. */
+  function courseLabelFor(path) {
+    const parts = String(path || '').split('/');
+    for (const p of parts) {
+      if (COURSE_LABELS[p]) return COURSE_LABELS[p];
+    }
+    return parts.find(Boolean) || 'Physics';
+  }
+
+  /* Raw bank text → LaTeX the tutor can parse. Inline <latex>v_f</latex> becomes
+     $v_f$ and a block tag becomes $$…$$. The $$ is deliberate here: the single-$
+     rule in CLAUDE.md exists for the Google Docs Auto-LaTeX add-on, and this text
+     goes to a chat box instead, where $$ is the reliable display-math delimiter.
+     Markdown bold is left as ** ** rather than converted to HTML. */
+  function toPlainLatex(raw) {
+    return String(raw || '')
+      .replace(/<latex>\s*\n([\s\S]*?)\n\s*<\/latex>/g, '$$$$\n$1\n$$$$')
+      .replace(/<latex>([\s\S]*?)<\/latex>/g, '$$$1$')
+      .replace(/[ \t]+\n/g, '\n')
+      .trim();
+  }
+
+  function helpPrompt(item) {
+    const body = toPlainLatex(item.rawText);
+    // Avoid ".?" when the question already ends in its own punctuation.
+    const tail = /[.?!]$/.test(body) ? '' : '.';
+    return `I need help with this Physics problem from ${item.course}. `
+      + `The question is ${body}${tail}`;
+  }
+
+  /* Must run inside the click handler with nothing awaited first, or iOS Safari
+     rejects the write. Falls back to execCommand for non-secure contexts. */
+  function copyText(text) {
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text);
+        return true;
+      }
+    } catch (_e) { /* fall through */ }
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.cssText = 'position:fixed;top:-1000px;opacity:0';
+      document.body.appendChild(ta);
+      ta.select();
+      const ok = document.execCommand('copy');
+      ta.remove();
+      return ok;
+    } catch (_e) {
+      return false;
+    }
+  }
+
   /* <option> text is plain text, so tags are stripped rather than rendered.
      Category descriptions carry no math, so nothing is lost here; the legend
      above the rows shows the full description as HTML. */
@@ -332,10 +412,15 @@
           : result.state === 'blank' ? '— Blank' : '✕ Incorrect'}</span>`
       : '';
 
+    const help = TUTOR_URL
+      ? `<button class="btn btn-xs qz-help" onclick="EstelaExamQuiz.getHelp(${item.num})">Get help</button>`
+      : '';
+
     return `<div class="qz-item ${stateCls}">
       <div class="qz-head">
         <span class="qz-num">Question ${item.num}</span>
         <span class="qz-type">${esc(item.typeLabel)}</span>
+        ${help}
         ${badge}
       </div>
       <div class="qz-body">${item.body}</div>
@@ -389,6 +474,40 @@
   function onType(num, value) {
     const item = Q && Q.items.find(i => i.num === num);
     if (item) item.response = value;
+  }
+
+  /* ── Get help ──────────────────────────────────────────────────────────── */
+
+  function getHelp(num) {
+    const item = Q && Q.items.find(i => i.num === num);
+    if (!item) return;
+    const text = helpPrompt(item);
+    const copied = copyText(text);
+
+    const msg = document.getElementById('qz-help-msg');
+    const fb = document.getElementById('qz-help-fallback');
+    if (copied) {
+      msg.textContent = 'Question copied to clipboard. Paste it on the next page.';
+      fb.style.display = 'none';
+      fb.value = '';
+    } else {
+      // Clipboard refused. Show the text so it can still be copied by hand.
+      msg.textContent = 'Copy the text below, then open the tutor.';
+      fb.style.display = 'block';
+      fb.value = text;
+      fb.select();
+    }
+    document.getElementById('qz-help-modal').classList.add('open');
+  }
+
+  function openTutor() {
+    window.open(TUTOR_URL, '_blank', 'noopener');
+    closeHelp();
+  }
+
+  function closeHelp() {
+    const m = document.getElementById('qz-help-modal');
+    if (m) m.classList.remove('open');
   }
 
   function onCategorize(num, cellIdx, value) {
@@ -471,6 +590,15 @@
 .qz-badge-correct{color:#2e8c5a;background:rgba(46,140,90,.12);}
 .qz-badge-incorrect{color:#c84030;background:rgba(200,64,48,.12);}
 .qz-badge-blank{color:var(--ink4);background:var(--bg3);}
+.qz-help{flex-shrink:0;}
+/* sits above the quiz modal (1300), which is itself above the mobile sidebar */
+#qz-help-modal{position:fixed;inset:0;background:rgba(26,25,22,.5);display:none;align-items:center;justify-content:center;z-index:1400;padding:1.5rem;}
+#qz-help-modal.open{display:flex;}
+.qz-help-panel{background:var(--bg);border:1px solid var(--border);border-radius:var(--r2);box-shadow:var(--sh2);width:min(420px,100%);padding:1.1rem 1.2rem;}
+#qz-help-msg{color:var(--ink2);line-height:1.55;margin-bottom:.8rem;}
+#qz-help-fallback{width:100%;font-family:var(--font-m);font-size:.85rem;margin-bottom:.8rem;padding:.4rem .5rem;border:1px solid var(--border);border-radius:var(--r);background:var(--surface);color:var(--ink2);resize:vertical;}
+.qz-help-note{font-family:var(--font-m);font-size:.78rem;color:var(--ink4);line-height:1.5;margin-bottom:.8rem;}
+.qz-help-btns{display:flex;gap:.4rem;justify-content:flex-end;flex-wrap:wrap;}
 .qz-body{color:var(--ink2);line-height:1.55;overflow-x:auto;}
 .qz-fig img{max-width:100%;margin:.5rem 0;border-radius:var(--r);}
 .qz-inputs{margin-top:.55rem;}
@@ -520,7 +648,25 @@
         <div id="qz-foot"></div>
       </div>`;
     document.body.appendChild(modal);
+
+    const help = document.createElement('div');
+    help.id = 'qz-help-modal';
+    help.addEventListener('click', e => { if (e.target === help) closeHelp(); });
+    help.innerHTML = `
+      <div class="qz-help-panel">
+        <div id="qz-help-msg"></div>
+        <textarea id="qz-help-fallback" readonly rows="4" style="display:none"></textarea>
+        <div class="qz-help-note">(Note: you must be logged in to access the Tutor Gem.)</div>
+        <div class="qz-help-btns">
+          <button class="btn btn-p" onclick="EstelaExamQuiz.openTutor()">Open Physics Tutor Gem</button>
+          <button class="btn" onclick="EstelaExamQuiz.closeHelp()">Cancel</button>
+        </div>
+      </div>`;
+    document.body.appendChild(help);
   }
 
-  global.EstelaExamQuiz = { open, close, submit, retry, onPick, onType, onCategorize };
+  global.EstelaExamQuiz = {
+    open, close, submit, retry, onPick, onType, onCategorize,
+    getHelp, openTutor, closeHelp,
+  };
 })(typeof window !== 'undefined' ? window : globalThis);
