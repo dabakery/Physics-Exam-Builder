@@ -27,9 +27,14 @@ The Markdown path is the one to use for anything you intend to edit. Google Docs
 ### Interactive quiz mode
 
 **Take Quiz** in the Build Exam panel turns the current cart into a quiz answered in the
-browser. Submitting grades it and shows each question's feedback — including the
-`on_correct` / `on_incorrect` text the banks carry for Canvas QTI, which nothing else in
-this app displays (the exporters and the bank browser read only `feedback.general`).
+browser. Submitting grades it and shows the `on_correct` / `on_incorrect` feedback the banks
+carry for Canvas QTI, which nothing else in this app displays (the exporters and the bank
+browser read only `feedback.general`).
+
+A correct answer also releases the worked solution from `feedback.general`, marks the correct
+option, and shows the expected numerical value. A wrong or blank answer gets the
+`on_incorrect` hint and nothing else, so **Try again** stays worth doing. The student's own
+selections stay on screen either way.
 
 Quiz *vN* draws exactly the same questions, in the same order and with the same shuffled
 answer options, as Exam *vN*, so it doubles as a self-check against a printed version.

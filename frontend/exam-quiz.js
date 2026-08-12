@@ -185,17 +185,23 @@
     const graded = !!result;
     const stateCls = graded ? `qz-${result.state}` : '';
 
+    /* Nothing that gives the answer away is emitted unless the student got it
+       right: not the worked solution, not the correct-option marker, not the
+       expected value. A wrong or blank answer keeps "Try again" honest.
+       Per-option marks are suppressed wholesale rather than hidden only on the
+       correct option, because on multiple_answers, marking just the student's
+       wrong picks would identify their right ones by elimination. Their own
+       selections stay visible in the disabled inputs. */
+    const reveal = graded && result.state === 'correct';
+
     let inputs = '';
     if (item.options) {
       const kind = item.type === 'multiple_choice' ? 'radio' : 'checkbox';
       inputs = item.options.map((o, i) => {
         const checked = item.response instanceof Set && item.response.has(i);
-        let mark = '';
-        if (graded) {
-          if (o.correct) mark = '<span class="qz-mark qz-mark-ok">correct</span>';
-          else if (checked) mark = '<span class="qz-mark qz-mark-no">your answer</span>';
-        }
-        return `<label class="qz-opt${graded && o.correct ? ' qz-opt-ok' : ''}">
+        const mark = reveal && o.correct
+          ? '<span class="qz-mark qz-mark-ok">correct</span>' : '';
+        return `<label class="qz-opt${reveal && o.correct ? ' qz-opt-ok' : ''}">
           <input type="${kind}" name="qz-${item.num}" value="${i}"
                  ${checked ? 'checked' : ''} ${graded ? 'disabled' : ''}
                  onchange="EstelaExamQuiz.onPick(${item.num},${i},'${kind}')">
@@ -208,24 +214,30 @@
         <input type="text" inputmode="decimal" class="inp qz-num-inp" value="${val}"
                placeholder="Your answer…" ${graded ? 'disabled' : ''}
                oninput="EstelaExamQuiz.onType(${item.num},this.value)">
-        ${graded ? `<span class="qz-expected">Expected ${esc(expectedText(item.numeric))}</span>` : ''}
+        ${reveal ? `<span class="qz-expected">Expected ${esc(expectedText(item.numeric))}</span>` : ''}
       </div>`;
     } else {
       inputs = `<div class="qz-unscored">${esc(item.typeLabel)} questions are not
         interactive yet — this one is shown for reference and left out of the score.</div>`;
     }
 
+    /* A wrong answer gets its on_incorrect hint only. Withholding the worked
+       solution keeps "Try again" meaningful, since handing over the answer on a
+       first miss turns the retry into copying. The solution is released once the
+       student has earned it by answering correctly. A blank counts as not
+       correct, so it is treated the same way. */
     let fb = '';
     if (graded && result.state !== 'skipped') {
       const parts = [];
-      if (result.state === 'correct' && item.feedback.onCorrect) {
-        parts.push(`<div class="qz-fb qz-fb-ok">${item.feedback.onCorrect}</div>`);
-      }
-      if (result.state !== 'correct' && item.feedback.onIncorrect) {
+      if (result.state === 'correct') {
+        if (item.feedback.onCorrect) {
+          parts.push(`<div class="qz-fb qz-fb-ok">${item.feedback.onCorrect}</div>`);
+        }
+        if (item.feedback.general) {
+          parts.push(`<div class="qz-fb"><b>Solution.</b> ${item.feedback.general}</div>`);
+        }
+      } else if (item.feedback.onIncorrect) {
         parts.push(`<div class="qz-fb qz-fb-no">${item.feedback.onIncorrect}</div>`);
-      }
-      if (item.feedback.general) {
-        parts.push(`<div class="qz-fb"><b>Solution.</b> ${item.feedback.general}</div>`);
       }
       fb = parts.join('');
     }
@@ -375,7 +387,6 @@
 .qz-opt-ok{background:rgba(46,140,90,.09);}
 .qz-mark{font-family:var(--font-m);font-size:.74rem;margin-left:.4rem;padding:.02rem .3rem;border-radius:var(--r);vertical-align:middle;}
 .qz-mark-ok{color:#2e8c5a;background:rgba(46,140,90,.14);}
-.qz-mark-no{color:#c84030;background:rgba(200,64,48,.14);}
 .qz-num-inp{max-width:15rem;}
 .qz-expected{font-family:var(--font-m);font-size:.82rem;color:var(--ink4);margin-left:.5rem;}
 .qz-unscored{font-family:var(--font-m);font-size:.82rem;color:var(--ink4);line-height:1.5;}
