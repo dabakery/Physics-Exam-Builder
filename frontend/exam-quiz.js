@@ -449,7 +449,10 @@
 
     const style = document.createElement('style');
     style.textContent = `
-#quiz-modal{position:fixed;inset:0;background:rgba(26,25,22,.45);display:none;align-items:center;justify-content:center;z-index:1100;padding:1.5rem;}
+/* Above the mobile sidebar (z-index 1200) and its overlay (1100). The Take Quiz
+   buttons sit inside the sidebar, so on a phone the drawer is necessarily open
+   when the quiz launches; at a lower z-index the drawer covers the whole quiz. */
+#quiz-modal{position:fixed;inset:0;background:rgba(26,25,22,.45);display:none;align-items:center;justify-content:center;z-index:1300;padding:1.5rem;}
 #quiz-modal.open{display:flex;}
 .qz-panel{background:var(--bg);border:1px solid var(--border);border-radius:var(--r2);box-shadow:var(--sh2);width:min(880px,100%);max-height:90vh;display:flex;flex-direction:column;overflow:hidden;}
 .qz-top{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;padding:.85rem 1.1rem .6rem;border-bottom:1px solid var(--border);}

@@ -1156,6 +1156,9 @@ async function doPreview(version, includeAnswers) {
 // ── Interactive quiz (exam-quiz.js — fork-local, enhanced build only) ───────
 // Same cart and version windowing as the exporters, so Quiz vN matches Exam vN.
 async function doQuiz(version) {
+  // On mobile the Take Quiz button is inside the drawer, so the drawer is open
+  // when we get here. Close it, or it is still sitting there when the quiz ends.
+  closeNav();
   try {
     await EstelaExamQuiz.open({
       cart: _cartBodyWithRefs(),
