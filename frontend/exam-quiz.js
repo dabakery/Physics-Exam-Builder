@@ -424,7 +424,7 @@
         ${badge}
       </div>
       <div class="qz-body">${item.body}</div>
-      ${item.figUrl ? `<div class="qz-fig"><img src="${item.figUrl}" alt=""></div>` : ''}
+      ${item.figUrl ? `<div class="qz-fig"><img src="${item.figUrl}" alt="" decoding="async" loading="lazy"></div>` : ''}
       <div class="qz-inputs">${inputs}</div>
       ${fb}
     </div>`;
@@ -457,7 +457,27 @@
          <button class="btn" onclick="EstelaExamQuiz.close()">Cancel</button>`;
     }
 
-    if (opts.renderMath) opts.renderMath(body);
+    renderMathChunked(body);
+  }
+
+  /* KaTeX one question at a time, yielding between frames. A typical quiz holds
+     about 24 math spans, but a heavy one reaches ~180, and a single synchronous
+     pass over all of them blocks the main thread — which on a phone means the
+     modal is visible but will not scroll until it finishes. */
+  function renderMathChunked(root) {
+    if (!opts.renderMath || !root) return;
+    const items = [...root.querySelectorAll('.qz-item')];
+    if (!items.length) { opts.renderMath(root); return; }
+    let i = 0;
+    const step = () => {
+      const deadline = (performance.now ? performance.now() : Date.now()) + 12;
+      while (i < items.length
+             && (performance.now ? performance.now() : Date.now()) < deadline) {
+        opts.renderMath(items[i++]);
+      }
+      if (i < items.length) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
   }
 
   /* ── input handlers (called from inline onchange/oninput) ───────────────── */
@@ -578,7 +598,16 @@
 #qz-title{font-family:var(--font-d);font-size:1.1rem;color:var(--ink);margin-right:auto;}
 #qz-score{font-family:var(--font-m);font-size:.92rem;color:var(--ink3);}
 .qz-note{color:var(--ink4);}
-#qz-scroll{flex:1;overflow-y:auto;padding:.9rem 1.1rem;}
+/* min-height:0 is load-bearing. A flex item defaults to min-height:auto in a
+   column container, which floors this at its content height, so flex:1 cannot
+   shrink it and it never develops the overflow it needs to scroll. The panel
+   overflows instead and .qz-panel's overflow:hidden clips it. Safari showed this
+   as "no scrolling for a few seconds, then fine", because a later relayout
+   (images decoding, KaTeX substituting spans) happened to resize it correctly.
+   Same trap as .tr-t needing min-width:0 in the topic rule.
+   overscroll-behavior stops a scroll at the end of the quiz from chaining into
+   #content behind the modal. */
+#qz-scroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:.9rem 1.1rem;}
 #qz-foot{display:flex;gap:.4rem;justify-content:flex-end;padding:.7rem 1.1rem;border-top:1px solid var(--border);background:var(--surface);}
 .qz-item{border:1px solid var(--border);border-radius:var(--r);padding:.8rem .9rem;margin-bottom:.8rem;background:var(--surface);}
 .qz-item.qz-correct{border-color:rgba(46,140,90,.5);}
