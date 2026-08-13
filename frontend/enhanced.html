@@ -359,7 +359,7 @@ body.nav-open #nav-overlay{display:block;}
 
       <div class="sb-sec" id="build-sec" style="display:none">
         <span class="sb-lbl">Build Exam</span>
-        <input id="exam-title" class="inp" type="text" value="PHY I Mechanics Exam" placeholder="Exam title…">
+        <input id="exam-title" class="inp" type="text" value="Physics Exam" placeholder="Exam title…">
         <div style="display:flex;align-items:center;gap:.35rem;margin-top:.32rem;">
           <span style="font-family:var(--font-m);font-size:1.1rem;color:var(--ink4)">Versions:</span>
           <button class="ci-step" onclick="adjustVersions(-1)">−</button>
@@ -1182,6 +1182,17 @@ function dlBlob(blob, name) {
 function _titleVal() { return document.getElementById('exam-title').value || 'Exam'; }
 function _nver() { return Math.max(1, parseInt(document.getElementById('n-ver')?.value||'2')); }
 function _safeName(s) { return String(s||'exam').replace(/[^\w.-]+/g,'_').replace(/^_+|_+$/g,'') || 'exam'; }
+// Local time, sortable, filename-safe: 20260813-1432. Filenames ONLY — the
+// document heading uses the bare title, since a timestamp printed on a
+// student's paper is noise.
+function _stamp() {
+  const d = new Date(), p = n => String(n).padStart(2,'0');
+  return `${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}`;
+}
+// Every single-file export shares this shape so downloads sort together.
+function _exportName(kind, version, ext) {
+  return `${_safeName(_titleVal())}_${kind}_${versionLabel(version)}-${_stamp()}.${ext}`;
+}
 
 function doTexPlus(version, kind) {
   try {
@@ -1190,7 +1201,7 @@ function doTexPlus(version, kind) {
     const src = kind === 'key'
       ? EstelaExamExportPlus.buildKeyLatex(cart, version, title)
       : EstelaExamExportPlus.buildExamLatex(cart, version, title);
-    dlBlob(new Blob([src], {type:'application/x-tex;charset=utf-8'}), `${kind}_${versionLabel(version)}.tex`);
+    dlBlob(new Blob([src], {type:'application/x-tex;charset=utf-8'}), _exportName(kind, version, 'tex'));
     toast(`Downloaded ${kind}_${versionLabel(version)}.tex`);
   } catch(e) { toast('Export failed: ' + (e && e.message ? e.message : e)); }
 }
@@ -1208,11 +1219,11 @@ function doMdPlus(version, kind) {
     // One stray delimiter makes the Auto-LaTeX add-on pair everything after it
     // inside-out, so surface it here rather than shipping a broken file.
     const audit = EstelaExamExportPlus.auditMathDelims(src);
-    dlBlob(new Blob([src], {type:'text/markdown;charset=utf-8'}),
-           `${_safeName(title)}_${kind}_${versionLabel(version)}.md`);
+    const name = _exportName(kind, version, 'md');
+    dlBlob(new Blob([src], {type:'text/markdown;charset=utf-8'}), name);
     toast(audit.balanced
-      ? `Downloaded ${kind}_${versionLabel(version)}.md`
-      : `⚠ ${kind}_${versionLabel(version)}.md downloaded, but math delimiters are unbalanced (${audit.count}). Equations will render inside-out — check the source for a stray $.`);
+      ? `Downloaded ${name}`
+      : `⚠ ${name} downloaded, but math delimiters are unbalanced (${audit.count}). Equations will render inside-out — check the source for a stray $.`);
   } catch(e) { toast('Export failed: ' + (e && e.message ? e.message : e)); }
 }
 
@@ -1222,7 +1233,7 @@ async function doExportBundlePlus() {
   toast('Building exam bundle…');
   try {
     const blob = await EstelaExamExportPlus.buildBundleZip(_cartBodyWithRefs(), versions, title, S.bankSource);
-    dlBlob(blob, `${_safeName(title)}-exams.zip`);
+    dlBlob(blob, `${_safeName(title)}-exams-${_stamp()}.zip`);
     const imgs = blob.__imagesCopied || 0;
     const bad = blob.__unbalanced || 0;
     toast(bad
@@ -1238,7 +1249,7 @@ async function doDocxPlus(version, kind) {
     const html = kind === 'key'
       ? EstelaExamExportPlus.buildKeyDoc(_cartBodyWithRefs(), version, title)
       : await EstelaExamExportPlus.buildExamDoc(_cartBodyWithRefs(), version, title, S.bankSource);
-    dlBlob(new Blob([html], {type:'application/msword;charset=utf-8'}), `${kind}_${versionLabel(version)}.doc`);
+    dlBlob(new Blob([html], {type:'application/msword;charset=utf-8'}), _exportName(kind, version, 'doc'));
     toast(`Downloaded ${kind}_${versionLabel(version)}.doc (beta)`);
   } catch(e) { toast('Export failed: ' + (e && e.message ? e.message : e)); }
 }
