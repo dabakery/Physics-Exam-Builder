@@ -75,6 +75,34 @@
     return BigInt(version) * 10000n + BigInt(qNum);
   }
 
+  /* Which questions a cart item contributes at a given version, and where each
+     came from. Single source of truth for the windowing, so the "new set"
+     preview count cannot drift from what the new set actually contains. */
+  function windowFor(item, version) {
+    const questions = (item.rawData || {}).questions || [];
+    if (!questions.length) return [];
+    const qn = Math.max(1, Number(item.qn) || 1);
+    const n = questions.length;
+    const start = (((Number(version) - 1) * qn) % n);
+    const out = [];
+    for (let i = 0; i < qn; i++) {
+      const idx = (start + i) % n;
+      out.push({ q: questions[idx], idx });
+    }
+    return out;
+  }
+
+  /* Stable identity for "the student has already seen this one". */
+  function keyOf(item, idx) { return `${item.path}#${idx}`; }
+
+  function selectionKeys(cart, version) {
+    const keys = [];
+    for (const item of cart || []) {
+      for (const w of windowFor(item, version)) keys.push(keyOf(item, w.idx));
+    }
+    return keys;
+  }
+
   async function collectQuestions(cart, version, bankSource) {
     const BS = global.EstelaBankSource;
     const EX = global.EstelaExamExport;
@@ -82,16 +110,12 @@
     let qNum = 0;
 
     for (const item of cart) {
-      const questions = (item.rawData || {}).questions || [];
-      if (!questions.length) continue;
-
-      const qn = Math.max(1, Number(item.qn) || 1);
-      const n = questions.length;
-      const start = (((Number(version) - 1) * qn) % n);
+      const slots = windowFor(item, version);
+      if (!slots.length) continue;
       const bankRef = item.bankRef || { path: item.path, handle: { path: item.path } };
 
-      for (let i = 0; i < qn; i++) {
-        const q = questions[(start + i) % n];
+      for (const slot of slots) {
+        const q = slot.q;
         const qtype = BS.getQtype(q);
         const qdata = q[qtype] || {};
 
@@ -104,6 +128,7 @@
         const fb = qdata.feedback || {};
         const entry = {
           num: qNum + 1,
+          key: keyOf(item, slot.idx),
           type: qtype,
           typeLabel: BS.typeLabel(qtype),
           bankId: (item.meta || {}).bank_id || '',
@@ -546,12 +571,90 @@
     document.getElementById('qz-scroll').scrollTop = 0;
   }
 
+  /* "Try again" asks first, because the useful answer depends on how many fresh
+     isomorphs the selected banks can still supply. Advancing the version shifts
+     every bank's window by its own qn, which walks each bank through its
+     questions in order and wraps at the end. Banks run out at different points,
+     so the count is computed from what the student has actually seen this
+     session rather than assumed. */
   function retry() {
+    if (!Q) return;
+    const keys = selectionKeys(Q.cart, Q.version + 1);
+    const total = keys.length;
+    const fresh = keys.filter(k => !Q.seen.has(k)).length;
+
+    /* Only block "New set" when it would hand back exactly what is on screen,
+       which happens when every bank is taking its whole supply (qn === n).
+       Once the banks have merely been exhausted, cycling back to the start is
+       still worth offering, as long as the message says so. */
+    const current = Q.items.map(i => i.key).join('|');
+    const identical = keys.join('|') === current;
+
+    let msg;
+    if (fresh === total) {
+      msg = `All ${total} question${total === 1 ? '' : 's'} have a different version available.`;
+    } else if (fresh > 0) {
+      msg = `${fresh} of ${total} questions have a different version available. `
+          + `The other ${total - fresh} would repeat.`;
+    } else if (identical) {
+      msg = `These banks have no other versions to draw from, so a new set would be `
+          + `identical to this one.`;
+    } else {
+      msg = `Every version in these banks has been used. A new set would cycle back to `
+          + `questions you have already seen.`;
+    }
+    document.getElementById('qz-retry-msg').innerHTML =
+      `${msg}<div class="qz-retry-q">Try again with a new set, or the same questions?</div>`;
+
+    const btn = document.getElementById('qz-retry-new');
+    btn.disabled = identical;
+    btn.style.opacity = identical ? '.45' : '';
+    btn.style.cursor = identical ? 'not-allowed' : '';
+
+    document.getElementById('qz-retry-modal').classList.add('open');
+  }
+
+  function closeRetry() {
+    const m = document.getElementById('qz-retry-modal');
+    if (m) m.classList.remove('open');
+  }
+
+  function retrySame() {
+    closeRetry();
     if (!Q) return;
     Q.graded = false;
     for (const it of Q.items) it.response = null;
     render();
     document.getElementById('qz-scroll').scrollTop = 0;
+  }
+
+  async function retryNew() {
+    closeRetry();
+    if (!Q) return;
+    const next = Q.version + 1;
+    let items;
+    try {
+      items = await collectQuestions(Q.cart, next, Q.bankSource);
+    } catch (e) {
+      if (opts.toast) opts.toast('Could not load a new set: ' + e);
+      return;
+    }
+    if (!items.length) {
+      if (opts.toast) opts.toast('No questions available for a new set');
+      return;
+    }
+    Q.items = items;
+    Q.version = next;
+    Q.graded = false;
+    items.forEach(i => Q.seen.add(i.key));
+    setTitle();
+    render();
+    document.getElementById('qz-scroll').scrollTop = 0;
+  }
+
+  function setTitle() {
+    document.getElementById('qz-title').textContent =
+      `${Q.title} — Quiz ${global.EstelaExamExport.versionLabel(Q.version)}`;
   }
 
   function close() {
@@ -573,9 +676,14 @@
       if (opts.toast) opts.toast('No questions in the selected banks');
       return;
     }
-    Q = { items, version, title, graded: false };
-    document.getElementById('qz-title').textContent =
-      `${title} — Quiz ${global.EstelaExamExport.versionLabel(version)}`;
+    // cart and bankSource are kept so "New set" can re-collect at a later
+    // version; seen accumulates across rounds so the count stays honest.
+    Q = {
+      items, version, title, graded: false,
+      cart, bankSource,
+      seen: new Set(items.map(i => i.key)),
+    };
+    setTitle();
     document.getElementById('quiz-modal').classList.add('open');
     document.getElementById('qz-scroll').scrollTop = 0;
     render();
@@ -621,8 +729,10 @@
 .qz-badge-blank{color:var(--ink4);background:var(--bg3);}
 .qz-help{flex-shrink:0;}
 /* sits above the quiz modal (1300), which is itself above the mobile sidebar */
-#qz-help-modal{position:fixed;inset:0;background:rgba(26,25,22,.5);display:none;align-items:center;justify-content:center;z-index:1400;padding:1.5rem;}
-#qz-help-modal.open{display:flex;}
+#qz-help-modal,#qz-retry-modal{position:fixed;inset:0;background:rgba(26,25,22,.5);display:none;align-items:center;justify-content:center;z-index:1400;padding:1.5rem;}
+#qz-help-modal.open,#qz-retry-modal.open{display:flex;}
+#qz-retry-msg{color:var(--ink2);line-height:1.55;}
+.qz-retry-q{margin-top:.5rem;margin-bottom:.8rem;color:var(--ink);}
 .qz-help-panel{background:var(--bg);border:1px solid var(--border);border-radius:var(--r2);box-shadow:var(--sh2);width:min(420px,100%);padding:1.1rem 1.2rem;}
 #qz-help-msg{color:var(--ink2);line-height:1.55;margin-bottom:.8rem;}
 #qz-help-fallback{width:100%;font-family:var(--font-m);font-size:.85rem;margin-bottom:.8rem;padding:.4rem .5rem;border:1px solid var(--border);border-radius:var(--r);background:var(--surface);color:var(--ink2);resize:vertical;}
@@ -692,10 +802,24 @@
         </div>
       </div>`;
     document.body.appendChild(help);
+
+    const again = document.createElement('div');
+    again.id = 'qz-retry-modal';
+    again.addEventListener('click', e => { if (e.target === again) closeRetry(); });
+    again.innerHTML = `
+      <div class="qz-help-panel">
+        <div id="qz-retry-msg"></div>
+        <div class="qz-help-btns">
+          <button class="btn btn-p" id="qz-retry-new" onclick="EstelaExamQuiz.retryNew()">New set</button>
+          <button class="btn" onclick="EstelaExamQuiz.retrySame()">Same questions</button>
+        </div>
+      </div>`;
+    document.body.appendChild(again);
   }
 
   global.EstelaExamQuiz = {
-    open, close, submit, retry, onPick, onType, onCategorize,
+    open, close, submit, retry, retrySame, retryNew, closeRetry,
+    onPick, onType, onCategorize,
     getHelp, openTutor, closeHelp,
   };
 })(typeof window !== 'undefined' ? window : globalThis);

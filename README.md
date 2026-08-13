@@ -36,6 +36,19 @@ option, and shows the expected numerical value. A wrong or blank answer gets the
 `on_incorrect` hint and nothing else, so **Try again** stays worth doing. The student's own
 selections stay on screen either way.
 
+### Try again with a new set
+
+**Try again** asks whether to repeat the same questions or draw a new set. A new set advances
+the quiz version, which shifts every bank's window forward by the number of questions that
+bank contributes. Each bank therefore walks through its own isomorphs in order and wraps at
+the end, and banks of different sizes run out at different points.
+
+The dialog reports what is actually available before you choose, for example "2 of 3
+questions have a different version available. The other 1 would repeat." Once every version
+has been used it says the new set would cycle back to questions already seen. **New set** is
+only disabled when it would return an identical set, which happens when every bank is already
+contributing all of its questions.
+
 ### Get help button
 
 Each question can carry a **Get help** button that hands the question to a Gemini Gem set up
