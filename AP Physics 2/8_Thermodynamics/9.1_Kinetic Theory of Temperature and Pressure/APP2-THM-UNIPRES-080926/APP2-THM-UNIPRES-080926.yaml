@@ -51,7 +51,7 @@ questions:
       is <latex>2r</latex>, as indicated in the figure. Which of the following
       statements about the pressure exerted by the gas on the top and side of
       the container is correct?
-    figure: figure_folder/q-1.png # not yet created — see "Figures" note below
+    figure: figure_folder/q-1.png
     answers:
     - answer:
         text: The gas exerts a greater pressure on the top than on the side.
@@ -89,7 +89,7 @@ questions:
       and the area of one of the side faces is <latex>3A</latex>, as indicated
       in the figure. Which of the following statements about the total force
       exerted by the gas on the bottom face and on that side face is correct?
-    figure: figure_folder/q-2.png # not yet created
+    figure: figure_folder/q-2.png
     answers:
     - answer:
         text: The gas exerts the same total force on both faces.
@@ -130,7 +130,7 @@ questions:
       inner wall area of the neck is <latex>A</latex>, as indicated in the
       figure. Which of the following statements about the pressure exerted by
       the gas on the bulb wall and on the neck wall is correct?
-    figure: figure_folder/q-3.png # not yet created
+    figure: figure_folder/q-3.png
     answers:
     - answer:
         text: The gas exerts a greater pressure on the neck wall than on the bulb wall.
@@ -170,7 +170,7 @@ questions:
       indicated in the figure. The gas exerts a total force of magnitude
       <latex>F</latex> on the smaller face. What is the magnitude of the total
       force the gas exerts on the larger face?
-    figure: figure_folder/q-4.png # not yet created
+    figure: figure_folder/q-4.png
     answers:
     - answer:
         text: <latex>F/4</latex>
@@ -200,11 +200,6 @@ questions:
           apply <latex>F = PA</latex> to each.
 
 # ── Notes for the next pass (delete once resolved) ────────────────────────────
-#
-# Figures: figure_folder/ does not exist yet. Create it beside this YAML and add
-#   q-1.png … q-4.png with those exact names — flat, no subfolders. Until then
-#   the questions render without figures (silently) and the Markdown export
-#   emits *[Figure: q-N.png]* placeholders.
 #
 # Isomorph design, for reference when extending the bank. Every variant holds
 #   the same target idea (pressure is uniform; pressure is not force) but changes
