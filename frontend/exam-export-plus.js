@@ -497,6 +497,25 @@ ${rows.join('\n')}
   const MD_DELIM = '$';
 
   /**
+   * CommonMark hard line break: two spaces at the end of a line.
+   *
+   * Answer choices are consecutive lines, and in Markdown consecutive lines are
+   * ONE paragraph, so Google Docs imported `A. … B. … C. …` as a single running
+   * block of prose. Ending each choice with this break keeps them in the same
+   * paragraph (so they stay tight, rather than gaining the paragraph spacing a
+   * blank line between choices would add) while still starting a new line.
+   *
+   * Spaces rather than the other CommonMark hard break, a trailing backslash:
+   * the importer unescapes backslashes before any of this is interpreted (see
+   * mdEscapeLatex), so a line-ending `\` is not reliable here.
+   *
+   * Nothing downstream trims line ends. mdText() strips trailing whitespace
+   * inside a field, but this is appended after that call, and the assembled
+   * string goes straight into the .zip.
+   */
+  const MD_BREAK = '  ';
+
+  /**
    * Count math delimiters and report whether they pair up. An odd count means
    * the Auto-LaTeX add-on will pair a closing delimiter with the next opening
    * one and render the document inside-out, so callers should warn rather than
@@ -685,12 +704,15 @@ ${rows.join('\n')}
       const answersVal = qdata.answers || [];
       const answerList = extractMcAnswers(answersVal);
       if (!answersHaveLock(answersVal)) seededShuffle(answerList, seedFor(version, num));
+      // Every choice but the last ends in a hard break; the last is followed by
+      // a blank line, which closes the paragraph on its own.
       answerList.forEach(([, atxt], j) => {
-        out.push(`${String.fromCharCode(65 + j)}. ${mdText(atxt)}`);
+        const brk = j === answerList.length - 1 ? '' : MD_BREAK;
+        out.push(`${String.fromCharCode(65 + j)}. ${mdText(atxt)}${brk}`);
       });
       out.push('');
     } else if (qtype === 'true_false') {
-      out.push('A. True', 'B. False', '');
+      out.push(`A. True${MD_BREAK}`, 'B. False', '');
     }
     return out.join('\n');
   }
