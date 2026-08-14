@@ -538,7 +538,31 @@ ${rows.join('\n')}
     return String(s == null ? '' : s).replace(MD_ESCAPABLE_RE, '\\\\$1');
   }
 
-  /** One unit term (`s²`, `kg`, `s^2`) → `\mathrm{s}^{2}`. */
+  /**
+   * Units whose LaTeX form is NOT `\mathrm{<the literal characters>}`.
+   *
+   * A unicode glyph inside `\mathrm{}` is text mode, and the Auto-LaTeX add-on's
+   * renderer fails on it exactly as it did on `\cdot` (see `unitToLatex`),
+   * emitting stray `\(` `\)` artifacts. Confirmed in Google Docs:
+   * `<latex>27</latex> °C` became `$27\ \mathrm{°C}$` and imported as a literal
+   * `27 \( ° \) C` instead of a rendered temperature.
+   *
+   * `{}` gives `\circ` an explicit empty base. The value and the unit are joined
+   * with `\ ` (a space token), and a bare `^` after a space has nothing to
+   * attach to, so `27\ ^{\circ}` is a "missing base" error in its own right.
+   *
+   * Only reachable for a unit that directly follows a `</latex>` tag. Prose
+   * degrees such as upstream's `inclined at 33.50°` carry no tag, never enter
+   * the converter, and are passed through as literal text as before.
+   */
+  const UNIT_SYMBOL = {
+    '°C': '{}^{\\circ}\\mathrm{C}',
+    '°F': '{}^{\\circ}\\mathrm{F}',
+    '°': '{}^{\\circ}',
+    'Ω': '\\Omega',
+  };
+
+  /** One unit term (`s²`, `kg`, `s^2`) → `\mathrm{s}^{2}`; `°C` → `{}^{\circ}\mathrm{C}`. */
   function unitTermToLatex(t) {
     let base = '', exp = '';
     for (const ch of String(t)) {
@@ -546,7 +570,12 @@ ${rows.join('\n')}
       else base += ch;
     }
     const caret = /^([^^]+)\^\{?(-?\d+)\}?$/.exec(base);
-    if (caret) return '\\mathrm{' + caret[1] + '}^{' + caret[2] + '}';
+    if (caret) {
+      return (UNIT_SYMBOL[caret[1]] || '\\mathrm{' + caret[1] + '}')
+             + '^{' + caret[2] + '}';
+    }
+    const sym = UNIT_SYMBOL[base];
+    if (sym) return exp ? sym + '^{' + exp + '}' : sym;
     return exp ? '\\mathrm{' + base + '}^{' + exp + '}'
                : '\\mathrm{' + base + '}';
   }
