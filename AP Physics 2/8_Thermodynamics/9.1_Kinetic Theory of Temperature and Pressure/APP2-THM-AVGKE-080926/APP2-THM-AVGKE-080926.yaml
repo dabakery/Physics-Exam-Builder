@@ -21,9 +21,19 @@ bank_info:
             vary the gas species and the temperature, and should sometimes give
             the temperature in degrees Celsius so the conversion to kelvin is
             part of the solution.)
+        - prompt 2: |
+            (q2-q6 authored as isomorphs of q1. Each changes something in the
+            solution rather than only the numbers: q2 and q3 add a Celsius to
+            kelvin conversion, q3 with a below-zero temperature so the sign
+            matters; q4 runs the formula backwards to solve for T; q5 names a
+            heavy gas beside a light one at the same temperature so the mass
+            has to be recognised as irrelevant; q6 takes a ratio of two gases
+            at different temperatures, which fails unless both the species
+            independence and the direct proportionality to T are used.)
         - formatting prompt: "../../../../Templates/YAML_formatting_prompt.md"
     updates:
         - update 1: (08-09-2026) Bank created; q1 moved here from the initial template scaffold.
+        - update 2: (08-13-2026) Added isomorphs q2-q6 (Celsius conversion, below-zero Celsius, reverse solve for T, heavy gas, two-gas ratio).
     generation details:
             model:
             version:
@@ -61,3 +71,215 @@ questions:
           independent of the identity of the gas.
         on_correct: Correct.
         on_incorrect: Check whether you used absolute temperature in kelvin.
+
+- numerical:
+    id: q2
+    title: Average Kinetic Energy of a Nitrogen Molecule
+    points: 3
+    text: |
+      A sealed rigid container holds nitrogen gas at a temperature of
+      <latex>27</latex> °C. Treat the nitrogen as an ideal gas. The Boltzmann
+      constant is <latex>1.38 \times 10^{-23}</latex> J/K.
+
+      Find the average translational kinetic energy of one nitrogen molecule,
+      in joules. Round your answer to two significant figures.
+    answer:
+        value: 6.2e-21
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          The average translational kinetic energy of a gas molecule depends
+          only on absolute temperature:
+          <latex>
+          K_{avg} = \frac{3}{2} k_B T
+          </latex>
+          The temperature here is given in degrees Celsius, so convert it to
+          kelvin first:
+          <latex>
+          T = 27 + 273 = 300 \text{ K}
+          </latex>
+          Then
+          <latex>
+          K_{avg} = \frac{3}{2}(1.38 \times 10^{-23})(300) = 6.2 \times 10^{-21} \text{ J}
+          </latex>
+        on_correct: |
+          Correct. Converting to kelvin before substituting is the step that
+          makes this work.
+        on_incorrect: |
+          This formula only works with absolute temperature. Add
+          <latex>273</latex> to the Celsius temperature before you substitute
+          it.
+
+- numerical:
+    id: q3
+    title: Average Kinetic Energy of an Argon Atom Below Zero
+    points: 3
+    text: |
+      A sealed rigid container holds argon gas at a temperature of
+      <latex>-23</latex> °C. Treat the argon as an ideal gas. The Boltzmann
+      constant is <latex>1.38 \times 10^{-23}</latex> J/K.
+
+      Find the average translational kinetic energy of one argon atom, in
+      joules. Round your answer to two significant figures.
+    answer:
+        value: 5.2e-21
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          Start from
+          <latex>
+          K_{avg} = \frac{3}{2} k_B T
+          </latex>
+          and convert the temperature to kelvin. A Celsius temperature below
+          zero is still a positive temperature on the kelvin scale:
+          <latex>
+          T = -23 + 273 = 250 \text{ K}
+          </latex>
+          Then
+          <latex>
+          K_{avg} = \frac{3}{2}(1.38 \times 10^{-23})(250) = 5.2 \times 10^{-21} \text{ J}
+          </latex>
+          Notice the answer is smaller than it would be at room temperature,
+          which is what you should expect from a colder gas.
+        on_correct: |
+          Correct. A negative Celsius temperature still gives a positive
+          absolute temperature.
+        on_incorrect: |
+          Watch the sign when you convert. A Celsius temperature of
+          <latex>-23</latex> °C becomes <latex>250</latex> K, not
+          <latex>296</latex> K.
+
+- numerical:
+    id: q4
+    title: Temperature from a Known Average Kinetic Energy
+    points: 3
+    text: |
+      A sealed rigid container holds oxygen gas, and the average translational
+      kinetic energy of one oxygen molecule is measured to be
+      <latex>8.28 \times 10^{-21}</latex> J. Treat the oxygen as an ideal gas.
+      The Boltzmann constant is <latex>1.38 \times 10^{-23}</latex> J/K.
+
+      Find the absolute temperature of the gas, in kelvin. Round your answer to
+      two significant figures.
+    answer:
+        value: 400
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          The same relationship applies, only this time you are solving for the
+          temperature instead of the energy. Start from
+          <latex>
+          K_{avg} = \frac{3}{2} k_B T
+          </latex>
+          and rearrange:
+          <latex>
+          T = \frac{2 K_{avg}}{3 k_B}
+          </latex>
+          Substituting gives
+          <latex>
+          T = \frac{2(8.28 \times 10^{-21})}{3(1.38 \times 10^{-23})} = 400 \text{ K}
+          </latex>
+          The identity of the gas is not needed here, and knowing that it is
+          oxygen does not change the answer.
+        on_correct: |
+          Correct. Rearranging the same relationship works in either direction.
+        on_incorrect: |
+          Solve the relationship for <latex>T</latex> before substituting. The
+          factor of <latex>\frac{3}{2}</latex> becomes
+          <latex>\frac{2}{3}</latex> when it moves to the other side.
+
+- numerical:
+    id: q5
+    title: Average Kinetic Energy of a Xenon Atom
+    points: 3
+    text: |
+      A sealed rigid container of neon gas and a sealed rigid container of
+      xenon gas are both held at a temperature of <latex>350</latex> K. A xenon
+      atom is about six times as massive as a neon atom. Treat both gases as
+      ideal. The Boltzmann constant is <latex>1.38 \times 10^{-23}</latex> J/K.
+
+      Find the average translational kinetic energy of one xenon atom, in
+      joules. Round your answer to two significant figures.
+    answer:
+        value: 7.2e-21
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          The relationship
+          <latex>
+          K_{avg} = \frac{3}{2} k_B T
+          </latex>
+          contains no mass term, so the mass of the atom does not enter the
+          calculation at all:
+          <latex>
+          K_{avg} = \frac{3}{2}(1.38 \times 10^{-23})(350) = 7.2 \times 10^{-21} \text{ J}
+          </latex>
+          The neon atoms in the other container have this same average kinetic
+          energy. What differs between the two gases is the average speed. The
+          heavier xenon atoms move more slowly, since
+          <latex>v_{rms} = \sqrt{3 k_B T / m}</latex>, and the two effects
+          balance out to give the same energy.
+        on_correct: |
+          Correct. Average translational kinetic energy depends on temperature
+          alone, not on which gas you have.
+        on_incorrect: |
+          The mass of the atom is not part of this relationship. Check whether
+          you scaled your answer by the factor of six, and note that the mass
+          affects the speed rather than the energy.
+
+- numerical:
+    id: q6
+    title: Ratio of Average Kinetic Energies for Two Gases
+    points: 3
+    text: |
+      A sealed rigid container of helium gas is held at <latex>200</latex> K.
+      A separate sealed rigid container of argon gas is held at
+      <latex>500</latex> K. Treat both gases as ideal.
+
+      Find the ratio of the average translational kinetic energy of one helium
+      atom to that of one argon atom. Give your answer as a decimal to two
+      significant figures.
+    answer:
+        value: 0.40
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          Write the relationship for each gas:
+          <latex>
+          K_{He} = \frac{3}{2} k_B T_{He}, \qquad K_{Ar} = \frac{3}{2} k_B T_{Ar}
+          </latex>
+          Because neither expression contains the mass of the atom, everything
+          except the temperature cancels in the ratio:
+          <latex>
+          \frac{K_{He}}{K_{Ar}} = \frac{T_{He}}{T_{Ar}} = \frac{200}{500} = 0.40
+          </latex>
+          The helium atoms are far less massive than the argon atoms, and that
+          plays no part in the answer. The ratio of the absolute temperatures is
+          the whole calculation.
+        on_correct: |
+          Correct. The masses cancel, and the ratio of absolute temperatures is
+          all that survives.
+        on_incorrect: |
+          Write out <latex>K_{avg} = \frac{3}{2} k_B T</latex> for each gas and
+          divide. Everything except the temperatures cancels, so the atomic
+          masses never enter the answer.
+
+# ── Notes for the next pass (delete once resolved) ────────────────────────────
+#
+# Isomorph design, for reference when extending the bank. Every variant holds
+#   the same target idea (K_avg depends only on absolute temperature) but changes
+#   something in the SOLUTION rather than just the nouns:
+#     q1  helium, 320 K                    — direct substitution        → 6.6e-21 J
+#     q2  nitrogen, 27 °C                  — adds Celsius conversion    → 6.2e-21 J
+#     q3  argon, -23 °C                    — conversion, sign matters   → 5.2e-21 J
+#     q4  oxygen, K given, find T          — rearrange and solve for T  → 400 K
+#     q5  xenon beside neon, same T        — mass named but irrelevant  → 7.2e-21 J
+#     q6  helium 200 K vs argon 500 K      — ratio; masses cancel       → 0.40
+#   q5 and q6 both target the "heavier gas means more kinetic energy" error; q5
+#   states the mass ratio as a distractor, q6 requires it to cancel.
+#   Every answer uses k_B = 1.38e-23 J/K and a 3% tolerance, matching q1.
