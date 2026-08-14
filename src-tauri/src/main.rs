@@ -689,7 +689,50 @@ fn figure_to_base64(path: &Path) -> Option<String> {
     Some(format!("data:{};base64,{}", mime, b64))
 }
 
-fn q_to_latex(q: &Value, num: usize, bank_dir: &Path, version: i64) -> String {
+/// Bundle filename for the figure of exam question `num`: `q07.png`.
+///
+/// Named by position on the exam, NOT by the name the figure carries in its
+/// bank. Bank-local names are unique only within one bank — banks conventionally
+/// number their figures `q-1`, `q-2`, … — so an exam drawing on two banks that
+/// each have a `q-4.png` used to copy one file and point both questions at it.
+/// Zero-padded so a file browser sorts q02 ahead of q11.
+fn bundle_fig_name(num: usize, src: &Path) -> String {
+    let ext = src
+        .extension()
+        .and_then(|e| e.to_str())
+        .map(|e| e.to_lowercase())
+        .unwrap_or_else(|| "png".to_string());
+    format!("q{:02}.{}", num, ext)
+}
+
+/// The questions of one exam version, in printed order, each paired with the
+/// bank directory it came from.
+///
+/// Single source of truth for exam order. Bundle figure filenames are derived
+/// from a question's POSITION in this list, so the .tex writer and the image
+/// copier have to walk the identical sequence or `\includegraphics` will name a
+/// file that was never copied.
+fn picked_questions(cart: &Value, version: i64) -> Vec<(Value, PathBuf)> {
+    let mut out: Vec<(Value, PathBuf)> = Vec::new();
+    if let Some(arr) = cart.as_array() {
+        for item in arr {
+            let raw = item.get("rawData").cloned().unwrap_or(json!({}));
+            let questions = raw.get("questions").and_then(|v| v.as_array()).cloned().unwrap_or_default();
+            if questions.is_empty() { continue; }
+            let bank_path = item.get("path").and_then(|v| v.as_str()).unwrap_or("");
+            let bank_dir = Path::new(bank_path).parent().unwrap_or(Path::new(".")).to_path_buf();
+            let qn = item.get("qn").and_then(|v| v.as_i64()).unwrap_or(1).max(1) as usize;
+            let n = questions.len();
+            let start = (((version - 1) as usize * qn) % n) as usize;
+            for i in 0..qn {
+                out.push((questions[(start + i) % n].clone(), bank_dir.clone()));
+            }
+        }
+    }
+    out
+}
+
+fn q_to_latex(q: &Value, num: usize, bank_dir: &Path, version: i64, bundle_figs: bool) -> String {
     let qtype = get_qtype(q);
     let qdata = q.get(&qtype).cloned().unwrap_or(json!({}));
     let raw_text = qdata.get("text").and_then(|v| v.as_str()).unwrap_or("");
@@ -699,8 +742,17 @@ fn q_to_latex(q: &Value, num: usize, bank_dir: &Path, version: i64) -> String {
         body.push_str("\n\nPlease show your work in the space below.");
     }
     let fig_latex = resolve_figure(&qdata, bank_dir)
-        .map(|p| format!("\n\\begin{{center}}\\includegraphics[width=0.8\\linewidth,keepaspectratio]{{{}}}\\end{{center}}\n",
-            p.to_string_lossy()))
+        .map(|p| {
+            // A bundle carries its own copy of the figure, so the .tex names it
+            // by position and stays portable. A standalone .tex keeps the
+            // absolute source path, which is what lets it compile in place.
+            let target = if bundle_figs {
+                bundle_fig_name(num, &p)
+            } else {
+                p.to_string_lossy().to_string()
+            };
+            format!("\n\\begin{{center}}\\includegraphics[width=0.8\\linewidth,keepaspectratio]{{{}}}\\end{{center}}\n", target)
+        })
         .unwrap_or_default();
     let mut out = vec![
         format!("\\question[3] % Q{}", num),
@@ -956,7 +1008,7 @@ fn export_tex(cart: Value, version: i64, title: String, kind: String) -> Result<
     if kind == "key" {
         Ok(build_key_latex(&cart, version, &title))
     } else {
-        Ok(build_exam_latex(&cart, version, &title))
+        Ok(build_exam_latex(&cart, version, &title, false))
     }
 }
 
@@ -969,10 +1021,14 @@ fn export_html(cart: Value, version: i64, title: String, include_answers: bool) 
 // Export builders
 // ══════════════════════════════════════════════════════════════════════════════
 
-fn build_exam_latex(cart: &Value, version: i64, title: &str) -> String {
-    let mut qs_with_dir: Vec<(Value, PathBuf)> = Vec::new();
+fn build_exam_latex(cart: &Value, version: i64, title: &str, bundle_figs: bool) -> String {
+    let qs_with_dir = picked_questions(cart, version);
     let mut graphicspaths: Vec<String> = Vec::new();
-    if let Some(arr) = cart.as_array() {
+    if bundle_figs {
+        // Figures sit in Images/<version>/ beside Exams/, copied there by
+        // export_exam_bundle under the same position-based names.
+        graphicspaths.push(format!("{{../Images/{}/}}", version_label(version)));
+    } else if let Some(arr) = cart.as_array() {
         for item in arr {
             let raw = item.get("rawData").cloned().unwrap_or(json!({}));
             let questions = raw.get("questions").and_then(|v| v.as_array()).cloned().unwrap_or_default();
@@ -986,16 +1042,10 @@ fn build_exam_latex(cart: &Value, version: i64, title: &str) -> String {
                 let fd = format!("{{{}/}}", figs_dir.to_string_lossy().replace('\\', "/"));
                 if !graphicspaths.contains(&fd) { graphicspaths.push(fd); }
             }
-            let qn = item.get("qn").and_then(|v| v.as_i64()).unwrap_or(1).max(1) as usize;
-            let n = questions.len();
-            let start = (((version - 1) as usize * qn) % n) as usize;
-            for i in 0..qn {
-                qs_with_dir.push((questions[(start + i) % n].clone(), bank_dir.clone()));
-            }
         }
     }
     let body: String = qs_with_dir.iter().enumerate()
-        .map(|(i, (q, dir))| q_to_latex(q, i + 1, dir, version))
+        .map(|(i, (q, dir))| q_to_latex(q, i + 1, dir, version, bundle_figs))
         .collect::<Vec<_>>()
         .join("\n\n");
     let graphicspath_line = if !graphicspaths.is_empty() {
@@ -1272,33 +1322,34 @@ fn export_exam_bundle(cart: Value, versions: i64, title: String, dest_folder: St
     std::fs::create_dir_all(&key_dir).map_err(|e| e.to_string())?;
     std::fs::create_dir_all(&img_dir).map_err(|e| e.to_string())?;
 
-    // Copy all referenced images (deduplicated by filename)
+    // Copy the figures of the questions actually ON each version, named by their
+    // position on that version — see bundle_fig_name().
+    //
+    // This used to walk every question of every cart bank and dedupe by source
+    // filename, which went wrong twice over: it copied figures for questions no
+    // version had selected, and when two banks each had a `q-4.png` the second
+    // was skipped entirely (`if !dst.exists()`) while both questions' .tex
+    // pointed at the one file that did land.
     let mut images_copied = 0usize;
-    if let Some(arr) = cart.as_array() {
-        for item in arr {
-            let bank_path = item.get("path").and_then(|v| v.as_str()).unwrap_or("");
-            let bank_dir = Path::new(bank_path).parent().unwrap_or(Path::new("."));
-            let raw = item.get("rawData").cloned().unwrap_or(json!({}));
-            for q in raw.get("questions").and_then(|v| v.as_array()).cloned().unwrap_or_default() {
-                let qtype = get_qtype(&q);
-                let qdata = q.get(&qtype).cloned().unwrap_or(json!({}));
-                if let Some(src) = resolve_figure(&qdata, bank_dir) {
-                    let fname = src.file_name().unwrap_or_default();
-                    let dst = img_dir.join(fname);
-                    if !dst.exists() {
-                        std::fs::copy(&src, &dst).map_err(|e| e.to_string())?;
-                        images_copied += 1;
-                    }
-                }
+    for v in 1..=versions {
+        let vdir = img_dir.join(version_label(v));
+        std::fs::create_dir_all(&vdir).map_err(|e| e.to_string())?;
+        let picked = picked_questions(&cart, v);
+        for (i, (q, bank_dir)) in picked.iter().enumerate() {
+            let qtype = get_qtype(q);
+            let qdata = q.get(&qtype).cloned().unwrap_or(json!({}));
+            if let Some(src) = resolve_figure(&qdata, bank_dir) {
+                let dst = vdir.join(bundle_fig_name(i + 1, &src));
+                std::fs::copy(&src, &dst).map_err(|e| e.to_string())?;
+                images_copied += 1;
             }
         }
     }
 
-    // Generate all exam + key tex files; rewrite graphicspath to point at ../Images/
-    let graphicspath_re = Regex::new(r"\\graphicspath\{[^}]*\}").unwrap();
+    // Generate all exam + key tex files. build_exam_latex writes its own
+    // \graphicspath for the bundle layout, so nothing is rewritten afterwards.
     for v in 1..=versions {
-        let exam_tex = build_exam_latex(&cart, v, &title);
-        let exam_tex = graphicspath_re.replace(&exam_tex, r"\graphicspath{{../Images/}}").to_string();
+        let exam_tex = build_exam_latex(&cart, v, &title, true);
         let key_tex  = build_key_latex(&cart, v, &title);
         std::fs::write(exam_dir.join(format!("exam_{}.tex", version_label(v))), &exam_tex).map_err(|e| e.to_string())?;
         std::fs::write(key_dir.join(format!("key_{}.tex",  version_label(v))), &key_tex).map_err(|e| e.to_string())?;
