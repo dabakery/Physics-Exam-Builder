@@ -376,26 +376,76 @@
   }
 
   /**
+   * The questions of one exam version, in printed order, each paired with the
+   * cart item it came from.
+   *
+   * Single source of truth for exam order. Bundle figure filenames are derived
+   * from a question's POSITION in this list, so the Markdown writer and the
+   * image writer have to walk the identical sequence or a placeholder will name
+   * a file the zip does not contain. Same discipline as the quiz/exporter
+   * selection parity in CLAUDE.md: two readers, one ordering.
+   *
+   * The item is carried alongside because resolving a figure needs the bankRef
+   * of the bank the question came from, which a flat question list loses.
+   */
+  function pickExamQuestions(cart, version) {
+    const picked = [];
+    for (const item of (Array.isArray(cart) ? cart : [])) {
+      for (const q of pickItemQuestions(item, version)) picked.push({ item, q });
+    }
+    return picked;
+  }
+
+  /**
+   * Bundle path for the figure of exam question `num`: `Images/A/q07.png`.
+   *
+   * Named by position on the exam, NOT by the name the figure carries in its
+   * bank. Bank-local names are only unique within one bank — every bank here
+   * numbers its figures `q-1`, `q-2`, … — so an exam drawing on two banks had
+   * two different `q-5.png`. The old collector deduped by basename, so the
+   * second bank's figure was never fetched at all and BOTH questions' Markdown
+   * pointed at the first bank's image: fewer files than questions, and the wrong
+   * picture against the ones that did resolve.
+   *
+   * Position-based names cannot collide, and they say which question the file
+   * belongs to. Zero-padded so a file browser sorts q02 ahead of q11. Foldered
+   * per version because question 11 of version A and of version B are usually
+   * different questions; each version's Images/ set is self-contained.
+   */
+  function figBaseName(num, srcPath) {
+    const m = /\.([A-Za-z0-9]+)$/.exec(basename(srcPath) || '');
+    const ext = m ? m[1].toLowerCase() : 'png';
+    return `q${String(num).padStart(2, '0')}.${ext}`;
+  }
+
+  /** Bundle folder holding one version's figures: `Images/A/`. */
+  function figExportDir(version) { return `Images/${versionLabel(version)}/`; }
+
+  function figExportName(version, num, srcPath) {
+    return figExportDir(version) + figBaseName(num, srcPath);
+  }
+
+  /**
    * Build the full exam .tex. Port of build_exam_latex (main.rs:873).
    * opts.graphicspathDirs — dirs for the \graphicspath line (default: common
-   * relative subdirs for a single .tex; the bundle exporter passes ['../Images/']).
+   * relative subdirs for a single .tex, led by this version's bundle folder).
    */
   function buildExamLatex(cart, version, title, opts) {
     opts = opts || {};
+    // The version's own folder leads, so a .tex compiled beside an unzipped
+    // bundle finds its figures without the author moving anything.
     const graphicspathDirs = opts.graphicspathDirs
-      || ['./', 'Figures/', 'figures/', 'Images/', 'images/'];
-
-    const picked = [];
-    for (const item of (Array.isArray(cart) ? cart : [])) {
-      for (const q of pickItemQuestions(item, version)) picked.push(q);
-    }
+      || [figExportDir(version), './', 'Figures/', 'figures/', 'Images/', 'images/'];
 
     let anyFigure = false;
-    const body = picked.map((q, idx) => {
+    const body = pickExamQuestions(cart, version).map(({ q }, idx) => {
       const qtype = getQtype(q);
       const qdata = q[qtype] || {};
+      // Position-based, exactly as the bundle names it. basename() here meant
+      // two banks that both called a figure q-4.png emitted the same
+      // \includegraphics for different pictures. See figExportName().
       let figInclude = null;
-      if (qdata.figure) { figInclude = basename(qdata.figure); anyFigure = true; }
+      if (qdata.figure) { figInclude = figBaseName(idx + 1, qdata.figure); anyFigure = true; }
       return qToLatex(q, idx + 1, version, figInclude);
     }).join('\n\n');
 
@@ -722,14 +772,13 @@ ${rows.join('\n')}
 
   /** Full exam as Markdown, ready for Google Docs import. */
   function buildExamMarkdown(cart, version, title) {
-    const picked = [];
-    for (const item of (Array.isArray(cart) ? cart : [])) {
-      for (const q of pickItemQuestions(item, version)) picked.push(q);
-    }
-    const body = picked.map((q, idx) => {
+    const body = pickExamQuestions(cart, version).map(({ q }, idx) => {
       const qtype = getQtype(q);
       const qdata = q[qtype] || {};
-      const figName = qdata.figure ? basename(qdata.figure) : null;
+      // Placeholder names the file by exam position, matching what
+      // buildBundleZip writes. Both sides go through figExportName().
+      const figName = qdata.figure
+        ? figExportName(version, idx + 1, qdata.figure) : null;
       return qToMarkdown(q, idx + 1, version, figName);
     }).join('\n');
 
@@ -791,8 +840,9 @@ ${rows.join('\n')}
    *
    * Markdown rather than .tex because Google Docs is the destination — import
    * each Exams/*.md, render with the Auto-LaTeX Equations add-on, then insert
-   * the Images/ files where the `*[Figure: name.png]*` placeholders sit (the
-   * Markdown export cannot embed them; Docs will not resolve a relative path).
+   * the Images/ files where the `*[Figure: Images/A/q07.png]*` placeholders sit
+   * (the Markdown export cannot embed them; Docs will not resolve a relative
+   * path). The placeholder gives the file's exact path inside this zip.
    * Single-file .tex export is still available separately via buildExamLatex /
    * buildKeyLatex, which this no longer calls.
    * @returns {Promise<Blob>}
@@ -802,33 +852,45 @@ ${rows.join('\n')}
     const zip = new global.JSZip();
     const examsDir = zip.folder('Exams');
     const keysDir = zip.folder('Keys');
-    const imagesDir = zip.folder('Images');
 
-    // Collect referenced figures (deduped by basename), fetched via the source.
+    const nv = Math.max(1, Number(versions) || 1);
+
+    // Figures for the questions actually ON each version, named by their exam
+    // position. Walks pickExamQuestions() in the same order buildExamMarkdown
+    // does, so every `*[Figure: …]*` placeholder names a file that is here.
+    //
+    // Previously this walked every question of every cart bank instead — it
+    // copied figures for questions no version had selected, while deduping by
+    // bank-local basename dropped the ones it did need. See figExportName().
     let imagesCopied = 0;
     if (bankSource && typeof bankSource.resolveFigure === 'function') {
-      const seen = new Set();
-      for (const item of (Array.isArray(cart) ? cart : [])) {
-        const bankRef = item.bankRef || { path: item.path, handle: { path: item.path } };
-        const raw = item.rawData || {};
-        for (const q of (raw.questions || [])) {
+      // One fetch per distinct source figure. A question reused across versions
+      // is written under several names but resolved once, which matters because
+      // RemoteSource.resolveFigure() goes over the network.
+      const resolved = new Map();
+      for (let v = 1; v <= nv; v++) {
+        const picked = pickExamQuestions(cart, v);
+        for (let i = 0; i < picked.length; i++) {
+          const { item, q } = picked[i];
           const qtype = getQtype(q);
           const qdata = q[qtype] || {};
           if (!qdata.figure) continue;
-          const base = basename(qdata.figure);
-          if (!base || seen.has(base)) continue;
-          seen.add(base);
-          let dataUrl = null;
-          try { dataUrl = await bankSource.resolveFigure(bankRef, qdata, bankRef); }
-          catch (_e) { dataUrl = null; }
-          if (!dataUrl) continue;
-          const decoded = dataUrlToBytes(dataUrl);
-          if (decoded) { imagesDir.file(base, decoded.bytes); imagesCopied += 1; }
+          const bankRef = item.bankRef || { path: item.path, handle: { path: item.path } };
+          const key = `${bankRef.path || item.path || ''} ${qdata.figure}`;
+          if (!resolved.has(key)) {
+            let dataUrl = null;
+            try { dataUrl = await bankSource.resolveFigure(bankRef, qdata, bankRef); }
+            catch (_e) { dataUrl = null; }
+            resolved.set(key, dataUrl ? dataUrlToBytes(dataUrl) : null);
+          }
+          const decoded = resolved.get(key);
+          if (!decoded) continue;
+          zip.file(figExportName(v, i + 1, qdata.figure), decoded.bytes);
+          imagesCopied += 1;
         }
       }
     }
 
-    const nv = Math.max(1, Number(versions) || 1);
     let unbalanced = 0;
     for (let v = 1; v <= nv; v++) {
       const examMd = buildExamMarkdown(cart, v, title);
