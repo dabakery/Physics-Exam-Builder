@@ -1,0 +1,304 @@
+bank_info:
+    title: Root-Mean-Square Speed from Temperature and Mass
+    bank_id: APP2-THM-VRMS-081426
+    description: |-
+      Isomorphic numerical problems for AP Physics 2, College Board Unit 9
+      Topic 9.1. Students compute an actual molecular speed by setting the
+      average translational kinetic energy equal to <latex>\frac{1}{2} m v^2</latex>
+      and solving:
+      <latex>
+      \frac{3}{2} k_B T = \frac{1}{2} m v_{rms}^2
+      \quad \Rightarrow \quad
+      v_{rms} = \sqrt{\frac{3 k_B T}{m}} = \sqrt{\frac{3 R T}{M}}
+      </latex>
+
+      The target idea is that the speed depends on both absolute temperature and
+      the mass of the molecule, and that it grows as the square root of the
+      temperature rather than in proportion to it. The companion bank
+      APP2-THM-TRMS-080926 covers the proportional reasoning; this one asks for
+      a number in metres per second.
+
+      The common errors are using a Celsius temperature, leaving the molar mass
+      in grams per mole instead of kilograms per mole, forgetting to take the
+      square root, and pairing the wrong constant with the wrong mass. The last
+      one is specific to this calculation: <latex>k_B</latex> goes with the mass
+      of one molecule in kilograms, and <latex>R</latex> goes with the molar
+      mass in kilograms per mole.
+    date created: 08-14-2026
+    status: ready # Only use 'draft', 'ready', 'deployed', and 'deprecated' for this field. 'draft' and 'deprecated' files won't be parsed by the exam builder.
+    learning objectives:
+        - THM-KTTP-1 # Relate average translational kinetic energy to absolute temperature
+        - THM-KTTP-2 # Relate molecular speed distribution to temperature and molar mass
+    generation prompts: # The following are the prompts that generated the questions in the problem bank.
+        - prompt 1: |
+            (q1-q6 drafted to fill a gap in the 9.1 topic folder: APP2-THM-AVGKE
+            computes kinetic energy and APP2-THM-TRMS reasons about how speed
+            scales, but nothing asked students to produce a speed in m/s. Each
+            isomorph changes the solution rather than only the numbers: q1 uses
+            the molar form, q2 the molecular form so the constant and the mass
+            have to be matched correctly, q3 adds a Celsius conversion, q4 and
+            q6 run the relationship backwards to a temperature and to a molar
+            mass, and q5 takes a ratio at fixed temperature so both temperature
+            and the constants cancel.)
+        - formatting prompt: "../../../../Templates/YAML_formatting_prompt.md"
+    updates:
+        - update 1: (08-14-2026) Bank created with q1-q6.
+    generation details:
+            model:
+            version:
+            last updated: 08-14-2026
+    authors:
+        - Michael Baker
+
+questions:
+
+- numerical:
+    id: q1
+    title: RMS Speed of Nitrogen Molecules
+    points: 3
+    text: |
+      A sealed rigid container holds nitrogen gas at a temperature of
+      <latex>300</latex> K. The molar mass of nitrogen is
+      <latex>0.028</latex> kg/mol. Treat the nitrogen as an ideal gas. The gas
+      constant is <latex>8.31</latex> J/(mol·K).
+
+      Find the root-mean-square speed of the nitrogen molecules, in metres per
+      second. Round your answer to three significant figures.
+    answer:
+        value: 517
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          Set the average translational kinetic energy equal to the kinetic
+          energy of a molecule moving at the rms speed:
+          <latex>
+          \frac{3}{2} k_B T = \frac{1}{2} m v_{rms}^2
+          </latex>
+          Solving for the speed and writing it per mole gives
+          <latex>
+          v_{rms} = \sqrt{\frac{3 R T}{M}}
+          </latex>
+          Substituting the values,
+          <latex>
+          v_{rms} = \sqrt{\frac{3(8.31)(300)}{0.028}} = \sqrt{2.67 \times 10^{5}} = 517 \text{ m/s}
+          </latex>
+          A few hundred metres per second is the size of answer you should
+          expect for a gas at room temperature, so it is worth checking your
+          result against that.
+        on_correct: |
+          Correct. Notice how quickly gas molecules are actually moving.
+        on_incorrect: |
+          Check that you took the square root at the end, and that the molar
+          mass went in as <latex>0.028</latex> kg/mol rather than
+          <latex>28</latex> g/mol.
+
+- numerical:
+    id: q2
+    title: RMS Speed of Helium Atoms from the Mass of One Atom
+    points: 3
+    text: |
+      A sealed rigid container holds helium gas at a temperature of
+      <latex>300</latex> K. The mass of one helium atom is
+      <latex>6.65 \times 10^{-27}</latex> kg. Treat the helium as an ideal gas.
+      The Boltzmann constant is <latex>1.38 \times 10^{-23}</latex> J/K.
+
+      Find the root-mean-square speed of the helium atoms, in metres per second.
+      Round your answer to three significant figures.
+    answer:
+        value: 1370
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          Here you are given the mass of a single atom rather than a molar mass,
+          so use the Boltzmann constant rather than the gas constant:
+          <latex>
+          v_{rms} = \sqrt{\frac{3 k_B T}{m}}
+          </latex>
+          The two constants are not interchangeable.
+          <latex>k_B</latex> pairs with the mass of one molecule in kilograms,
+          and <latex>R</latex> pairs with the molar mass in kilograms per mole.
+          Substituting,
+          <latex>
+          v_{rms} = \sqrt{\frac{3(1.38 \times 10^{-23})(300)}{6.65 \times 10^{-27}}} = 1.37 \times 10^{3} \text{ m/s}
+          </latex>
+          Helium comes out much faster than nitrogen at the same temperature
+          because a helium atom is far less massive, not because it is hotter.
+        on_correct: |
+          Correct. You matched the Boltzmann constant with the mass of a single
+          atom.
+        on_incorrect: |
+          Check which constant you used. With the mass of one atom in kilograms
+          you need <latex>k_B</latex>, not <latex>R</latex>.
+
+- numerical:
+    id: q3
+    title: RMS Speed of Oxygen Molecules at a Celsius Temperature
+    points: 3
+    text: |
+      A sealed rigid container holds oxygen gas at a temperature of
+      <latex>127</latex> °C. The molar mass of oxygen is
+      <latex>0.032</latex> kg/mol. Treat the oxygen as an ideal gas. The gas
+      constant is <latex>8.31</latex> J/(mol·K).
+
+      Find the root-mean-square speed of the oxygen molecules, in metres per
+      second. Round your answer to three significant figures.
+    answer:
+        value: 558
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          Convert the temperature to kelvin before you do anything else, because
+          this relationship only works with absolute temperature:
+          <latex>
+          T = 127 + 273 = 400 \text{ K}
+          </latex>
+          Then
+          <latex>
+          v_{rms} = \sqrt{\frac{3 R T}{M}} = \sqrt{\frac{3(8.31)(400)}{0.032}} = 558 \text{ m/s}
+          </latex>
+          If you had left the temperature at <latex>127</latex> °C you would
+          have found about <latex>314</latex> m/s, which is not a small error.
+          The conversion matters more than it might look.
+        on_correct: |
+          Correct. Converting to kelvin first is what makes the rest work.
+        on_incorrect: |
+          Add <latex>273</latex> to the Celsius temperature before substituting.
+          Absolute temperature is the only kind this relationship accepts.
+
+- numerical:
+    id: q4
+    title: Temperature from a Known RMS Speed
+    points: 3
+    text: |
+      A sealed rigid container holds argon gas, and the root-mean-square speed
+      of the argon atoms is measured to be <latex>500</latex> m/s. The molar
+      mass of argon is <latex>0.040</latex> kg/mol. Treat the argon as an ideal
+      gas. The gas constant is <latex>8.31</latex> J/(mol·K).
+
+      Find the absolute temperature of the gas, in kelvin. Round your answer to
+      three significant figures.
+    answer:
+        value: 401
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          Start from the same relationship and solve it for the temperature
+          instead of the speed:
+          <latex>
+          v_{rms} = \sqrt{\frac{3 R T}{M}}
+          \quad \Rightarrow \quad
+          T = \frac{M v_{rms}^2}{3 R}
+          </latex>
+          Squaring both sides is what undoes the square root, so the speed
+          enters as <latex>v_{rms}^2</latex>. Substituting,
+          <latex>
+          T = \frac{(0.040)(500)^2}{3(8.31)} = 401 \text{ K}
+          </latex>
+        on_correct: |
+          Correct. Rearranging the same relationship works in either direction.
+        on_incorrect: |
+          Square the speed when you rearrange. Since the speed depends on the
+          square root of the temperature, the temperature depends on the square
+          of the speed.
+
+- numerical:
+    id: q5
+    title: Ratio of RMS Speeds for Two Gases at the Same Temperature
+    points: 3
+    text: |
+      A sealed container of helium gas and a sealed container of argon gas are
+      held at the same temperature. The molar mass of helium is
+      <latex>0.004</latex> kg/mol and the molar mass of argon is
+      <latex>0.040</latex> kg/mol. Treat both gases as ideal.
+
+      Find the ratio of the root-mean-square speed of a helium atom to that of
+      an argon atom. Give your answer as a decimal to three significant figures.
+    answer:
+        value: 3.16
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          Write the relationship for each gas:
+          <latex>
+          v_{He} = \sqrt{\frac{3 R T}{M_{He}}}, \qquad v_{Ar} = \sqrt{\frac{3 R T}{M_{Ar}}}
+          </latex>
+          Both gases are at the same temperature, so <latex>T</latex> and the
+          constants cancel in the ratio and only the masses survive:
+          <latex>
+          \frac{v_{He}}{v_{Ar}} = \sqrt{\frac{M_{Ar}}{M_{He}}} = \sqrt{\frac{0.040}{0.004}} = \sqrt{10} = 3.16
+          </latex>
+          Note that the masses end up the other way round from where they
+          started, because the mass sits underneath the fraction. The lighter
+          gas is the faster one. A mass ratio of <latex>10</latex> gives a speed
+          ratio of only <latex>3.16</latex>, since the square root softens the
+          difference.
+        on_correct: |
+          Correct. The lighter gas is faster, by the square root of the mass
+          ratio.
+        on_incorrect: |
+          The mass is in the denominator, so the gas with the smaller molar mass
+          has the larger speed. Take the square root of the mass ratio rather
+          than the ratio itself.
+
+- numerical:
+    id: q6
+    title: Identifying a Gas from Its RMS Speed
+    points: 3
+    text: |
+      A sealed rigid container holds an unknown ideal gas at a temperature of
+      <latex>300</latex> K. The root-mean-square speed of its molecules is
+      measured to be <latex>1934</latex> m/s. The gas constant is
+      <latex>8.31</latex> J/(mol·K).
+
+      Find the molar mass of the gas, in grams per mole. Round your answer to
+      three significant figures.
+    answer:
+        value: 2.00
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          Solve the relationship for the molar mass this time:
+          <latex>
+          v_{rms} = \sqrt{\frac{3 R T}{M}}
+          \quad \Rightarrow \quad
+          M = \frac{3 R T}{v_{rms}^2}
+          </latex>
+          Substituting,
+          <latex>
+          M = \frac{3(8.31)(300)}{(1934)^2} = 2.00 \times 10^{-3} \text{ kg/mol}
+          </latex>
+          The question asks for grams per mole, so multiply by
+          <latex>1000</latex> to get <latex>2.00</latex> g/mol. That identifies
+          the gas as hydrogen, which is the lightest and therefore the fastest
+          gas at any given temperature.
+        on_correct: |
+          Correct, and the answer tells you the gas is hydrogen.
+        on_incorrect: |
+          Rearrange for <latex>M</latex> and remember the speed is squared. The
+          result comes out in kg/mol, so convert to g/mol before answering.
+
+# ── Notes for the next pass (delete once resolved) ────────────────────────────
+#
+# Isomorph design, for reference when extending the bank. Every variant holds
+#   the same target idea (v_rms = sqrt(3RT/M) = sqrt(3 kB T/m)) but changes the
+#   entry point or the direction of the solution:
+#     q1  N2,  M and T given          — molar form, direct         → 517 m/s
+#     q2  He,  m of one atom and T    — molecular form; kB not R   → 1370 m/s
+#     q3  O2,  T in Celsius           — adds the kelvin conversion → 558 m/s
+#     q4  Ar,  v and M given          — reverse, solve for T       → 401 K
+#     q5  He vs Ar at one T           — ratio; T and constants go  → 3.16
+#     q6  v and T given, gas unknown  — reverse, solve for M       → 2.00 g/mol
+#
+# q2 is the one that exercises the constant/mass pairing (kB with the mass of a
+#   single molecule, R with the molar mass). That error is invisible in the
+#   proportional reasoning of APP2-THM-TRMS-080926, which is why it only shows
+#   up here.
+# q5 deliberately inverts the masses relative to q5 of APP2-THM-AVGKE-080926:
+#   there the answer is that mass does NOT matter (equal kinetic energies), here
+#   it is the only thing that does. Worth keeping both.

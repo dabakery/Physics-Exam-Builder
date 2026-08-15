@@ -586,7 +586,21 @@ ${rows.join('\n')}
   const UNIT_SUP = '(?:[\\u00b2\\u00b3\\u00b9\\u2070\\u2074-\\u2079\\u207a\\u207b]+|\\^-?\\d+|\\^\\{-?\\d+\\})?';
   const UNIT_TERM = UNIT_BASE + UNIT_SUP;
   // Compound units: N·m, kg·m/s, N·m²/kg²
-  const UNIT_EXPR = UNIT_TERM + '(?:\\s*[·*/]\\s*' + UNIT_TERM + ')*';
+  const UNIT_OPS = '(?:\\s*[·*/]\\s*';
+  /**
+   * One parenthesised level, for denominators written the way the AP equation
+   * sheet writes them: `J/(mol·K)`. Without this the expression stopped at the
+   * `(`, so `<latex>8.31</latex> J/(mol·K)` absorbed only the `J` and left
+   * `/(mol·K)` outside the math span in body text.
+   *
+   * Deliberately not recursive, and no exponent on the group itself. Neither
+   * `((a·b)/c)` nor `(m/s)^2` occurs in the corpus, and both need a real parser
+   * rather than a regex. A unit that does either simply absorbs partially, the
+   * same as every parenthesised unit did before.
+   */
+  const UNIT_GROUP = '\\(' + UNIT_TERM + UNIT_OPS + UNIT_TERM + ')*\\)';
+  const UNIT_ATOM = '(?:' + UNIT_GROUP + '|' + UNIT_TERM + ')';
+  const UNIT_EXPR = UNIT_ATOM + UNIT_OPS + UNIT_ATOM + ')*';
 
   const SUP_MAP = {
     '²': '2', '³': '3', '¹': '1', '⁰': '0', '⁴': '4',
@@ -658,16 +672,21 @@ ${rows.join('\n')}
    * add-on's renderer failed on it and emitted stray `\(` `\)` artifacts.
    */
   function unitToLatex(u) {
-    return String(u == null ? '' : u)
-      .replace(/\s+/g, '')
-      .split(/([·*\/])/)
-      .filter((piece) => piece !== '')
-      .map((piece) => {
-        if (piece === '·' || piece === '*') return '\\cdot ';
-        if (piece === '/') return '/';
-        return unitTermToLatex(piece);
-      })
-      .join('');
+    // Tokenise rather than split, because a split on the operators would cut
+    // `(mol·K)` into `(mol` and `K)` and hand `\mathrm{}` the brackets.
+    // Parentheses pass through untouched: they are already math-mode
+    // delimiters and must NOT go inside \mathrm{}, for the same reason \cdot
+    // must not.
+    const TOK = /([()])|([·*\/])|([^()·*\/]+)/g;
+    const s = String(u == null ? '' : u).replace(/\s+/g, '');
+    let out = '';
+    let m;
+    while ((m = TOK.exec(s)) !== null) {
+      if (m[1]) out += m[1];
+      else if (m[2]) out += (m[2] === '/' ? '/' : '\\cdot ');
+      else out += unitTermToLatex(m[3]);
+    }
+    return out;
   }
 
   /**
@@ -701,8 +720,13 @@ ${rows.join('\n')}
     t = t.replace(INLINE_UNIT_RE, (m, inner, gap, unit) => {
       const math = inner.trim();
       if (!math) return m;
-      const withUnit = unit ? math + '\\ ' + unitToLatex(unit) : math;
-      return MD_DELIM + mdEscapeLatex(withUnit) + MD_DELIM;
+      // With no unit to absorb, the whitespace the pattern consumed is ordinary
+      // spacing and has to be put back. It only survived when a LETTER followed,
+      // because the trailing (?![A-Za-z]) forced the engine to backtrack to a
+      // zero-width gap; before a `(`, a digit or a `$` the lookahead passed and
+      // the space was silently eaten, giving `$R$(Closing)`.
+      if (!unit) return MD_DELIM + mdEscapeLatex(math) + MD_DELIM + gap;
+      return MD_DELIM + mdEscapeLatex(math + '\\ ' + unitToLatex(unit)) + MD_DELIM;
     });
     return t;
   }
