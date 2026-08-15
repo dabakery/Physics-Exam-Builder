@@ -2,20 +2,23 @@
 
 Isomorphic problem banks for AP Physics 2 (algebra-based), authored by Michael Baker.
 
-Unit folder numbers follow the College Board's AP Physics 2 unit numbering **shifted down by
-one**, so that a course numbered from 0 lines up: AP Unit 9 (Thermodynamics) is folder
-`8_Thermodynamics`, AP Unit 15 (Modern Physics) is folder `14_Modern Physics`. Folders 0–7
-belong to `../AP Physics 1/` (AP Units 1–8) and intentionally do not exist here.
+Unit folder numbers **are** the College Board's AP Physics 2 unit numbers: AP Unit 9
+(Thermodynamics) is folder `9_Thermodynamics`, AP Unit 15 (Modern Physics) is folder
+`15_Modern Physics`. The folder number is shown to students on the site, so it has to match
+the number they see in the course description and on the equation sheet. It also has to match
+the subtopic folders beneath it, which carry College Board section numbers such as
+`9.1_Kinetic Theory of Temperature and Pressure`. Folders 1–8 belong to `../AP Physics 1/`
+(AP Units 1–8) and intentionally do not exist here.
 
 | Folder | College Board unit |
 |---|---|
-| `8_Thermodynamics` | Unit 9 |
-| `9_Electric Force, Field, and Potential` | Unit 10 |
-| `10_Electric Circuits` | Unit 11 |
-| `11_Magnetism and Electromagnetism` | Unit 12 |
-| `12_Geometric Optics` | Unit 13 |
-| `13_Waves, Sound, and Physical Optics` | Unit 14 |
-| `14_Modern Physics` | Unit 15 |
+| `9_Thermodynamics` | Unit 9 |
+| `10_Electric Force, Field, and Potential` | Unit 10 |
+| `11_Electric Circuits` | Unit 11 |
+| `12_Magnetism and Electromagnetism` | Unit 12 |
+| `13_Geometric Optics` | Unit 13 |
+| `14_Waves, Sound, and Physical Optics` | Unit 14 |
+| `15_Modern Physics` | Unit 15 |
 
 `Topics.csv` is the topic catalog for this course.
 
@@ -28,10 +31,10 @@ The bank folder, the `.yaml` inside it, and `bank_info.bank_id` all use this sam
 
 | Unit | Code | Unit | Code |
 |---|---|---|---|
-| 8 Thermodynamics | `THM` | 12 Geometric Optics | `OPT` |
-| 9 Electric Force, Field, and Potential | `EFP` | 13 Waves, Sound, and Physical Optics | `WAV` |
-| 10 Electric Circuits | `CIR` | 14 Modern Physics | `MOD` |
-| 11 Magnetism and Electromagnetism | `MAG` | | |
+| 9 Thermodynamics | `THM` | 13 Geometric Optics | `OPT` |
+| 10 Electric Force, Field, and Potential | `EFP` | 14 Waves, Sound, and Physical Optics | `WAV` |
+| 11 Electric Circuits | `CIR` | 15 Modern Physics | `MOD` |
+| 12 Magnetism and Electromagnetism | `MAG` | | |
 
 ## Adding a bank
 

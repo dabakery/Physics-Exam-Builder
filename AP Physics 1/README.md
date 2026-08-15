@@ -2,25 +2,27 @@
 
 Isomorphic problem banks for AP Physics 1 (algebra-based), authored by Michael Baker.
 
-Unit folder numbers follow the College Board's AP Physics 1 unit numbering **shifted down by
-one**, so the course is numbered from 0: AP Unit 1 (Kinematics) is folder `0_Kinematics`,
-AP Unit 8 (Fluids) is folder `7_Fluids`. `../AP Physics 2/` picks up at folder 8 (AP Unit 9,
-Thermodynamics) under the same convention, so the two courses form one unbroken 0–14
+Unit folder numbers **are** the College Board's AP Physics 1 unit numbers: AP Unit 1
+(Kinematics) is folder `1_Kinematics`, AP Unit 8 (Fluids) is folder `8_Fluids`. The folder
+number is shown to students on the site, so it has to match the number they see in the
+course description and on the equation sheet. `../AP Physics 2/` picks up at folder 9 (AP
+Unit 9, Thermodynamics) under the same rule, so the two courses form one unbroken 1–15
 sequence.
 
 | Folder | College Board unit |
 |---|---|
-| `0_Kinematics` | 1 |
-| `1_Force and Translational Dynamics` | 2 |
-| `2_Work, Energy, and Power` | 3 |
-| `3_Linear Momentum` | 4 |
-| `4_Torque and Rotational Dynamics` | 5 |
-| `5_Energy and Momentum of Rotating Systems` | 6 |
-| `6_Oscillations` | 7 |
-| `7_Fluids` | 8 |
+| `1_Kinematics` | 1 |
+| `2_Force and Translational Dynamics` | 2 |
+| `3_Work, Energy, and Power` | 3 |
+| `4_Linear Momentum` | 4 |
+| `5_Torque and Rotational Dynamics` | 5 |
+| `6_Energy and Momentum of Rotating Systems` | 6 |
+| `7_Oscillations` | 7 |
+| `8_Fluids` | 8 |
 
-Note this numbering no longer lines up with `../PHY I Mechanics/`, which uses upstream's
-university-course sequence. `Topics.csv` is the topic catalog for this course.
+Note this numbering does not line up with `../PHY I Mechanics/`, which uses upstream's
+university-course sequence and starts at 0. `Topics.csv` is the topic catalog for this
+course.
 
 ## Bank ID convention
 
@@ -31,10 +33,10 @@ The bank folder, the `.yaml` inside it, and `bank_info.bank_id` all use this sam
 
 | Unit | Code | Unit | Code |
 |---|---|---|---|
-| 0 Kinematics | `KIN` | 4 Torque and Rotational Dynamics | `TOR` |
-| 1 Force and Translational Dynamics | `FTD` | 5 Energy and Momentum of Rotating Systems | `ROT` |
-| 2 Work, Energy, and Power | `WEP` | 6 Oscillations | `OSC` |
-| 3 Linear Momentum | `MOM` | 7 Fluids | `FLU` |
+| 1 Kinematics | `KIN` | 5 Torque and Rotational Dynamics | `TOR` |
+| 2 Force and Translational Dynamics | `FTD` | 6 Energy and Momentum of Rotating Systems | `ROT` |
+| 3 Work, Energy, and Power | `WEP` | 7 Oscillations | `OSC` |
+| 4 Linear Momentum | `MOM` | 8 Fluids | `FLU` |
 
 ## Adding a bank
 

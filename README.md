@@ -144,11 +144,11 @@ The [Templates](./Templates/) folder contains templates for problem YAML files a
 | Course | Bank prefix | Unit folders |
 |---|---|---|
 | [PHY I Mechanics](./PHY%20I%20Mechanics/) | `PHY1` | 0–12, upstream's university sequence |
-| [AP Physics 1](./AP%20Physics%201/) | `APP1` | 0–7 |
-| [AP Physics 2](./AP%20Physics%202/) | `APP2` | 8–14 |
-| [HS Physics](./HS%20Physics/) | `HSPHY` | 0–13, based on personal teaching sequence |
+| [AP Physics 1](./AP%20Physics%201/) | `APP1` | 1–8 |
+| [AP Physics 2](./AP%20Physics%202/) | `APP2` | 9–15 |
+| [HS Physics](./HS%20Physics/) | `HSPHY` | 1–14, based on personal teaching sequence |
 
-**Unit numbering is not shared across courses.** The two AP courses use College Board unit numbers shifted down by one, so together they form one unbroken 0–14 sequence (AP Unit 1 Kinematics → `0_Kinematics`; AP Unit 9 Thermodynamics → `8_Thermodynamics`). HS Physics follows its own order entirely. Check the course's own `README.md` before assuming a folder number means the same thing in two places.
+**The unit folder number is what students see.** The exam builder shows each chapter folder name verbatim, so the number in the folder name is the unit number on the site. The two AP courses use the College Board unit numbers directly, and together they form one unbroken 1–15 sequence (AP Unit 1 Kinematics → `1_Kinematics`; AP Unit 9 Thermodynamics → `9_Thermodynamics`, whose subtopic folders are numbered `9.1`, `9.2`, and so on). HS Physics follows its own order, numbered from 1. `PHY I Mechanics/` is the exception and starts at 0, because upstream's unit 0 is a math review that comes before the course proper. Check the course's own `README.md` before assuming a folder number means the same thing in two places.
 
 
 * Each course has a `Topics.csv` catalog of its units
@@ -175,7 +175,7 @@ downloads fine and the damage only shows up in Google Docs.
 Course → Chapter → Topic, and that third level comes from the folder layout:
 
 ```
-AP Physics 2/8_Thermodynamics/9.1_Kinetic Theory.../APP2-THM-KTTP-080926/…yaml   ← filterable
+AP Physics 2/9_Thermodynamics/9.1_Kinetic Theory.../APP2-THM-KTTP-080926/…yaml   ← filterable
 PHY I Mechanics/3_Forces/PHY1-F-OFKF-030625/…yaml                                ← flat, still fine
 ```
 

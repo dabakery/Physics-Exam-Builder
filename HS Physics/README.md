@@ -2,10 +2,11 @@
 
 Isomorphic problem banks for regular (non-AP) high school physics, authored by Michael Baker.
 
-Unit folders follow this course's own teaching sequence, numbered 0–13. They do **not** line
-up with `../PHY I Mechanics/` (upstream's university sequence) or with `../AP Physics 1/` and
-`../AP Physics 2/` (College Board numbering shifted down by one) — check the target course's
-README before assuming a folder number means the same thing elsewhere.
+Unit folders follow this course's own teaching sequence, numbered 1–14. The folder number is
+the unit number students see on the site, so it starts at 1. These numbers do **not** line up
+with `../PHY I Mechanics/`, which is upstream's university sequence and starts at 0 because
+its unit 0 is a math review that precedes the course proper. Check the target course's README
+before assuming a folder number means the same thing elsewhere.
 
 `Topics.csv` is the topic catalog for this course.
 
@@ -18,13 +19,13 @@ The bank folder, the `.yaml` inside it, and `bank_info.bank_id` all use this sam
 
 | Unit | Code | Unit | Code |
 |---|---|---|---|
-| 0 1D Motion | `1DM` | 7 Voltage | `VLT` |
-| 1 Graphing | `GRA` | 8 Circuits | `CIR` |
-| 2 Projectiles | `PRJ` | 9 Magnetism and Induction | `MAG` |
-| 3 Forces | `FOR` | 10 EMF | `EMF` |
-| 4 Energy | `ENE` | 11 Optics | `OPT` |
-| 5 Momentum | `MOM` | 12 Light and Waves | `LGW` |
-| 6 Electrostatics | `EST` | 13 Astronomy | `AST` |
+| 1 1D Motion | `1DM` | 8 Voltage | `VLT` |
+| 2 Graphing | `GRA` | 9 Circuits | `CIR` |
+| 3 Projectiles | `PRJ` | 10 Magnetism and Induction | `MAG` |
+| 4 Forces | `FOR` | 11 EMF | `EMF` |
+| 5 Energy | `ENE` | 12 Optics | `OPT` |
+| 6 Momentum | `MOM` | 13 Light and Waves | `LGW` |
+| 7 Electrostatics | `EST` | 14 Astronomy | `AST` |
 
 ## Adding a bank
 
