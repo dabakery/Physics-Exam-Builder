@@ -673,7 +673,10 @@ function onFilterChange() {
   if (course && S.repo[course]) {
     ft.style.display = 'block';
     ft.innerHTML = '<option value="">All chapters</option>';
-    Object.keys(S.repo[course]).forEach(t => {
+    // Sorted here rather than trusted from the source: the Tauri backend hands
+    // back a serde_json::Map (a BTreeMap), so its chapter keys arrive in plain
+    // lexicographic order and would list 10_ before 2_.
+    Object.keys(S.repo[course]).sort(EstelaBankSource.natCmp).forEach(t => {
       const o = document.createElement('option'); o.value = t; o.textContent = t; ft.appendChild(o);
     });
   } else {
@@ -697,7 +700,7 @@ function onTopicChange() {
   if (subs.size) {
     fs.style.display = 'block';
     fs.innerHTML = '<option value="">All topics</option>';
-    [...subs].sort().forEach(t => {
+    [...subs].sort(EstelaBankSource.natCmp).forEach(t => {
       const o = document.createElement('option'); o.value = t; o.textContent = t; fs.appendChild(o);
     });
   } else {
@@ -728,7 +731,7 @@ function renderBanks() {
 
   for (const [course, topics] of Object.entries(S.repo)) {
     if (fc && course !== fc) continue;
-    for (const [topic, banks] of Object.entries(topics)) {
+    for (const [topic, banks] of Object.entries(topics).sort((a, b) => EstelaBankSource.natCmp(a[0], b[0]))) {
       if (ft && topic !== ft) continue;
       const subFiltered = fs ? banks.filter(b => (b.subtopic || '') === fs) : banks;
       const textFiltered = q ? subFiltered.filter(b => {
@@ -752,7 +755,7 @@ function renderBanks() {
         if (!groups.has(key)) groups.set(key, []);
         groups.get(key).push(b);
       }
-      const keys = [...groups.keys()].sort((a, b) => (a === '' ? -1 : b === '' ? 1 : a.localeCompare(b)));
+      const keys = [...groups.keys()].sort((a, b) => (a === '' ? -1 : b === '' ? 1 : EstelaBankSource.natCmp(a, b)));
       for (const key of keys) {
         const group = groups.get(key);
         html += `<div class="topic-rule">

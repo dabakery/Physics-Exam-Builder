@@ -29,6 +29,18 @@
     'formula', 'file_upload', 'hot_spot',
   ];
 
+  /**
+   * Folder names carry their unit number as a prefix (`2_Graphing`,
+   * `10_Electric Circuits`) and are shown to the user verbatim, so they must
+   * sort by that number. A plain localeCompare is lexicographic and puts
+   * `10_` ahead of `2_`; `{numeric:true}` compares digit runs as numbers.
+   * Used for every course/unit/subtopic ordering so the sidebar filters, the
+   * chapter rules, and the bank list all agree.
+   */
+  function natCmp(a, b) {
+    return String(a).localeCompare(String(b), undefined, { numeric: true });
+  }
+
   // ── Shared YAML / meta helpers (mirror Rust main.rs) ─────────────────────
 
   function getQtype(q) {
@@ -471,7 +483,7 @@
       for await (const [name, handle] of root) {
         if (handle.kind === 'directory') courseEntries.push({ name, handle });
       }
-      courseEntries.sort((a, b) => a.name.localeCompare(b.name));
+      courseEntries.sort((a, b) => natCmp(a.name, b.name));
 
       for (const { name: courseName, handle: courseHandle } of courseEntries) {
         if (SKIP_COURSES.includes(courseName) || courseName.startsWith('.')) continue;
@@ -481,7 +493,7 @@
         for await (const [name, handle] of courseHandle) {
           if (handle.kind === 'directory') topicEntries.push({ name, handle });
         }
-        topicEntries.sort((a, b) => a.name.localeCompare(b.name));
+        topicEntries.sort((a, b) => natCmp(a.name, b.name));
 
         for (const { name: topicName, handle: topicHandle } of topicEntries) {
           if (topicName.startsWith('.')) continue;
@@ -499,7 +511,7 @@
     async _walkTopic(dirHandle, relParts, banks, courseName, topicName, rootHandle) {
       const entries = [];
       for await (const [name, handle] of dirHandle) entries.push({ name, handle });
-      entries.sort((a, b) => a.name.localeCompare(b.name));
+      entries.sort((a, b) => natCmp(a.name, b.name));
 
       const subdirs = [];
       const files = [];
@@ -729,7 +741,7 @@
       const bankRef = makeRef(p, meta, bankDir);
       banks.push({ path: p, meta, bankRef, subtopic: subtopicOf(relFromTopic) });
     }
-    banks.sort((a, b) => a.path.localeCompare(b.path));
+    banks.sort((a, b) => natCmp(a.path, b.path));
     return banks;
   }
 
@@ -741,7 +753,7 @@
       if (course) courseNames.add(course);
     }
 
-    for (const courseName of [...courseNames].sort()) {
+    for (const courseName of [...courseNames].sort(natCmp)) {
       if (SKIP_COURSES.includes(courseName) || courseName.startsWith('.')) continue;
       const courseTopics = {};
       const topicNames = new Set();
@@ -751,7 +763,7 @@
         if (topic) topicNames.add(topic);
       }
 
-      for (const topicName of [...topicNames].sort()) {
+      for (const topicName of [...topicNames].sort(natCmp)) {
         if (topicName.startsWith('.')) continue;
         const banks = await collectBanksFromPaths(courseName, topicName, paths, readText, makeRef);
         if (banks.length) courseTopics[topicName] = banks;
@@ -1146,6 +1158,7 @@
 
   global.EstelaBankSource = {
     subtopicOf,
+    natCmp,
     SKIP_DIRS,
     SKIP_COURSES,
     getQtype,
