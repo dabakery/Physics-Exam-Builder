@@ -35,8 +35,8 @@ bank_info:
         - update 1: (08-09-2026) Bank created; q1 moved here from the initial template scaffold.
         - update 2: (08-13-2026) Added isomorphs q2-q6 (Celsius conversion, below-zero Celsius, reverse solve for T, heavy gas, two-gas ratio).
     generation details:
-            model:
-            version:
+            model: Claude Opus 5
+            version: claude-opus-5
             last updated: 08-09-2026
     authors:
         - Michael Baker

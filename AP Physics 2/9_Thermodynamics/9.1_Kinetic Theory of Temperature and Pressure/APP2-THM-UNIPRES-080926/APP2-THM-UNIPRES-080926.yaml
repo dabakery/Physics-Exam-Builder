@@ -32,8 +32,8 @@ bank_info:
         - update 1: (08-09-2026) Michael Baker authored the source question q1.
         - update 2: (08-09-2026) Added isomorphs q2-q4 (box/force, flask/neck, force ratio).
     generation details:
-            model:
-            version:
+            model: Claude Opus 5
+            version: claude-opus-5
             last updated: 08-09-2026
     authors:
         - Michael Baker

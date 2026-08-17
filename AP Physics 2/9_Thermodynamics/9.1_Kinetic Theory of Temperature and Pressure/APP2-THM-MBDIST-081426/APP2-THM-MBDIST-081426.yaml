@@ -52,8 +52,8 @@ bank_info:
         - update 1: (08-14-2026) Bank created with q1-q7 and Scripts/make_figures.py.
         - update 2: (08-14-2026) Relabelled the curves in q1-q4 away from A/B/C, which collided with the shuffled answer letters. Samples and gases are now X/Y/Z and q3's process states are numbered. Figures regenerated.
     generation details:
-            model:
-            version:
+            model: Claude Opus 5
+            version: claude-opus-5
             last updated: 08-14-2026
     authors:
         - Michael Baker

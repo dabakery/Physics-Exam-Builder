@@ -44,8 +44,8 @@ bank_info:
     updates:
         - update 1: (08-14-2026) Bank created with q1-q6.
     generation details:
-            model:
-            version:
+            model: Claude Opus 5
+            version: claude-opus-5
             last updated: 08-14-2026
     authors:
         - Michael Baker
