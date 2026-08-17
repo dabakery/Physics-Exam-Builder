@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Physics Exam Builder · Problem Bank</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Lexend:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
@@ -18,9 +18,9 @@
   --accent:#c8391a;--accent-dim:rgba(200,57,26,.07);
   --blue:#1a3cc8;--gold:#b8860b;--green:#1a7a35;
   --sidebar-w:300px;
-  --font-d:'DM Serif Display',Georgia,serif;
-  --font-b:'DM Sans',system-ui,sans-serif;
-  --font-m:'DM Mono','Courier New',monospace;
+  --font-d:'Space Grotesk',Georgia,sans-serif;
+  --font-b:'Lexend',system-ui,sans-serif;
+  --font-m:'JetBrains Mono','Courier New',monospace;
   --r:7px;--r2:11px;
   --sh:0 1px 3px rgba(26,25,22,.07),0 4px 12px rgba(26,25,22,.04);
   --sh2:0 2px 8px rgba(26,25,22,.1),0 8px 28px rgba(26,25,22,.07);
@@ -56,17 +56,23 @@ body:not(.tauri) #shell{height:100vh;}
 /* ── Sidebar ── */
 #sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
 #sb-top{padding:1rem 1.1rem .8rem;border-bottom:1px solid var(--border);flex-shrink:0;}
-.sb-wm{font-family:var(--font-d);font-size:1.1rem;color:var(--ink);letter-spacing:-.02em;}
+.sb-wm{font-family:var(--font-d);font-size:1.3rem;font-weight:600;color:var(--ink);letter-spacing:-.02em;}
 .sb-wm em{font-style:normal;color:var(--accent);}
-.sb-sub{font-family:var(--font-m);font-size:1rem;color:var(--ink4);letter-spacing:.1em;text-transform:uppercase;margin-top:.18rem;}
+.sb-sub{font-family:var(--font-m);font-size:.72rem;color:var(--ink4);letter-spacing:.1em;text-transform:uppercase;margin-top:.18rem;}
 #sb-scroll{flex:1;overflow-y:auto;padding:.75rem 1rem 1.2rem;}
 .sb-sec{margin-bottom:.9rem;}
-.sb-lbl{font-family:var(--font-m);font-size:.9rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--ink4);margin-bottom:.32rem;display:block;}
+.sb-lbl{font-family:var(--font-m);font-size:.74rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--ink4);margin-bottom:.32rem;display:block;}
 
 /* ── Controls ── */
 .inp{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--ink);font-family:var(--font-m);font-size:.92rem;border-radius:var(--r);padding:.4rem .58rem;outline:none;transition:border-color .12s,box-shadow .12s;}
 .inp:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(200,57,26,.1);}
 .inp-row{display:flex;gap:.35rem;margin-top:.35rem;}
+/* The exam title is printed as the heading of every exam and key and is the stem
+   of every export filename, but it was styled exactly like the search box two
+   groups above it and ships with a plausible default, so nothing ever prompted
+   anyone to set it. It gets the reading face and a size of its own. */
+#exam-title{font-family:var(--font-b);font-size:1rem;font-weight:500;padding:.48rem .6rem;}
+.sb-hint{font-family:var(--font-b);font-size:.76rem;color:var(--ink4);line-height:1.45;margin-top:.32rem;}
 .sel{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--ink);font-family:var(--font-m);font-size:.92rem;border-radius:var(--r);padding:.38rem .55rem;outline:none;cursor:pointer;margin-top:.28rem;color-scheme:inherit;}
 .sel:focus{border-color:var(--accent);}
 [data-theme=dark] .sel{color-scheme:dark;}
@@ -81,13 +87,13 @@ body:not(.tauri) #shell{height:100vh;}
 .btn-icon{padding:.3rem .42rem;}
 
 /* ── Cart ── */
-.cart-empty{font-family:var(--font-m);font-size:1.1rem;color:var(--ink4);}
+.cart-empty{font-family:var(--font-b);font-size:.84rem;color:var(--ink4);}
 .ci-grp-label{font-family:var(--font-m);font-size:.9rem;color:var(--accent);text-transform:uppercase;letter-spacing:.06em;margin:.4rem 0 .12rem;}
 .ci-row{display:flex;align-items:flex-start;gap:.35rem;padding:.3rem 0;border-bottom:1px solid var(--border2);}
 .ci-row:last-of-type{border-bottom:none;}
 .ci-info{flex:1;min-width:0;}
 .ci-title{font-size:.9rem;font-weight:500;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.ci-n{font-family:var(--font-m);font-size:.9rem;color:var(--ink4);}
+.ci-n{font-family:var(--font-m);font-size:.76rem;color:var(--ink4);}
 .ci-stepper{display:flex;align-items:center;gap:.2rem;margin-top:.18rem;}
 .ci-step{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;border:1px solid var(--border);background:var(--bg3);color:var(--ink2);font-size:.8rem;cursor:pointer;line-height:1;padding:0;transition:background .1s,border-color .1s;}
 .ci-step:hover{background:var(--accent);border-color:var(--accent);color:#fff;}
@@ -96,10 +102,16 @@ body:not(.tauri) #shell{height:100vh;}
 
 /* ── Main ── */
 #main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
-#topbar{display:flex;align-items:center;justify-content:space-between;padding:.65rem 1.6rem;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;box-shadow:var(--sh);}
-.tb-wm{font-family:var(--font-d);font-size:1.2rem;color:var(--ink);letter-spacing:-.02em;}
-.tb-wm em{font-style:normal;color:var(--accent);}
-.tb-sub{font-family:var(--font-m);font-size:.9rem;color:var(--ink4);letter-spacing:.07em;text-transform:uppercase;margin-top:.1rem;}
+#topbar{display:flex;align-items:center;justify-content:flex-start;gap:.6rem;padding:.65rem 1.6rem;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;box-shadow:var(--sh);}
+/* The masthead used to live here as well as in the sidebar, with the product name
+   and the descriptor swapped between the two. The sidebar owns the identity now;
+   this bar is for getting out of here and for attribution. */
+.tb-sub{font-family:var(--font-m);font-size:.74rem;color:var(--ink4);letter-spacing:.06em;text-transform:uppercase;}
+#home-link{flex-shrink:0;width:32px;height:32px;padding:0;border-radius:50%;color:var(--ink4);}
+#home-link:hover{color:var(--accent);}
+#home-link svg{width:16px;height:16px;display:block;}
+/* the desktop app has no website to return to */
+body.tauri #home-link{display:none;}
 /* sun/moon theme toggle — pinned right; margin-left:auto survives the mobile
    topbar switching to justify-content:flex-start */
 #theme-toggle{margin-left:auto;flex-shrink:0;width:32px;height:32px;padding:0;border-radius:50%;color:var(--ink4);}
@@ -112,18 +124,20 @@ body:not(.tauri) #shell{height:100vh;}
 #content{flex:1;overflow-y:auto;padding:1.3rem 1.8rem 3rem;}
 
 /* ── Stats ── */
-#stats{display:flex;border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;margin-bottom:1.4rem;background:var(--surface);box-shadow:var(--sh);}
-.sc{flex:1;padding:.5rem .8rem;border-right:1px solid var(--border);}
-.sc:last-child{border-right:none;}
-.sv{font-family:var(--font-d);font-size:1.35rem;color:var(--ink);line-height:1;letter-spacing:-.03em;}
-.sk{font-family:var(--font-m);font-size:.87rem;color:var(--ink4);text-transform:uppercase;letter-spacing:.08em;margin-top:.1rem;}
+/* Library summary. These numbers describe the whole corpus and do not move while
+   you work, so they are a caption rather than the five display-size tiles they
+   used to be: the vertical space above the banks is worth more than the restatement.
+   "In cart" is gone from here entirely. It is working state, and the sidebar cart
+   already carries a live count right next to the cart it describes. */
+#stats{font-family:var(--font-m);font-size:.76rem;color:var(--ink4);letter-spacing:.03em;margin-bottom:1.15rem;display:flex;flex-wrap:wrap;gap:.15rem .95rem;}
+.st-n{color:var(--ink2);font-weight:500;}
 
 /* ── Export panel ── */
 #export-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:.9rem 1rem;margin-bottom:1.2rem;box-shadow:var(--sh);}
-.ep-title{font-family:var(--font-m);font-size:.92rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--ink4);margin-bottom:.7rem;}
+.ep-title{font-family:var(--font-m);font-size:.76rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--ink4);margin-bottom:.7rem;}
 .ep-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;}
 .ep-group{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:.6rem .75rem;}
-.ep-glbl{font-family:var(--font-m);font-size:.9rem;color:var(--ink4);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.4rem;}
+.ep-glbl{font-family:var(--font-m);font-size:.74rem;color:var(--ink4);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.4rem;}
 .ep-btns{display:flex;flex-wrap:wrap;gap:.28rem;}
 
 /* ── Topic rule ── */
@@ -132,10 +146,10 @@ body:not(.tauri) #shell{height:100vh;}
    title's min-content width would keep the row wider than #content and scroll
    the page sideways on narrow screens. */
 .topic-rule{display:flex;align-items:center;gap:.6rem;margin:1.7rem 0 .6rem;flex-wrap:wrap;}
-.tr-c{font-family:var(--font-d);font-size:1.1rem;color:var(--ink);white-space:nowrap;flex-shrink:0;}
-.tr-t{font-family:var(--font-m);font-size:.92rem;color:var(--ink3);letter-spacing:.04em;flex:0 1 auto;min-width:0;overflow-wrap:anywhere;}
+.tr-c{font-family:var(--font-d);font-size:1.18rem;font-weight:600;color:var(--ink);white-space:nowrap;flex-shrink:0;}
+.tr-t{font-family:var(--font-m);font-size:.78rem;color:var(--ink3);letter-spacing:.04em;flex:0 1 auto;min-width:0;overflow-wrap:anywhere;}
 .tr-l{flex:1 1 1.5rem;min-width:0;height:1px;background:var(--border);}
-.tr-n{font-family:var(--font-m);font-size:.9rem;color:var(--ink4);white-space:nowrap;flex-shrink:0;margin-left:auto;}
+.tr-n{font-family:var(--font-m);font-size:.76rem;color:var(--ink4);white-space:nowrap;flex-shrink:0;margin-left:auto;}
 
 /* ── Bank card ── */
 .bank-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:.85rem 1rem .85rem 1.2rem;margin-bottom:.3rem;box-shadow:var(--sh);position:relative;transition:box-shadow .15s,transform .12s;}
@@ -146,9 +160,13 @@ body:not(.tauri) #shell{height:100vh;}
 .bank-card.incart{border-color:rgba(200,57,26,.18);}
 [data-theme=dark] .bank-card.incart{border-color:rgba(232,82,46,.26);}
 .bc-row{display:flex;justify-content:space-between;align-items:flex-start;gap:.7rem;}
-.bc-title{font-weight:600;font-size:1rem;color:var(--ink);letter-spacing:-.01em;}
-.bc-id{font-family:var(--font-m);font-size:.92rem;color:var(--ink4);margin-top:.05rem;}
-.bc-right{font-family:var(--font-m);font-size:.92rem;color:var(--ink4);white-space:nowrap;flex-shrink:0;margin-top:.08rem;}
+.bc-title{font-weight:600;font-size:1.06rem;color:var(--ink);letter-spacing:-.01em;}
+/* The bank ID is a stable key, not a subtitle. It used to sit directly beneath
+   the title, so a database string was the second thing read on every card. It
+   keeps its place in the DOM (search and Ctrl+F still find it) but moves to the
+   metadata corner at label size. */
+.bc-id{font-family:var(--font-m);font-size:.68rem;color:var(--ink4);letter-spacing:.02em;margin-top:.18rem;}
+.bc-right{font-family:var(--font-m);font-size:.8rem;color:var(--ink3);white-space:nowrap;flex-shrink:0;text-align:right;}
 .bc-desc{font-size:.9rem;color:var(--ink3);margin-top:.28rem;line-height:1.5;}
 .bc-preview{font-size:.87rem;color:var(--ink4);margin-top:.28rem;line-height:1.55;font-style:italic;border-left:2px solid var(--border);padding-left:.5rem;}
 .bc-footer{display:flex;align-items:center;justify-content:space-between;margin-top:.55rem;}
@@ -156,7 +174,7 @@ body:not(.tauri) #shell{height:100vh;}
 .bc-actions{display:flex;gap:.3rem;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;}
 
 /* ── Badges ── */
-.badge{display:inline-block;font-family:var(--font-m);font-size:.9rem;font-weight:500;padding:.09rem .36rem;border-radius:3px;margin:.12rem .08rem 0 0;letter-spacing:.03em;}
+.badge{display:inline-block;font-family:var(--font-m);font-size:.72rem;font-weight:500;padding:.09rem .36rem;border-radius:3px;margin:.12rem .08rem 0 0;letter-spacing:.03em;}
 .bd-num{background:rgba(26,60,200,.07);color:var(--blue);border:1px solid rgba(26,60,200,.17);}
 .bd-mc{background:rgba(184,134,11,.08);color:var(--gold);border:1px solid rgba(184,134,11,.19);}
 .bd-gen{background:rgba(26,25,22,.05);color:var(--ink3);border:1px solid var(--border);}
@@ -243,13 +261,9 @@ body.nav-open #nav-overlay{display:block;}
   #main{width:100%;min-width:0;}
   #nav-toggle{display:inline-flex;align-items:center;justify-content:center;}
   #topbar{justify-content:flex-start;gap:.7rem;padding:.6rem 1rem;}
-  .tb-wm{font-size:1.05rem;}
   .tb-sub{display:none;}
   #content{padding:1rem .9rem 2.6rem;}
   /* stats: grid, not a squished row */
-  #stats{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border);}
-  .sc{border-right:none;background:var(--surface);}
-  .sc:last-child{grid-column:1/-1;}
   .ep-grid{grid-template-columns:1fr;}
   /* comfortable touch targets */
   .btn-sm{font-size:.9rem;padding:.4rem .72rem;}
@@ -282,7 +296,7 @@ body.nav-open #nav-overlay{display:block;}
   <aside id="sidebar">
     <div id="sb-top">
       <div class="sb-wm">Physics <em>Exam</em> Builder</div>
-      <div class="sb-sub">Problem Bank Visualizer</div>
+      <div class="sb-sub">Browse banks · build an exam</div>
     </div>
     <div id="sb-scroll">
 
@@ -350,6 +364,7 @@ body.nav-open #nav-overlay{display:block;}
       <div class="sb-sec" id="build-sec" style="display:none">
         <span class="sb-lbl">Build Exam</span>
         <input id="exam-title" class="inp" type="text" value="Physics Exam" placeholder="Exam title…">
+        <div class="sb-hint">Heads every exam and key, and names every file you download.</div>
         <div style="display:flex;align-items:center;gap:.35rem;margin-top:.32rem;">
           <span style="font-family:var(--font-m);font-size:1.1rem;color:var(--ink4)">Versions:</span>
           <button class="ci-step" onclick="adjustVersions(-1)">−</button>
@@ -368,10 +383,10 @@ body.nav-open #nav-overlay{display:block;}
   <div id="main">
     <div id="topbar">
       <button id="nav-toggle" class="btn btn-icon" onclick="toggleNav()" aria-label="Open menu" title="Menu">☰</button>
-      <div>
-        <div class="tb-wm">Problem Bank <em>Visualizer</em></div>
-        <div class="tb-sub">Physics Exam Builder · Isomorphic Physics Banks · adapted from ESTELA (UCF)</div>
-      </div>
+      <a id="home-link" class="btn btn-icon" href="./index.html" title="Back to the Physics Exam Builder home page" aria-label="Back to the home page">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.6 12 3.2l9 7.4"/><path d="M5.5 9.5V20.3h13V9.5"/></svg>
+      </a>
+      <div class="tb-sub">Adapted from the ESTELA problem bank project (UCF)</div>
       <button id="theme-toggle" class="btn btn-icon" onclick="toggleTheme()" title="Switch to dark mode" aria-label="Switch to dark mode">
         <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 14.6A8.6 8.6 0 0 1 9.4 3.5a8.6 8.6 0 1 0 11.1 11.1Z"/></svg>
         <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.2v2.4M12 19.4v2.4M4.1 4.1l1.7 1.7M18.2 18.2l1.7 1.7M2.2 12h2.4M19.4 12h2.4M4.1 19.9l1.7-1.7M18.2 5.8l1.7-1.7"/></svg>
@@ -785,9 +800,11 @@ function statsHTML() {
     courses++;
     for (const bl of Object.values(tv)) { topics++; for (const b of bl) { banks++; qs+=b.meta.q_count; } }
   }
+  const n = (v) => `<span class="st-n">${v}</span>`;
   return `<div id="stats">
-    ${[['Courses',courses],['Topics',topics],['Banks',banks],['Questions',qs],['In Cart',S.cart.length]]
-      .map(([k,v])=>`<div class="sc"><div class="sv">${v}</div><div class="sk">${k}</div></div>`).join('')}
+    <span>${n(banks)} banks</span>
+    <span>${n(qs)} questions</span>
+    <span>${n(topics)} topics in ${n(courses)} courses</span>
   </div>`;
 }
 
@@ -815,9 +832,11 @@ function bankCardHTML(b, topic) {
     <div class="bc-row">
       <div style="flex:1;min-width:0">
         <div class="bc-title">${esc(meta.title)}</div>
+      </div>
+      <div class="bc-right">
+        <div>${meta.q_count} q</div>
         <div class="bc-id">${esc(meta.bank_id)}</div>
       </div>
-      <div class="bc-right">${meta.q_count} q</div>
     </div>
     ${desc}
     ${preview}
