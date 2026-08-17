@@ -164,7 +164,7 @@ body.tauri #home-link{display:none;}
    row, where the question-type counts already sit, so the card's reading column
    stays title then description with nothing wedged between them. It keeps its
    place in the DOM, so search and Ctrl+F are unaffected. */
-.bc-id{font-family:var(--font-m);font-size:.7rem;color:var(--ink4);letter-spacing:.02em;align-self:center;margin-left:.5rem;}
+.bc-id{font-family:var(--font-m);font-size:.7rem;color:var(--ink4);letter-spacing:.02em;align-self:center;margin-left:.5rem;white-space:nowrap;}
 /* Clamped rather than cut to a fixed character count, so the card spends whatever
    width it has on real text and stays the same height either way. */
 .bc-desc{font-size:.9rem;color:var(--ink3);margin-top:.34rem;line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
@@ -268,6 +268,7 @@ body.nav-open #nav-overlay{display:block;}
   /* comfortable touch targets */
   .btn-sm{font-size:.9rem;padding:.4rem .72rem;}
   .bc-actions{gap:.35rem;}
+  .bc-footer{flex-wrap:wrap;row-gap:.5rem;}
   .ci-step{width:28px;height:28px;font-size:1.05rem;}
   /* wide display math shouldn't blow out the card width */
   .q-text{overflow-x:auto;}
@@ -829,7 +830,7 @@ function bankCardHTML(b, topic) {
   const badges = Object.entries(meta.q_types)
     .map(([t,n])=>`<span class="badge ${bcls(t)}">${TS[t]||t.slice(0,3).toUpperCase()} ×${n}</span>`)
     .join('') + (inCart?'<span class="badge bd-ok">✓ cart</span>':'');
-  const descText = descLead(meta.description);
+  const descText = EstelaBankSource.stripTags(descLead(meta.description));
   const desc = descText ? `<div class="bc-desc">${esc(descText)}</div>` : '';
   const preview = (!isExp && meta.preview)
     ? `<div class="bc-preview">${esc(meta.preview)}</div>` : '';

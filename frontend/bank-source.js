@@ -54,16 +54,57 @@
     return 'unknown';
   }
 
+  /**
+   * Fork-local. `stripTags` used to delete each `<latex>…</latex>` span outright,
+   * which took every number in a question with it — a card preview read "holds
+   * helium gas at a temperature of  K" and "the Boltzmann constant is  J/K". The
+   * payload is unwrapped to plain text instead: enough structure survives to read
+   * a teaser line, without pretending to be rendered math. Every consumer of
+   * `stripTags` is a plain-text context (card description, card preview, search
+   * haystack), so there is nowhere for real markup to be wanted.
+   */
+  const MATH_SYMBOL = {
+    times: '×', cdot: '·', pm: '±', mp: '∓', approx: '≈', neq: '≠', ne: '≠',
+    leq: '≤', geq: '≥', le: '≤', ge: '≥', propto: '∝', infty: '∞',
+    Rightarrow: '⇒', rightarrow: '→', to: '→', Delta: 'Δ', delta: 'δ',
+    theta: 'θ', phi: 'φ', pi: 'π', mu: 'μ', rho: 'ρ', sigma: 'σ', tau: 'τ',
+    omega: 'ω', Omega: 'Ω', lambda: 'λ', alpha: 'α', beta: 'β', gamma: 'γ',
+    circ: '°', degree: '°',
+  };
+
+  function mathToText(tex) {
+    let s = String(tex || '').replace(/\\\\/g, ' ');
+    // Innermost-first so nested fractions unwind; the bound just stops runaway input.
+    for (let i = 0; i < 6 && /\\frac\s*\{/.test(s); i++) {
+      s = s.replace(/\\frac\s*\{([^{}]*)\}\s*\{([^{}]*)\}/g, '$1/$2');
+    }
+    for (let i = 0; i < 6 && /\\sqrt\s*\{/.test(s); i++) {
+      s = s.replace(/\\sqrt\s*\{([^{}]*)\}/g, '√($1)');
+    }
+    s = s.replace(/\\(?:text|mathrm|mathbf|mathit|operatorname)\s*\{([^{}]*)\}/g, '$1');
+    s = s.replace(/\\(?:left|right|displaystyle|limits)\b/g, '');
+    s = s.replace(/\\([a-zA-Z]+)/g, (m, w) =>
+      Object.prototype.hasOwnProperty.call(MATH_SYMBOL, w) ? MATH_SYMBOL[w] : ' ');
+    s = s.replace(/\\[,!;:> ]/g, ' ');
+    // ^{-23} → ^-23, _{avg} → _avg; the braces carry nothing once unrendered.
+    s = s.replace(/([\^_])\{([^{}]*)\}/g, '$1$2');
+    s = s.replace(/[{}]/g, '');
+    return s.replace(/\s+/g, ' ').trim();
+  }
+
   function stripTags(text) {
     let s = String(text || '');
-    s = s.replace(/<latex>[\s\S]*?<\/latex>/g, ' ');
+    s = s.replace(/<latex>([\s\S]*?)<\/latex>/g, (_m, inner) => ` ${mathToText(inner)} `);
     s = s.replace(/<[^>]+>/g, ' ');
     const cmdRe = /\\[a-zA-Z]+\{([^}]*)\}/g;
     while (cmdRe.test(s)) s = s.replace(cmdRe, '$1');
     s = s.replace(/\$\$([^$]*)\$\$/g, '$1');
     s = s.replace(/\$([^$]*)\$/g, '$1');
     s = s.replace(/\\/g, ' ').replace(/\*\*/g, '').replace(/\*/g, '');
-    return s.trim().replace(/\s+/g, ' ');
+    // Unwrapped math is padded with spaces so it never fuses to the words around
+    // it, which leaves "temperature T_o ." when a tag ended a sentence. Colons are
+    // deliberately not tightened: ratios ("V_i : V_f") are spaced on purpose.
+    return s.replace(/\s+/g, ' ').replace(/\s+([,.!?)])/g, '$1').trim();
   }
 
   function latexToHtml(text) {
@@ -1163,6 +1204,7 @@
     SKIP_COURSES,
     getQtype,
     stripTags,
+    mathToText,
     latexToHtml,
     typeLabel,
     parseYaml,
