@@ -26,7 +26,7 @@ bank_info:
             part of the solution.)
         - prompt 2: |
             (q2-q6 authored as isomorphs of q1. Each changes something in the
-            solution rather than only the numbers: q2 and q3 add a Celsius to
+            solution: q2 and q3 add a Celsius to
             kelvin conversion, q3 with a below-zero temperature so the sign
             matters; q4 runs the formula backwards to solve for T; q5 names a
             heavy gas beside a light one at the same temperature so the mass
