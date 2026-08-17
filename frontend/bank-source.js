@@ -116,44 +116,83 @@
     return result;
   }
 
-  /**
-   * Fork-local. The card teaser is built twice from the same source. `preview` is
-   * `stripTags` plain text and feeds anything that reads characters rather than
-   * markup; `preview_html` keeps the math as KaTeX delimiters so the card renders
-   * it the way the expanded question panel already does.
-   *
-   * Clipping runs on the *source*, before the tags become `$…$`, so a cut can never
-   * land inside a span — half a formula leaves an unclosed `$` that swallows the
-   * rest of the line into one long KaTeX run. A formula counts toward the budget by
-   * its payload length, which is near enough for a teaser.
-   */
-  function clipLatexSource(text, limit) {
-    const src = String(text || '');
-    const re = /<latex>([\s\S]*?)<\/latex>/g;
-    let out = '', used = 0, last = 0, m;
-    while ((m = re.exec(src))) {
-      const plain = src.slice(last, m.index);
-      if (used + plain.length >= limit) return out + plain.slice(0, limit - used) + '…';
-      out += plain + m[0];
-      used += plain.length + m[1].length;
-      last = re.lastIndex;
-      if (used >= limit) return out + '…';
-    }
-    const tail = src.slice(last);
-    return used + tail.length > limit ? out + tail.slice(0, limit - used) + '…' : out + tail;
+  const HTML_ENT = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ' };
+
+  function decodeEntities(s) {
+    return String(s).replace(/&(?:#(\d+)|#[xX]([0-9a-fA-F]+)|([a-zA-Z]+));/g,
+      (m, dec, hex, name) => {
+        if (dec) return String.fromCodePoint(Number(dec));
+        if (hex) return String.fromCodePoint(parseInt(hex, 16));
+        return Object.prototype.hasOwnProperty.call(HTML_ENT, name) ? HTML_ENT[name] : m;
+      });
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"]/g,
+      (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   }
 
   /**
-   * Block spans are flattened to inline ones first: the teaser is one clamped line
-   * of prose, and `$$…$$` renders as a centred display block that breaks out of it.
-   * A `**` left unpaired by the clip is dropped rather than shown, mirroring
-   * `stripTags`.
+   * Fork-local. The card teaser is built twice from the same source. `preview` is
+   * `stripTags` plain text and feeds anything that reads characters rather than
+   * markup; `preview_html` is the same prose with the math left as KaTeX `$…$`
+   * delimiters so the card renders it the way the expanded question panel does.
+   *
+   * The output is **escaped text plus delimiters — never author markup**. Bank
+   * question text is full of hand-written HTML (~1000 `<b>`, ~800 `<br>`, ~660
+   * `<li>`, ~470 `<p>` across this corpus, plus tables), and a teaser is by
+   * definition a document cut off partway, so it cannot close what it opened: one
+   * clipped `<p>` nested every following card inside it, and one clipped `<b>` put
+   * the rest of the page in bold. Tags are dropped rather than balanced, matching
+   * what `stripTags` has always done for the plain-text twin.
+   *
+   * The walk does three jobs at once, and the order is the point. Tags are removed
+   * from each plain run *before* it is measured, so the budget counts characters a
+   * reader sees rather than markup. `<latex>` spans are stepped over whole, so a cut
+   * can never land inside one — half a formula leaves an unclosed `$` that swallows
+   * the rest of the line into a single KaTeX run. Escaping happens per run, after
+   * the tag strip, so nothing an author wrote can re-enter as markup; KaTeX reads
+   * text nodes, so an escaped `<` still reaches it as `<`.
    */
-  function previewToHtml(text) {
-    const inlined = String(text || '')
-      .replace(/<latex>\s*\n([\s\S]*?)\n\s*<\/latex>/g,
-        (_m, inner) => `<latex>${inner.replace(/\s+/g, ' ').trim()}</latex>`);
-    return latexToHtml(inlined).replace(/\*\*/g, '').replace(/\s+/g, ' ').trim();
+  function previewToHtml(text, limit) {
+    // Block spans become inline: `$$…$$` renders as a centred display block, which
+    // breaks out of a one-line teaser.
+    const src = String(text || '').replace(/<latex>\s*\n([\s\S]*?)\n\s*<\/latex>/g,
+      (_m, inner) => `<latex>${inner.replace(/\s+/g, ' ').trim()}</latex>`);
+    const re = /<latex>([\s\S]*?)<\/latex>/g;
+    const out = [];
+    let used = 0, last = 0, m, cut = false;
+
+    const addPlain = (raw) => {
+      const t = decodeEntities(raw.replace(/<[^>]*>/g, ' ').replace(/\*\*/g, ''));
+      if (used + t.length > limit) {
+        out.push(escapeHtml(t.slice(0, limit - used)));
+        used = limit;
+        cut = true;
+      } else {
+        out.push(escapeHtml(t));
+        used += t.length;
+      }
+    };
+
+    while ((m = re.exec(src))) {
+      addPlain(src.slice(last, m.index));
+      last = re.lastIndex;
+      if (cut) break;
+      // A bare `$` in the payload would close the delimiter early; TeX almost never
+      // wants one, and a teaser is not the place to find out.
+      out.push('$' + escapeHtml(decodeEntities(m[1]).replace(/\$/g, '')) + '$');
+      used += m[1].length;
+      if (used >= limit) { cut = true; break; }
+    }
+    if (!cut) addPlain(src.slice(last));
+
+    let html = (out.join('') + (cut ? '…' : '')).replace(/\s+/g, ' ').trim();
+    // Two upstream banks write raw `$…$` in prose instead of `<latex>` tags, so a
+    // clip can still orphan a delimiter. Drop the odd one out rather than let KaTeX
+    // read the rest of the card as math.
+    if (((html.match(/\$/g) || []).length) % 2) html = html.replace(/\$([^$]*)$/, '$1');
+    return html;
   }
 
   function typeLabel(qtype) {
@@ -225,7 +264,7 @@
       const text = qs[0][qtype]?.text || '';
       const clean = stripTags(text);
       preview = clean.length > 220 ? clean.slice(0, 220) + '…' : clean;
-      preview_html = previewToHtml(clipLatexSource(text, 220));
+      preview_html = previewToHtml(text, 220);
     }
     return {
       title: info.title || 'Untitled Bank',
