@@ -666,10 +666,29 @@ function populateFilters() {
   renderTypeFilter();
 }
 
+/* Only the types the loaded banks actually contain get a chip — the same
+   self-hiding rule as the QTI button. `TS` covers every type the YAML schema
+   allows, but the live corpus is numerical / MC / multiple-answer / categorization,
+   so the full map showed seven chips that filtered to nothing. Counted over the
+   whole repo rather than the currently visible banks, so the row does not reshuffle
+   under you while you filter. A type present in a bank but missing from `TS` still
+   gets a chip, using the same three-letter fallback the card badges use. */
+function availableTypes() {
+  const seen = new Set();
+  for (const topics of Object.values(S.repo))
+    for (const banks of Object.values(topics))
+      for (const b of banks)
+        for (const t of Object.keys(b.meta.q_types || {})) seen.add(t);
+  return seen;
+}
+
 function renderTypeFilter() {
   const el = document.getElementById('type-filter');
   if (!el) return;
-  const types = Object.entries(TS);
+  const avail = availableTypes();
+  const known = Object.keys(TS).filter(t => avail.has(t));
+  const extra = [...avail].filter(t => !(t in TS)).sort(EstelaBankSource.natCmp);
+  const types = [...known, ...extra].map(t => [t, TS[t] || t.slice(0, 3).toUpperCase()]);
   el.innerHTML = types.map(([t, label]) => {
     const on = S.typeFilter.has(t);
     return `<button class="badge ${on ? 'bd-ok' : 'bd-gen'}" style="cursor:pointer;padding:.18rem .45rem" onclick="toggleTypeFilter('${t}')">${label}</button>`;
