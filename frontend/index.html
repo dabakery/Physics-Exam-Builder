@@ -850,7 +850,6 @@ function bankCardHTML(b, topic) {
     <div class="bc-footer">
       <div class="bc-badges">${badges}<span class="bc-id">${esc(meta.bank_id)}</span></div>
       <div class="bc-actions">
-        <button class="btn btn-sm" onclick="openYamlModal(${attr(path)})" title="View source YAML & generation prompts">📄 YAML</button>
         ${meta.has_qti !== false
           ? `<button class="btn btn-sm" onclick="downloadBankQti(${attr(path)})" title="Download Canvas QTI package (New Quizzes import)">⬇ QTI</button>`
           : ''}
@@ -882,21 +881,32 @@ async function loadQs(path) {
   }
 }
 
+/* The preview shows a question the way a student meets it — stem, figure, and the
+   options to choose among — and withholds everything that gives the answer away:
+   the correct-option marker, the solution feedback, and the answers of the types
+   whose "answer" list is nothing *but* the key (numerical value, true/false
+   verdict). Same rule as quiz mode: no path through the page hands over an answer. */
 function qHTML(q, i, bankPath) {
   const id = `q_${slugify(bankPath)}_${i}`;
-  const answers = q.answers.map(a =>
-    `<div class="ans-opt${a.correct?' ans-ok':''}">` +
-    (a.label !== 'Answer' ? `<b>${a.label}.</b> ` : `<b>${a.label}:</b> `) +
-    `${a.text}</div>`
-  ).join('');
-  const groups = (q.groups||[]).map(g =>
-    `<div class="cat-grp${g.correct?'':' cat-grp-dis'}">
-      <div class="cat-grp-t">${g.title}</div>
-      ${g.items.map(t=>`<div class="${g.correct?'ans-ok':'ans-opt'}">${t}</div>`).join('')}
-    </div>`
-  ).join('');
-  const sol = q.solution
-    ? `<div class="q-sol"><div class="sol-lbl">Solution</div>${q.solution}</div>` : '';
+  const hasOpts = q.type === 'multiple_choice' || q.type === 'multiple_answers';
+  const answers = hasOpts
+    ? q.answers.map(a => `<div class="ans-opt"><b>${a.label}.</b> ${a.text}</div>`).join('')
+    : '';
+  // Categorization is split into the categories and the items to be placed, rather
+  // than the filled buckets the YAML models. The pooled items are sorted, because
+  // their source order runs category by category and would give the mapping back;
+  // distractors join the same pool unlabelled, for the same reason.
+  const cats = (q.groups||[]).filter(g => g.correct);
+  const pool = (q.groups||[]).flatMap(g => g.items).slice().sort();
+  const groups = cats.length
+    ? `<div class="cat-grp">
+        <div class="cat-grp-t">Categories</div>
+        ${cats.map(g=>`<div class="ans-opt">${g.title}</div>`).join('')}
+      </div>
+      <div class="cat-grp">
+        <div class="cat-grp-t">Items to place</div>
+        ${pool.map(t=>`<div class="ans-opt">${t}</div>`).join('')}
+      </div>` : '';
   const fig = q.fig_url
     ? `<img src="${q.fig_url}" style="max-width:360px;margin:.35rem 0;border-radius:5px;display:block;">` : '';
   return `<div class="q-item">
@@ -912,8 +922,7 @@ function qHTML(q, i, bankPath) {
       <div class="q-text">${q.body}</div>
       ${fig}
       ${groups?`<div class="cat-groups">${groups}</div>`:''}
-      <div class="ans-list">${answers}</div>
-      ${sol}
+      ${answers?`<div class="ans-list">${answers}</div>`:''}
     </div>
   </div>`;
 }
