@@ -1,0 +1,530 @@
+bank_info:
+    title: Volume, Pressure and Temperature Ratios for an Ideal Gas
+    bank_id: APP2-THM-PVTRAT-081626
+    description: |-
+      Isomorphic proportional-reasoning problems for AP Physics 2, College Board
+      Unit 9 Topic 9.2. Every question links a molecular quantity to a change of
+      state through two steps. First the absolute temperature ratio is found
+      from the molecules,
+      <latex>
+      v_{rms} \propto \sqrt{T}, \qquad K_{avg} \propto T
+      </latex>
+      and then the state variables are related through the ideal gas law with
+      the amount of gas held fixed,
+      <latex>
+      \frac{P_i V_i}{T_i} = \frac{P_f V_f}{T_f}
+      </latex>
+
+      The target idea is that a piston free to slide holds the pressure
+      constant, which leaves volume proportional to absolute temperature, while
+      a clamped piston holds the volume constant and leaves pressure
+      proportional to absolute temperature. The bank pairs with
+      APP2-THM-TRMS-080926, which stops at the molecular step. This bank carries
+      that step through to a volume or a pressure.
+
+      The common errors are scaling volume with the speed rather than with the
+      speed squared, reporting the ratio in the opposite order to the one asked
+      for, treating the average kinetic energy as though it scaled like the
+      speed, and using a Celsius temperature in a ratio.
+    date created: 08-16-2026
+    status: ready # Only use 'draft', 'ready', 'deployed', and 'deprecated' for this field. 'draft' and 'deprecated' files won't be parsed by the exam builder.
+    learning objectives:
+        - THM-IGL-1 # Apply the ideal gas law to relate pressure, volume, temperature and amount of gas
+        - THM-IGL-2 # Predict how one state variable responds to a change in another when the rest are held fixed
+        - THM-KTTP-2 # Relate molecular speed distribution to temperature and molar mass
+    generation prompts: # The following are the prompts that generated the questions in the problem bank.
+        - prompt 1: |
+            (q1 drafted from the owner's outline: an ideal gas in a cylinder
+            closed by a frictionless piston is placed in a constant temperature
+            hot water bath, the rms speed doubles at thermal equilibrium, the
+            pressure stays constant, find V_i : V_f. q2-q7 are isomorphs that
+            each change the solution rather than only the numbers: q2 reverses
+            the direction with a cold bath, q3 enters through average kinetic
+            energy so the link to temperature is linear instead of a square
+            root, q4 runs the chain backwards from a volume ratio to a speed
+            factor, q5 clamps the piston so the constant quantity is volume and
+            the answer is a pressure ratio, q6 changes pressure and volume at
+            the same time so the full ideal gas law is needed, and q7 supplies
+            Celsius temperatures so the conversion to kelvin has to happen
+            before any ratio is taken.)
+        - formatting prompt: "../../../../Templates/YAML_formatting_prompt.md"
+    updates:
+        - update 1: (08-16-2026) Bank created with q1-q7. First bank in Topic 9.2.
+    generation details:
+            model:
+            version:
+            last updated: 08-16-2026
+    authors:
+        - Michael Baker
+
+questions:
+
+- multiple_choice:
+    id: q1
+    title: Volume Ratio When the RMS Speed Doubles at Constant Pressure
+    points: 2
+    text: |
+      A sealed cylinder of ideal gas is closed by a piston that slides without
+      friction. The cylinder is placed in a large hot water bath held at a
+      constant temperature, and the gas is left until it reaches thermal
+      equilibrium with the water. The piston is free to move the whole time, so
+      the pressure of the gas stays constant.
+
+      Once the gas reaches equilibrium, the root-mean-square speed of its
+      molecules has doubled. Find the ratio of the initial volume to the final
+      volume, <latex>V_i : V_f</latex>.
+    answers:
+    - answer:
+        text: |
+          <latex>1 : 4</latex>
+        correct: true
+    - answer:
+        text: |
+          <latex>1 : 2</latex>
+        correct: false
+    - answer:
+        text: |
+          <latex>4 : 1</latex>
+        correct: false
+    - answer:
+        text: |
+          <latex>1 : 16</latex>
+        correct: false
+    feedback:
+        general: |
+          Take this in two steps. First find what the speed tells you about the
+          temperature, then find what the temperature tells you about the
+          volume.
+
+          The root-mean-square speed depends on the square root of the absolute
+          temperature,
+          <latex>
+          v_{rms} = \sqrt{\frac{3 k_B T}{m}}
+          </latex>
+          so a speed that doubles needs a temperature that quadruples:
+          <latex>
+          \frac{v_f}{v_i} = \sqrt{\frac{T_f}{T_i}} = 2
+          \quad \Rightarrow \quad
+          \frac{T_f}{T_i} = 4
+          </latex>
+
+          Now use the piston. Because it slides without friction it settles
+          wherever the gas pressure matches the pressure pushing in on it from
+          outside, and that outside pressure has not changed. The pressure of
+          the gas is therefore constant, and with the amount of gas fixed as
+          well, the ideal gas law leaves volume proportional to absolute
+          temperature:
+          <latex>
+          \frac{V_i}{T_i} = \frac{V_f}{T_f}
+          \quad \Rightarrow \quad
+          \frac{V_f}{V_i} = \frac{T_f}{T_i} = 4
+          </latex>
+
+          The final volume is four times the initial volume, so
+          <latex>V_i : V_f = 1 : 4</latex>. Check the order the question asked
+          for before you answer, because the same physics written the other way
+          round would read <latex>4 : 1</latex>.
+        on_correct: |
+          Correct. You squared the speed ratio to get the temperature ratio, and
+          the volume then followed the temperature directly.
+        on_incorrect: |
+          Find the temperature ratio first. Speed grows as the square root of
+          absolute temperature, so a speed that doubles means a temperature that
+          quadruples rather than one that doubles.
+
+- multiple_choice:
+    id: q2
+    title: Volume Ratio When the RMS Speed Is Halved at Constant Pressure
+    points: 2
+    text: |
+      A sealed cylinder of ideal gas is closed by a piston that slides without
+      friction. The cylinder is placed in a large ice water bath held at a
+      constant temperature, and the gas is left until it reaches thermal
+      equilibrium with the water. The piston is free to move the whole time, so
+      the pressure of the gas stays constant.
+
+      Once the gas reaches equilibrium, the root-mean-square speed of its
+      molecules is half its original value. Find the ratio of the initial
+      volume to the final volume, <latex>V_i : V_f</latex>.
+    answers:
+    - answer:
+        text: |
+          <latex>4 : 1</latex>
+        correct: true
+    - answer:
+        text: |
+          <latex>2 : 1</latex>
+        correct: false
+    - answer:
+        text: |
+          <latex>1 : 4</latex>
+        correct: false
+    - answer:
+        text: |
+          <latex>16 : 1</latex>
+        correct: false
+    feedback:
+        general: |
+          The chain of reasoning is the same as for a gas being heated, it just
+          runs downhill instead. Start with the speed:
+          <latex>
+          \frac{v_f}{v_i} = \sqrt{\frac{T_f}{T_i}} = \frac{1}{2}
+          \quad \Rightarrow \quad
+          \frac{T_f}{T_i} = \frac{1}{4}
+          </latex>
+          Squaring one half gives one quarter, so the absolute temperature drops
+          to a quarter of what it was.
+
+          The piston still slides freely, so the pressure is still constant and
+          volume is still proportional to absolute temperature:
+          <latex>
+          \frac{V_f}{V_i} = \frac{T_f}{T_i} = \frac{1}{4}
+          </latex>
+
+          The gas ends up in a quarter of the volume it started in, so
+          <latex>V_i : V_f = 4 : 1</latex>. It is worth noticing that cooling a
+          gas shrinks it by exactly the same factor that heating it would have
+          grown it, provided you compare the same ratio of absolute
+          temperatures.
+        on_correct: |
+          Correct. Halving the speed quarters the absolute temperature, and the
+          volume follows.
+        on_incorrect: |
+          Square the speed ratio before you use it. Half the speed corresponds
+          to a quarter of the absolute temperature, not half of it.
+
+- multiple_choice:
+    id: q3
+    title: Volume Ratio When the Average Kinetic Energy Triples
+    points: 2
+    text: |
+      A sealed cylinder of ideal gas is closed by a piston that slides without
+      friction, so the pressure of the gas stays constant. The gas is warmed
+      slowly until it reaches thermal equilibrium at a new temperature.
+
+      At the new temperature the average translational kinetic energy of the
+      molecules is three times its original value. Find the ratio of the
+      initial volume to the final volume, <latex>V_i : V_f</latex>.
+    answers:
+    - answer:
+        text: |
+          <latex>1 : 3</latex>
+        correct: true
+    - answer:
+        text: |
+          <latex>1 : 9</latex>
+        correct: false
+    - answer:
+        text: |
+          <latex>1 : \sqrt{3}</latex>
+        correct: false
+    - answer:
+        text: |
+          <latex>3 : 1</latex>
+        correct: false
+    feedback:
+        general: |
+          Read the given quantity carefully, because average kinetic energy and
+          rms speed do not scale with temperature in the same way. Average
+          translational kinetic energy is directly proportional to absolute
+          temperature,
+          <latex>
+          K_{avg} = \frac{3}{2} k_B T
+          </latex>
+          with no square root anywhere. Tripling the kinetic energy therefore
+          triples the absolute temperature:
+          <latex>
+          \frac{T_f}{T_i} = \frac{K_f}{K_i} = 3
+          </latex>
+
+          The pressure is constant, so volume is proportional to absolute
+          temperature:
+          <latex>
+          \frac{V_f}{V_i} = \frac{T_f}{T_i} = 3
+          </latex>
+          and <latex>V_i : V_f = 1 : 3</latex>.
+
+          If the question had said the rms speed tripled instead, the answer
+          would have been <latex>1 : 9</latex>. Which molecular quantity you are
+          handed changes the first step of the problem, so it is worth reading
+          that line twice.
+        on_correct: |
+          Correct. Kinetic energy is proportional to absolute temperature, so no
+          squaring was needed here.
+        on_incorrect: |
+          Check whether you were given a speed or an energy. Average kinetic
+          energy is proportional to absolute temperature directly, so it does
+          not need to be squared the way a speed does.
+
+- multiple_choice:
+    id: q4
+    title: Speed Factor from a Known Volume Change at Constant Pressure
+    points: 2
+    text: |
+      A sealed cylinder of ideal gas is closed by a piston that slides without
+      friction, so the pressure of the gas stays constant. The gas is heated
+      and the piston moves outward until the gas occupies nine times its
+      original volume.
+
+      By what factor has the root-mean-square speed of the molecules changed?
+    answers:
+    - answer:
+        text: It has increased by a factor of <latex>3</latex>.
+        correct: true
+    - answer:
+        text: It has increased by a factor of <latex>9</latex>.
+        correct: false
+    - answer:
+        text: It has increased by a factor of <latex>81</latex>.
+        correct: false
+    - answer:
+        text: It has not changed, because the pressure was held constant.
+        correct: false
+    feedback:
+        general: |
+          This is the same chain as before, walked in the opposite direction.
+          You are given the volume and asked for the speed, so start at the
+          ideal gas law and finish at the molecules.
+
+          The pressure and the amount of gas are both constant, so volume is
+          proportional to absolute temperature:
+          <latex>
+          \frac{T_f}{T_i} = \frac{V_f}{V_i} = 9
+          </latex>
+
+          The rms speed grows as the square root of absolute temperature, so
+          take the square root of that ratio rather than the ratio itself:
+          <latex>
+          \frac{v_f}{v_i} = \sqrt{\frac{T_f}{T_i}} = \sqrt{9} = 3
+          </latex>
+
+          A gas that expands to nine times its volume is nine times hotter on
+          the absolute scale, but its molecules are only three times faster. The
+          square root always softens the change, which is why the speed answer
+          is smaller than the volume answer.
+        on_correct: |
+          Correct. Working backwards means taking a square root where the
+          forward problem asked you to square.
+        on_incorrect: |
+          Going from temperature to speed calls for a square root. The volume
+          ratio of <latex>9</latex> gives a temperature ratio of
+          <latex>9</latex>, and the speed ratio is the square root of that.
+
+- multiple_choice:
+    id: q5
+    title: Pressure Ratio When the RMS Speed Doubles at Constant Volume
+    points: 2
+    text: |
+      A sealed cylinder of ideal gas is closed by a piston, and the piston is
+      clamped in place so that it cannot move. The cylinder is placed in a
+      large hot water bath held at a constant temperature and left until the
+      gas reaches thermal equilibrium with the water.
+
+      Once the gas reaches equilibrium, the root-mean-square speed of its
+      molecules has doubled. Find the ratio of the initial pressure to the
+      final pressure, <latex>P_i : P_f</latex>.
+    answers:
+    - answer:
+        text: |
+          <latex>1 : 4</latex>
+        correct: true
+    - answer:
+        text: |
+          <latex>1 : 2</latex>
+        correct: false
+    - answer:
+        text: |
+          <latex>4 : 1</latex>
+        correct: false
+    - answer:
+        text: |
+          <latex>1 : 1</latex>, because the cylinder is sealed and no gas can
+          escape.
+        correct: false
+    feedback:
+        general: |
+          The molecular step has not changed. A speed that doubles still means
+          an absolute temperature that quadruples:
+          <latex>
+          \frac{T_f}{T_i} = \left( \frac{v_f}{v_i} \right)^2 = 4
+          </latex>
+
+          What has changed is which quantity the apparatus holds fixed. Clamping
+          the piston fixes the volume rather than the pressure, so it is now the
+          pressure that is free to respond:
+          <latex>
+          \frac{P_i}{T_i} = \frac{P_f}{T_f}
+          \quad \Rightarrow \quad
+          \frac{P_f}{P_i} = \frac{T_f}{T_i} = 4
+          </latex>
+          The pressure ends up four times larger, so
+          <latex>P_i : P_f = 1 : 4</latex>.
+
+          Sealing the cylinder fixes the amount of gas, which is what lets you
+          use the ideal gas law as a ratio at all. It does not fix the pressure.
+          Faster molecules hit the walls harder and more often, and with nowhere
+          for the walls to move, that shows up as a higher pressure.
+        on_correct: |
+          Correct. Clamping the piston moves the response from the volume to the
+          pressure.
+        on_incorrect: |
+          Ask yourself which quantity the apparatus is holding constant. A
+          clamped piston fixes the volume, so the pressure is what has to
+          change when the temperature rises.
+
+- multiple_choice:
+    id: q6
+    title: Speed Factor When Pressure and Volume Both Double
+    points: 2
+    text: |
+      A sealed cylinder of ideal gas is heated while the load on its piston is
+      increased at the same time. When the gas settles at its new equilibrium,
+      both the pressure and the volume of the gas are twice their original
+      values.
+
+      By what factor has the root-mean-square speed of the molecules changed?
+    answers:
+    - answer:
+        text: It has increased by a factor of <latex>2</latex>.
+        correct: true
+    - answer:
+        text: It has increased by a factor of <latex>4</latex>.
+        correct: false
+    - answer:
+        text: It has increased by a factor of <latex>\sqrt{2}</latex>.
+        correct: false
+    - answer:
+        text: It has not changed, because the two changes cancel.
+        correct: false
+    feedback:
+        general: |
+          Neither the pressure nor the volume is constant here, so use the full
+          ideal gas law rather than one of its special cases. With the amount of
+          gas fixed,
+          <latex>
+          \frac{P_i V_i}{T_i} = \frac{P_f V_f}{T_f}
+          \quad \Rightarrow \quad
+          \frac{T_f}{T_i} = \frac{P_f V_f}{P_i V_i}
+          </latex>
+
+          Both factors on the right are <latex>2</latex>, and they multiply
+          rather than cancel:
+          <latex>
+          \frac{T_f}{T_i} = (2)(2) = 4
+          </latex>
+
+          Now finish at the molecules. The rms speed grows as the square root of
+          absolute temperature, so
+          <latex>
+          \frac{v_f}{v_i} = \sqrt{4} = 2
+          </latex>
+
+          Pressure and volume trade off against each other only when the
+          temperature is held constant. Here the temperature was free to change,
+          which is exactly why both were able to rise together.
+        on_correct: |
+          Correct. Multiplying the two ratios gives the temperature ratio, and
+          the square root of that gives the speed.
+        on_incorrect: |
+          Pressure and volume only work against each other at constant
+          temperature. Here they multiply, giving four times the absolute
+          temperature and twice the speed.
+
+- multiple_choice:
+    id: q7
+    title: Speed and Volume Ratios from Celsius Temperatures
+    points: 2
+    text: |
+      A sealed cylinder of ideal gas is closed by a piston that slides without
+      friction, so the pressure of the gas stays constant. The gas starts at a
+      temperature of <latex>27</latex> °C and is placed in a furnace held at
+      <latex>1227</latex> °C, where it is left until it reaches thermal
+      equilibrium.
+
+      By what factor does the root-mean-square speed of the molecules change,
+      and what is the ratio of the initial volume to the final volume,
+      <latex>V_i : V_f</latex>?
+    answers:
+    - answer:
+        text: |
+          The rms speed increases by a factor of <latex>\sqrt{5}</latex>, and
+          <latex>V_i : V_f = 1 : 5</latex>.
+        correct: true
+    - answer:
+        text: |
+          The rms speed increases by a factor of <latex>5</latex>, and
+          <latex>V_i : V_f = 1 : 5</latex>.
+        correct: false
+    - answer:
+        text: |
+          The rms speed increases by a factor of <latex>\sqrt{45.4}</latex>, and
+          <latex>V_i : V_f = 1 : 45.4</latex>.
+        correct: false
+    - answer:
+        text: |
+          The rms speed increases by a factor of <latex>5</latex>, and
+          <latex>V_i : V_f = 1 : 25</latex>.
+        correct: false
+    feedback:
+        general: |
+          Convert both temperatures to kelvin before you take any ratio, because
+          none of these relationships work on the Celsius scale:
+          <latex>
+          T_i = 27 + 273 = 300 \text{ K}, \qquad T_f = 1227 + 273 = 1500 \text{ K}
+          </latex>
+          <latex>
+          \frac{T_f}{T_i} = \frac{1500}{300} = 5
+          </latex>
+
+          The pressure is constant, so volume is proportional to absolute
+          temperature:
+          <latex>
+          \frac{V_f}{V_i} = 5
+          \quad \Rightarrow \quad
+          V_i : V_f = 1 : 5
+          </latex>
+
+          The speed carries the square root, so it grows by less than the volume
+          does:
+          <latex>
+          \frac{v_f}{v_i} = \sqrt{5} \approx 2.24
+          </latex>
+
+          Notice what the Celsius scale would have done to you here. The ratio
+          <latex>1227/27</latex> is about <latex>45.4</latex>, which is nowhere
+          near <latex>5</latex>. Ratios of temperature only mean anything on a
+          scale whose zero is real, and that is what makes the kelvin scale the
+          one to use.
+        on_correct: |
+          Correct. Converting to kelvin first is what makes both ratios come out
+          right.
+        on_incorrect: |
+          Add <latex>273</latex> to each Celsius temperature before comparing
+          them. A Celsius ratio has no physical meaning, because zero on that
+          scale is just the freezing point of water rather than an absence of
+          thermal energy.
+
+# ── Notes for the next pass (delete once resolved) ────────────────────────────
+#
+# Isomorph design, for reference when extending the bank. Every variant holds
+#   the same two-step target (molecular quantity -> absolute temperature ratio,
+#   then ideal gas law -> state variable ratio) but changes the entry point, the
+#   direction, or the quantity the apparatus holds fixed:
+#     q1  v_rms doubles, piston free      — forward, isobaric      → V 1:4
+#     q2  v_rms halved, piston free       — reversed direction     → V 4:1
+#     q3  K_avg triples, piston free      — linear link, no root   → V 1:3
+#     q4  V_f = 9 V_i, piston free        — backwards, take root   → v x3
+#     q5  v_rms doubles, piston clamped   — constant V, answer P   → P 1:4
+#     q6  P and V both double             — full gas law, 2 ratios → v x2
+#     q7  27 °C to 1227 °C, piston free   — kelvin conversion      → v xsqrt5, V 1:5
+#
+# q3 is the one that separates K_avg (linear in T) from v_rms (square root in
+#   T). That distinction is the whole point of APP2-THM-TRMS-080926 in 9.1, so
+#   students who did that bank should find q3 easy and q1 harder. Watch whether
+#   that holds in practice.
+# q5 is the only question whose answer is a pressure. If the bank is later split
+#   by target quantity, q5 and any future pressure isomorphs should move out
+#   together.
+# Still missing from this topic, for future banks: questions where the amount of
+#   gas n changes, and numerical questions that put actual values into PV = nRT
+#   rather than working in ratios.
