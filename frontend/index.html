@@ -159,18 +159,18 @@ body.tauri #home-link{display:none;}
 .bank-card.incart::before{background:var(--accent);}
 .bank-card.incart{border-color:rgba(200,57,26,.18);}
 [data-theme=dark] .bank-card.incart{border-color:rgba(232,82,46,.26);}
-.bc-row{display:flex;justify-content:space-between;align-items:flex-start;gap:.7rem;}
 .bc-title{font-weight:600;font-size:1.06rem;color:var(--ink);letter-spacing:-.01em;}
-/* The bank ID is a stable key, not a subtitle. It used to sit directly beneath
-   the title, so a database string was the second thing read on every card. It
-   keeps its place in the DOM (search and Ctrl+F still find it) but moves to the
-   metadata corner at label size. */
-.bc-id{font-family:var(--font-m);font-size:.68rem;color:var(--ink4);letter-spacing:.02em;margin-top:.18rem;}
-.bc-right{font-family:var(--font-m);font-size:.8rem;color:var(--ink3);white-space:nowrap;flex-shrink:0;text-align:right;}
-.bc-desc{font-size:.9rem;color:var(--ink3);margin-top:.28rem;line-height:1.5;}
+/* The bank ID is a stable key, not a subtitle. It rides at the end of the badge
+   row, where the question-type counts already sit, so the card's reading column
+   stays title then description with nothing wedged between them. It keeps its
+   place in the DOM, so search and Ctrl+F are unaffected. */
+.bc-id{font-family:var(--font-m);font-size:.7rem;color:var(--ink4);letter-spacing:.02em;align-self:center;margin-left:.5rem;}
+/* Clamped rather than cut to a fixed character count, so the card spends whatever
+   width it has on real text and stays the same height either way. */
+.bc-desc{font-size:.9rem;color:var(--ink3);margin-top:.34rem;line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
 .bc-preview{font-size:.87rem;color:var(--ink4);margin-top:.28rem;line-height:1.55;font-style:italic;border-left:2px solid var(--border);padding-left:.5rem;}
 .bc-footer{display:flex;align-items:center;justify-content:space-between;margin-top:.55rem;}
-.bc-badges{display:flex;flex-wrap:wrap;gap:0;}
+.bc-badges{display:flex;flex-wrap:wrap;align-items:center;gap:0;min-width:0;}
 .bc-actions{display:flex;gap:.3rem;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;}
 
 /* ── Badges ── */
@@ -808,6 +808,20 @@ function statsHTML() {
   </div>`;
 }
 
+/* Bank descriptions in this fork open with a sentence that restates the course,
+   unit and topic — "Isomorphic numerical problems for AP Physics 2, College Board
+   Unit 9 Topic 9.1." — which is exactly what the topic rule directly above the card
+   already says. Drop it so the card spends its three lines on what the bank actually
+   holds. Anchored on the closing "Topic <n>.<n>." marker, capped at 200 characters,
+   and not allowed to cross a blank line, so it cannot swallow a real opening
+   sentence. Upstream descriptions ("This problem bank contains…", "Problem set
+   for…") match nothing and are passed through untouched. */
+function descLead(text) {
+  return String(text || '')
+    .replace(/^(?:(?!\n\s*\n)[\s\S]){0,200}?\bTopic\s+\d+(?:\.\d+)?\s*\.\s+/, '')
+    .trim();
+}
+
 function bankCardHTML(b, topic) {
   const {path,meta} = b;
   const inCart = S.cart.some(c=>c.path===path);
@@ -815,8 +829,8 @@ function bankCardHTML(b, topic) {
   const badges = Object.entries(meta.q_types)
     .map(([t,n])=>`<span class="badge ${bcls(t)}">${TS[t]||t.slice(0,3).toUpperCase()} ×${n}</span>`)
     .join('') + (inCart?'<span class="badge bd-ok">✓ cart</span>':'');
-  const desc = meta.description
-    ? `<div class="bc-desc">${esc(meta.description).slice(0,145)}${meta.description.length>145?'…':''}</div>` : '';
+  const descText = descLead(meta.description);
+  const desc = descText ? `<div class="bc-desc">${esc(descText)}</div>` : '';
   const preview = (!isExp && meta.preview)
     ? `<div class="bc-preview">${esc(meta.preview)}</div>` : '';
   const qSection = isExp
@@ -829,19 +843,11 @@ function bankCardHTML(b, topic) {
         </div>
       </div>` : '';
   return `<div class="bank-card${inCart?' incart':''}" id="bc-${slugify(path)}">
-    <div class="bc-row">
-      <div style="flex:1;min-width:0">
-        <div class="bc-title">${esc(meta.title)}</div>
-      </div>
-      <div class="bc-right">
-        <div>${meta.q_count} q</div>
-        <div class="bc-id">${esc(meta.bank_id)}</div>
-      </div>
-    </div>
+    <div class="bc-title">${esc(meta.title)}</div>
     ${desc}
     ${preview}
     <div class="bc-footer">
-      <div class="bc-badges">${badges}</div>
+      <div class="bc-badges">${badges}<span class="bc-id">${esc(meta.bank_id)}</span></div>
       <div class="bc-actions">
         <button class="btn btn-sm" onclick="openYamlModal(${attr(path)})" title="View source YAML & generation prompts">📄 YAML</button>
         ${meta.has_qti !== false
