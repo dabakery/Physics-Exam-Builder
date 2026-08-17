@@ -3,25 +3,23 @@ bank_info:
     bank_id: APP2-THM-MBDIST-081426
     description: |-
       Isomorphic conceptual problems for AP Physics 2, College Board Unit 9
-      Topic 9.1. Every question in this bank shows a Maxwell-Boltzmann speed
-      distribution and asks the student to read something off it: which sample
-      is hottest, what happened to the temperature during a process, what an
-      area under the curve counts, or which gas is the most massive.
+      Topic 9.1.
 
-      The target idea is that the graph describes a spread of speeds rather
-      than one speed shared by every molecule, and that the shape of that
-      spread is set by temperature and molar mass. Where the TRMS bank works
-      the algebra of <latex>K_{avg} \propto T</latex> and
-      <latex>v_{rms} \propto \sqrt{T}</latex>, this bank stays with the graph.
+      Every question shows you a Maxwell-Boltzmann speed distribution and asks you to
+      read something off the graph. You might be asked which sample is hottest, what
+      happened to the temperature during a process, what the area under a curve
+      counts, or which of two gases has the heavier molecules.
 
-      Three misconceptions are targeted repeatedly. The first is reading the
-      height of a curve as the temperature, when a taller curve is the colder
-      one. The second is treating equal areas as a sign of equal temperature,
-      when equal areas only mean the samples hold the same number of
-      molecules. The third is treating a shift of the distribution as a
+      Teaching notes: the target idea is that the graph describes a spread of speeds
+      rather than one speed shared by every molecule, and that the shape of that
+      spread is set by temperature and molar mass. Where APP2-THM-TRMS-080926 works
+      the algebra, this bank stays with the graph. Three misconceptions are targeted
+      repeatedly. The first is reading the height of a curve as the temperature, when
+      a taller curve is the colder one. The second is treating equal areas as a sign
+      of equal temperature, when equal areas only mean the samples hold the same
+      number of molecules. The third is treating a shift of the distribution as a
       statement about every individual molecule, when the curves overlap and a
-      molecule drawn from the colder sample can easily be the faster of the
-      two.
+      molecule drawn from the colder sample can easily be the faster of the two.
     date created: 08-14-2026
     status: ready # Only use 'draft', 'ready', 'deployed', and 'deprecated' for this field. 'draft' and 'deprecated' files won't be parsed by the exam builder.
     learning objectives:

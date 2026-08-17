@@ -3,16 +3,18 @@ bank_info:
     bank_id: APP2-THM-UNIPRES-080926
     description: |-
       Isomorphic conceptual problems for AP Physics 2, College Board Unit 9
-      Topic 9.1. Students are shown a closed container whose surfaces have
-      unequal areas and asked to compare the pressure the enclosed gas exerts
-      on each surface. The target idea is that the pressure of a gas in
-      equilibrium is the same at every wall and does not depend on the area of
-      the surface it acts on — area determines the total force, not the
-      pressure.
+      Topic 9.1.
 
-      The common misconception is to conflate pressure with force, and so to
-      reason that the larger surface must experience the greater pressure (or,
-      inverting the relationship, the smaller one).
+      You are shown a closed container whose surfaces have different areas, and asked
+      to compare the pressure the gas inside pushes on each one. Read carefully
+      whether a question is asking you about pressure or about total force, because
+      the two do not answer the same way.
+
+      Teaching notes: the target idea is that the pressure of a gas in equilibrium is
+      the same at every wall and does not depend on the area it acts on. Area sets the
+      total force, not the pressure. The common misconception is to conflate pressure
+      with force, and so to reason that the larger surface must feel the greater
+      pressure, or to invert that and pick the smaller one.
     date created: 08-09-2026
     status: ready # Only use 'draft', 'ready', 'deployed', and 'deprecated' for this field. 'draft' and 'deprecated' files won't be parsed by the exam builder.
     learning objectives:

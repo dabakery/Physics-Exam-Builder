@@ -3,28 +3,25 @@ bank_info:
     bank_id: APP2-THM-CGL-081626
     description: |-
       Isomorphic proportional-reasoning problems for AP Physics 2, College Board
-      Unit 9 Topic 9.2. A fixed amount of ideal gas moves from one equilibrium
-      state to another. Two of the three state variables are given as multiples
-      of their starting values and students find the third from
-      <latex>
-      \frac{P_o V_o}{T_o} = \frac{P_f V_f}{T_f}
-      </latex>
+      Unit 9 Topic 9.2.
 
-      The target idea is that this single relationship covers every case,
+      A sealed sample of ideal gas moves from one equilibrium state to another. Two of
+      its three state variables, the pressure, the volume and the absolute
+      temperature, are given to you as multiples of where they started, and you find
+      the third. Every answer is a multiple of a starting value, so you never need an
+      absolute pressure, volume or temperature to answer one of these.
+
+      Teaching notes: the target idea is that one relationship covers every case,
       including the ones usually taught as separate named laws. Holding the
-      temperature constant makes it Boyle's law, holding the pressure constant
-      makes it Charles' law, and holding the volume constant makes it Gay-Lussac's
-      law. Nothing has to be memorised beyond the one equation and the habit of
-      asking which quantity the apparatus holds fixed. Every answer is a multiple
-      of a starting value, so no absolute pressures, volumes or temperatures are
-      needed anywhere in the bank.
-
-      The common errors are putting a ratio in upside down, multiplying where the
-      relationship calls for dividing, assuming a sealed container must have a
-      fixed volume, and believing that absolute values are required before a
-      ratio can be taken. Companion bank APP2-THM-PVT-081626 reaches these same
-      state changes from molecular speeds. This one starts and ends with the
-      state variables themselves.
+      temperature constant makes it Boyle's law, holding the pressure constant makes
+      it Charles' law, and holding the volume constant makes it Gay-Lussac's law.
+      Several questions state the constraint through the apparatus rather than in
+      words, which is what keeps them at the same difficulty as the ones where nothing
+      is held fixed. The common errors are putting a ratio in upside down, multiplying
+      where the relationship calls for dividing, assuming a sealed container must have
+      a fixed volume, and believing that absolute values are needed before a ratio can
+      be taken. APP2-THM-PVT-081626 reaches these same state changes from molecular
+      speeds.
     date created: 08-16-2026
     status: ready # Only use 'draft', 'ready', 'deployed', and 'deprecated' for this field. 'draft' and 'deprecated' files won't be parsed by the exam builder.
     learning objectives:

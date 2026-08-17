@@ -3,29 +3,23 @@ bank_info:
     bank_id: APP2-THM-PVT-081626
     description: |-
       Isomorphic proportional-reasoning problems for AP Physics 2, College Board
-      Unit 9 Topic 9.2. Every question links a molecular quantity to a change of
-      state through two steps. First the absolute temperature ratio is found
-      from the molecules,
-      <latex>
-      v_{rms} \propto \sqrt{T}, \qquad K_{avg} \propto T
-      </latex>
-      and then the state variables are related through the ideal gas law with
-      the amount of gas held fixed,
-      <latex>
-      \frac{P_i V_i}{T_i} = \frac{P_f V_f}{T_f}
-      </latex>
+      Unit 9 Topic 9.2.
 
-      The target idea is that a piston free to slide holds the pressure
-      constant, which leaves volume proportional to absolute temperature, while
-      a clamped piston holds the volume constant and leaves pressure
-      proportional to absolute temperature. The bank pairs with
-      APP2-THM-TRMS-080926, which stops at the molecular step. This bank carries
-      that step through to a volume or a pressure.
+      A sealed sample of ideal gas is heated or cooled, and you are told what happened
+      to its molecules. Their root-mean-square speed might double, or their average
+      kinetic energy might triple. From that you work out what happened to the volume,
+      the pressure or the temperature of the gas. Read the apparatus in each question
+      carefully, because a piston free to slide and a piston clamped in place do not
+      lead to the same answer.
 
-      The common errors are scaling volume with the speed rather than with the
-      speed squared, reporting the ratio in the opposite order to the one asked
-      for, treating the average kinetic energy as though it scaled like the
-      speed, and using a Celsius temperature in a ratio.
+      Teaching notes: the target idea is that a free piston holds the pressure
+      constant, which leaves volume proportional to absolute temperature, while a
+      clamped piston holds the volume constant and leaves pressure proportional to
+      absolute temperature. APP2-THM-TRMS-080926 stops at the molecular step; this
+      bank carries it through to a volume or a pressure. The common errors are scaling
+      volume with the speed rather than with the speed squared, reporting a ratio in
+      the opposite order to the one asked for, treating average kinetic energy as
+      though it scaled like speed, and using a Celsius temperature in a ratio.
     date created: 08-16-2026
     status: ready # Only use 'draft', 'ready', 'deployed', and 'deprecated' for this field. 'draft' and 'deprecated' files won't be parsed by the exam builder.
     learning objectives:

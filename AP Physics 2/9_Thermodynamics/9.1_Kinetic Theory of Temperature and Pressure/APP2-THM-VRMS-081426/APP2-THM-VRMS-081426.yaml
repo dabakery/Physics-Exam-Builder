@@ -3,27 +3,23 @@ bank_info:
     bank_id: APP2-THM-VRMS-081426
     description: |-
       Isomorphic numerical problems for AP Physics 2, College Board Unit 9
-      Topic 9.1. Students compute an actual molecular speed by setting the
-      average translational kinetic energy equal to <latex>\frac{1}{2} m v^2</latex>
-      and solving:
-      <latex>
-      \frac{3}{2} k_B T = \frac{1}{2} m v_{rms}^2
-      \quad \Rightarrow \quad
-      v_{rms} = \sqrt{\frac{3 k_B T}{m}} = \sqrt{\frac{3 R T}{M}}
-      </latex>
+      Topic 9.1.
 
-      The target idea is that the speed depends on both absolute temperature and
-      the mass of the molecule, and that it grows as the square root of the
-      temperature rather than in proportion to it. The companion bank
-      APP2-THM-TRMS-080926 covers the proportional reasoning; this one asks for
-      a number in metres per second.
+      You are asked for an actual molecular speed, in metres per second. Some
+      questions hand you a temperature and a mass and ask for the speed, and others
+      run the other way, giving you a speed and asking for the temperature or for the
+      mass of the gas. Check whether you have been given the mass of one molecule or
+      the mass of a mole, because the two are not interchangeable.
 
-      The common errors are using a Celsius temperature, leaving the molar mass
-      in grams per mole instead of kilograms per mole, forgetting to take the
-      square root, and pairing the wrong constant with the wrong mass. The last
-      one is specific to this calculation: <latex>k_B</latex> goes with the mass
-      of one molecule in kilograms, and <latex>R</latex> goes with the molar
-      mass in kilograms per mole.
+      Teaching notes: the target idea is that the speed depends on both absolute
+      temperature and molecular mass, and that it grows as the square root of the
+      temperature rather than in proportion to it. APP2-THM-TRMS-080926 covers the
+      proportional reasoning; this bank asks for a number. The common errors are using
+      a Celsius temperature, leaving the molar mass in grams per mole, forgetting to
+      take the square root, and pairing the wrong constant with the wrong mass. That
+      last one is specific to this calculation: <latex>k_B</latex> goes with the mass
+      of one molecule in kilograms, and <latex>R</latex> goes with the molar mass in
+      kilograms per mole.
     date created: 08-14-2026
     status: ready # Only use 'draft', 'ready', 'deployed', and 'deprecated' for this field. 'draft' and 'deprecated' files won't be parsed by the exam builder.
     learning objectives:
