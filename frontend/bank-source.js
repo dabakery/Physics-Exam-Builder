@@ -116,6 +116,46 @@
     return result;
   }
 
+  /**
+   * Fork-local. The card teaser is built twice from the same source. `preview` is
+   * `stripTags` plain text and feeds anything that reads characters rather than
+   * markup; `preview_html` keeps the math as KaTeX delimiters so the card renders
+   * it the way the expanded question panel already does.
+   *
+   * Clipping runs on the *source*, before the tags become `$…$`, so a cut can never
+   * land inside a span — half a formula leaves an unclosed `$` that swallows the
+   * rest of the line into one long KaTeX run. A formula counts toward the budget by
+   * its payload length, which is near enough for a teaser.
+   */
+  function clipLatexSource(text, limit) {
+    const src = String(text || '');
+    const re = /<latex>([\s\S]*?)<\/latex>/g;
+    let out = '', used = 0, last = 0, m;
+    while ((m = re.exec(src))) {
+      const plain = src.slice(last, m.index);
+      if (used + plain.length >= limit) return out + plain.slice(0, limit - used) + '…';
+      out += plain + m[0];
+      used += plain.length + m[1].length;
+      last = re.lastIndex;
+      if (used >= limit) return out + '…';
+    }
+    const tail = src.slice(last);
+    return used + tail.length > limit ? out + tail.slice(0, limit - used) + '…' : out + tail;
+  }
+
+  /**
+   * Block spans are flattened to inline ones first: the teaser is one clamped line
+   * of prose, and `$$…$$` renders as a centred display block that breaks out of it.
+   * A `**` left unpaired by the clip is dropped rather than shown, mirroring
+   * `stripTags`.
+   */
+  function previewToHtml(text) {
+    const inlined = String(text || '')
+      .replace(/<latex>\s*\n([\s\S]*?)\n\s*<\/latex>/g,
+        (_m, inner) => `<latex>${inner.replace(/\s+/g, ' ').trim()}</latex>`);
+    return latexToHtml(inlined).replace(/\*\*/g, '').replace(/\s+/g, ' ').trim();
+  }
+
   function typeLabel(qtype) {
     const map = {
       numerical: 'Numerical',
@@ -179,12 +219,13 @@
         typeCounts[t] = (typeCounts[t] || 0) + 1;
       }
     }
-    let preview = '';
+    let preview = '', preview_html = '';
     if (qs.length && qs[0] && typeof qs[0] === 'object') {
       const qtype = getQtype(qs[0]);
       const text = qs[0][qtype]?.text || '';
       const clean = stripTags(text);
       preview = clean.length > 220 ? clean.slice(0, 220) + '…' : clean;
+      preview_html = previewToHtml(clipLatexSource(text, 220));
     }
     return {
       title: info.title || 'Untitled Bank',
@@ -196,6 +237,7 @@
       q_count: qs.length,
       q_types: typeCounts,
       preview,
+      preview_html,
     };
   }
 

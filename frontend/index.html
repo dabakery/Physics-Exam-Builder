@@ -791,6 +791,7 @@ function renderBanks() {
 
   const v = document.getElementById('banks-view');
   v.innerHTML = html; v.style.display = 'block';
+  renderMath(v);
   document.getElementById('empty').style.display = 'none';
   S.expanded.forEach(p => loadQs(p));
 }
@@ -816,10 +817,20 @@ function statsHTML() {
    holds. Anchored on the closing "Topic <n>.<n>." marker, capped at 200 characters,
    and not allowed to cross a blank line, so it cannot swallow a real opening
    sentence. Upstream descriptions ("This problem bank contains…", "Problem set
-   for…") match nothing and are passed through untouched. */
+   for…") match nothing and are passed through untouched.
+
+   The tail is cut at the same place, on a "Teaching notes:" marker beginning a line.
+   That paragraph is written for the teacher — target idea, common misconceptions,
+   sibling banks — and the card only shows three clamped lines, so letting it run on
+   meant the student-facing paragraph was cut off mid-sentence by whatever notes
+   followed it. This is the convention for bank descriptions: a student-facing
+   paragraph first, then `Teaching notes:` on its own line for everything else. The
+   marker must start a line, so a prose mention of teaching notes cannot trigger it,
+   and only the card is trimmed — search still reads the whole description. */
 function descLead(text) {
   return String(text || '')
     .replace(/^(?:(?!\n\s*\n)[\s\S]){0,200}?\bTopic\s+\d+(?:\.\d+)?\s*\.\s+/, '')
+    .replace(/\n[ \t]*Teach(?:ing|er)s?[ \t]+notes?[ \t]*:[\s\S]*$/i, '')
     .trim();
 }
 
@@ -832,8 +843,12 @@ function bankCardHTML(b, topic) {
     .join('') + (inCart?'<span class="badge bd-ok">✓ cart</span>':'');
   const descText = EstelaBankSource.stripTags(descLead(meta.description));
   const desc = descText ? `<div class="bc-desc">${esc(descText)}</div>` : '';
-  const preview = (!isExp && meta.preview)
-    ? `<div class="bc-preview">${esc(meta.preview)}</div>` : '';
+  // The teaser renders its math; `renderBanks()` runs KaTeX over the view once the
+  // cards are in the DOM. `preview_html` is bank-source's, so TauriSource — whose
+  // meta comes from Rust — falls back to the escaped plain-text preview.
+  const previewBody = meta.preview_html || (meta.preview ? esc(meta.preview) : '');
+  const preview = (!isExp && previewBody)
+    ? `<div class="bc-preview">${previewBody}</div>` : '';
   const qSection = isExp
     ? `<div class="q-panel" id="qp-${slugify(path)}">
         <div class="q-ph">${esc(meta.title)} — ${meta.q_count} questions</div>
