@@ -1,0 +1,502 @@
+bank_info:
+    title: Finding the Third State Variable When Two of Them Change
+    bank_id: APP2-THM-CGL-081626
+    description: |-
+      Isomorphic proportional-reasoning problems for AP Physics 2, College Board
+      Unit 9 Topic 9.2. A fixed amount of ideal gas moves from one equilibrium
+      state to another. Two of the three state variables are given as multiples
+      of their starting values and students find the third from
+      <latex>
+      \frac{P_o V_o}{T_o} = \frac{P_f V_f}{T_f}
+      </latex>
+
+      The target idea is that this single relationship covers every case,
+      including the ones usually taught as separate named laws. Holding the
+      temperature constant makes it Boyle's law, holding the pressure constant
+      makes it Charles' law, and holding the volume constant makes it Gay-Lussac's
+      law. Nothing has to be memorised beyond the one equation and the habit of
+      asking which quantity the apparatus holds fixed. Every answer is a multiple
+      of a starting value, so no absolute pressures, volumes or temperatures are
+      needed anywhere in the bank.
+
+      The common errors are putting a ratio in upside down, multiplying where the
+      relationship calls for dividing, assuming a sealed container must have a
+      fixed volume, and believing that absolute values are required before a
+      ratio can be taken. Companion bank APP2-THM-PVT-081626 reaches these same
+      state changes from molecular speeds. This one starts and ends with the
+      state variables themselves.
+    date created: 08-16-2026
+    status: ready # Only use 'draft', 'ready', 'deployed', and 'deprecated' for this field. 'draft' and 'deprecated' files won't be parsed by the exam builder.
+    learning objectives:
+        - THM-IGL-1 # Apply the ideal gas law to relate pressure, volume, temperature and amount of gas
+        - THM-IGL-2 # Predict how one state variable responds to a change in another when the rest are held fixed
+    generation prompts: # The following are the prompts that generated the questions in the problem bank.
+        - prompt 1: |
+            (q1 drafted from the owner's outline: a sealed sample of ideal gas
+            starts at P_o, V_o, T_o, the temperature is raised to 4/3 of its
+            original value and the volume is doubled, find the new pressure.
+            q2-q7 are isomorphs that change which variable is solved for and
+            which one the apparatus holds fixed, rather than only the numbers:
+            q2 and q3 rotate the unknown to volume and then to temperature with
+            nothing held constant, q4 uses a rigid tank so the volume is fixed
+            and has to be inferred from the apparatus, q5 uses a free piston so
+            the pressure is fixed, q6 uses a constant temperature bath, and q7
+            runs a two stage process so that students see the intermediate state
+            drop out and only the endpoints matter. Distractors throughout are
+            the specific wrong answers produced by inverting one ratio, the
+            other, or both.)
+        - formatting prompt: "../../../../Templates/YAML_formatting_prompt.md"
+    updates:
+        - update 1: (08-16-2026) Bank created with q1-q7.
+    generation details:
+            model:
+            version:
+            last updated: 08-16-2026
+    authors:
+        - Michael Baker
+
+questions:
+
+- multiple_choice:
+    id: q1
+    title: New Pressure When Volume and Temperature Both Increase
+    points: 2
+    text: |
+      A sealed sample of ideal gas starts at pressure <latex>P_o</latex>, volume
+      <latex>V_o</latex> and absolute temperature <latex>T_o</latex>. The gas is
+      then brought to a new equilibrium state in which its absolute temperature
+      is <latex>\frac{4}{3} T_o</latex> and its volume is <latex>2 V_o</latex>.
+      No gas enters or leaves the sample.
+
+      Find the new pressure of the gas.
+    answers:
+    - answer:
+        text: |
+          <latex>\frac{2}{3} P_o</latex>
+        correct: true
+    - answer:
+        text: |
+          <latex>\frac{8}{3} P_o</latex>
+        correct: false
+    - answer:
+        text: |
+          <latex>\frac{3}{8} P_o</latex>
+        correct: false
+    - answer:
+        text: |
+          <latex>\frac{3}{2} P_o</latex>
+        correct: false
+    feedback:
+        general: |
+          The amount of gas is fixed, so the combination
+          <latex>PV/T</latex> has the same value in both states:
+          <latex>
+          \frac{P_o V_o}{T_o} = \frac{P_f V_f}{T_f}
+          </latex>
+          Solve that for the pressure you want before you put any numbers in,
+          because it is much easier to see which ratio goes which way up when the
+          symbols are still there:
+          <latex>
+          P_f = P_o \left( \frac{V_o}{V_f} \right) \left( \frac{T_f}{T_o} \right)
+          </latex>
+
+          Now read the two ratios off the question. The volume doubled, so
+          <latex>V_o / V_f = 1/2</latex>. The absolute temperature rose to
+          <latex>\frac{4}{3}</latex> of its old value, so
+          <latex>T_f / T_o = 4/3</latex>. Substituting,
+          <latex>
+          P_f = P_o \left( \frac{1}{2} \right) \left( \frac{4}{3} \right) = \frac{2}{3} P_o
+          </latex>
+
+          Check that the answer makes sense before you move on. The two changes
+          push the pressure in opposite directions, since spreading the gas into
+          a larger volume lowers the pressure while heating it raises the
+          pressure. Here the volume change is the bigger of the two, so the
+          pressure ends up lower than it started.
+        on_correct: |
+          Correct. Notice that the volume ratio went in upside down relative to
+          the temperature ratio, which is what the rearrangement tells you to do.
+        on_incorrect: |
+          Rearrange the relationship for <latex>P_f</latex> first, then read the
+          ratios off it. Volume appears on the same side of the equation as
+          pressure, so it enters as <latex>V_o / V_f</latex>, while temperature
+          enters as <latex>T_f / T_o</latex>.
+
+- multiple_choice:
+    id: q2
+    title: New Volume When Pressure and Temperature Both Increase
+    points: 2
+    text: |
+      A sealed sample of ideal gas starts at pressure <latex>P_o</latex>, volume
+      <latex>V_o</latex> and absolute temperature <latex>T_o</latex>. The gas is
+      then brought to a new equilibrium state in which its pressure is
+      <latex>\frac{3}{2} P_o</latex> and its absolute temperature is
+      <latex>3 T_o</latex>. No gas enters or leaves the sample.
+
+      Find the new volume of the gas.
+    answers:
+    - answer:
+        text: |
+          <latex>2 V_o</latex>
+        correct: true
+    - answer:
+        text: |
+          <latex>\frac{9}{2} V_o</latex>
+        correct: false
+    - answer:
+        text: |
+          <latex>\frac{2}{9} V_o</latex>
+        correct: false
+    - answer:
+        text: |
+          <latex>\frac{1}{2} V_o</latex>
+        correct: false
+    feedback:
+        general: |
+          Start from the same relationship, but this time rearrange it for the
+          volume:
+          <latex>
+          \frac{P_o V_o}{T_o} = \frac{P_f V_f}{T_f}
+          \quad \Rightarrow \quad
+          V_f = V_o \left( \frac{P_o}{P_f} \right) \left( \frac{T_f}{T_o} \right)
+          </latex>
+
+          The pressure rose to <latex>\frac{3}{2}</latex> of its old value, so
+          <latex>P_o / P_f = 2/3</latex>. The absolute temperature tripled, so
+          <latex>T_f / T_o = 3</latex>. Substituting,
+          <latex>
+          V_f = V_o \left( \frac{2}{3} \right) (3) = 2 V_o
+          </latex>
+
+          Pressure and volume are the pair that work against each other, so
+          whichever one you are solving for, the other one goes in as old over
+          new. Temperature is the odd one out and always goes in as new over old.
+        on_correct: |
+          Correct. Squeezing the gas harder shrinks it, heating it expands it,
+          and here the heating wins.
+        on_incorrect: |
+          Check which way up your pressure ratio is. The pressure went up, so on
+          its own it would shrink the gas, meaning that ratio has to be less than
+          one.
+
+- multiple_choice:
+    id: q3
+    title: New Temperature When Pressure and Volume Both Decrease
+    points: 2
+    text: |
+      A sealed sample of ideal gas starts at pressure <latex>P_o</latex>, volume
+      <latex>V_o</latex> and absolute temperature <latex>T_o</latex>. The gas is
+      then brought to a new equilibrium state in which its pressure is
+      <latex>\frac{1}{2} P_o</latex> and its volume is
+      <latex>\frac{3}{4} V_o</latex>. No gas enters or leaves the sample.
+
+      Find the new absolute temperature of the gas.
+    answers:
+    - answer:
+        text: |
+          <latex>\frac{3}{8} T_o</latex>
+        correct: true
+    - answer:
+        text: |
+          <latex>\frac{3}{2} T_o</latex>
+        correct: false
+    - answer:
+        text: |
+          <latex>\frac{2}{3} T_o</latex>
+        correct: false
+    - answer:
+        text: |
+          <latex>\frac{8}{3} T_o</latex>
+        correct: false
+    feedback:
+        general: |
+          Solving for temperature is the friendliest version of this problem,
+          because both ratios end up the same way round:
+          <latex>
+          T_f = T_o \left( \frac{P_f}{P_o} \right) \left( \frac{V_f}{V_o} \right)
+          </latex>
+          Temperature sits by itself on the bottom of the original relationship,
+          so when you bring it up top, everything else stays new over old.
+
+          Substituting the two given ratios,
+          <latex>
+          T_f = T_o \left( \frac{1}{2} \right) \left( \frac{3}{4} \right) = \frac{3}{8} T_o
+          </latex>
+
+          Both the pressure and the volume dropped, and temperature moves the
+          same way as each of them, so the temperature had to drop by more than
+          either one alone. An answer larger than <latex>T_o</latex> would have
+          been worth a second look for that reason.
+        on_correct: |
+          Correct, and this is the one case where neither ratio gets inverted.
+        on_incorrect: |
+          Both quantities fell, so the temperature must fall too, and by more
+          than either of them separately. Multiply the two new over old ratios
+          without turning either of them over.
+
+- multiple_choice:
+    id: q4
+    title: New Pressure of a Gas Heated in a Rigid Tank
+    points: 2
+    text: |
+      A sealed steel tank of fixed size holds an ideal gas at pressure
+      <latex>P_o</latex> and absolute temperature <latex>T_o</latex>. The tank
+      is heated until the absolute temperature of the gas is
+      <latex>\frac{5}{3} T_o</latex>. The tank does not deform and no gas
+      escapes.
+
+      Find the new pressure of the gas.
+    answers:
+    - answer:
+        text: |
+          <latex>\frac{5}{3} P_o</latex>
+        correct: true
+    - answer:
+        text: |
+          <latex>\frac{3}{5} P_o</latex>
+        correct: false
+    - answer:
+        text: |
+          <latex>P_o</latex>, because the tank is sealed and no gas can escape.
+        correct: false
+    - answer:
+        text: |
+          It cannot be found without knowing the volume of the tank.
+        correct: false
+    feedback:
+        general: |
+          The apparatus is doing the work of telling you what stays constant
+          here. A steel tank that does not deform holds the volume fixed, so
+          <latex>V_f = V_o</latex> and the volume cancels:
+          <latex>
+          \frac{P_o V_o}{T_o} = \frac{P_f V_o}{T_f}
+          \quad \Rightarrow \quad
+          \frac{P_o}{T_o} = \frac{P_f}{T_f}
+          </latex>
+          What is left is pressure proportional to absolute temperature, so
+          <latex>
+          P_f = P_o \left( \frac{T_f}{T_o} \right) = \frac{5}{3} P_o
+          </latex>
+
+          Two of the wrong answers are worth thinking about. Sealing the tank
+          fixes the amount of gas, which is what allows the relationship to be
+          used as a ratio at all, but it does not fix the pressure. And the
+          volume never needed a number, because it cancelled. Whenever a question
+          gives you changes as multiples of starting values, you can expect the
+          absolute values to cancel like this.
+        on_correct: |
+          Correct. You read the constant volume off the apparatus rather than
+          waiting to be told.
+        on_incorrect: |
+          Ask what the steel tank is doing physically. It cannot change size, so
+          the volume is the quantity being held constant, and the pressure has to
+          rise along with the absolute temperature.
+
+- multiple_choice:
+    id: q5
+    title: New Volume of a Gas Cooled Under a Free Piston
+    points: 2
+    text: |
+      An ideal gas is sealed in a cylinder by a piston that slides without
+      friction, and the outside of the cylinder is open to the atmosphere. The
+      gas starts at volume <latex>V_o</latex> and absolute temperature
+      <latex>T_o</latex>. The gas is cooled until its absolute temperature is
+      <latex>\frac{3}{4} T_o</latex>, with the piston free to move throughout.
+
+      Find the new volume of the gas.
+    answers:
+    - answer:
+        text: |
+          <latex>\frac{3}{4} V_o</latex>
+        correct: true
+    - answer:
+        text: |
+          <latex>\frac{4}{3} V_o</latex>
+        correct: false
+    - answer:
+        text: |
+          <latex>V_o</latex>, because the cylinder is sealed.
+        correct: false
+    - answer:
+        text: |
+          <latex>\frac{9}{16} V_o</latex>
+        correct: false
+    feedback:
+        general: |
+          Again the apparatus tells you what is constant. The piston slides
+          without friction, so it comes to rest wherever the gas pressure
+          balances the atmosphere pushing in plus the weight of the piston
+          itself. Neither of those changes while the gas cools, so the pressure
+          of the gas is constant and cancels:
+          <latex>
+          \frac{P_o V_o}{T_o} = \frac{P_o V_f}{T_f}
+          \quad \Rightarrow \quad
+          \frac{V_o}{T_o} = \frac{V_f}{T_f}
+          </latex>
+          Volume is then proportional to absolute temperature:
+          <latex>
+          V_f = V_o \left( \frac{T_f}{T_o} \right) = \frac{3}{4} V_o
+          </latex>
+
+          Note that you were never told the mass of the piston or the value of
+          atmospheric pressure. Those set the actual pressure of the gas, but
+          since that pressure is the same in both states it cancels out of the
+          ratio and its value never matters.
+        on_correct: |
+          Correct. A piston free to slide is the standard way a problem tells you
+          the pressure is constant.
+        on_incorrect: |
+          A sealed container fixes the amount of gas, not its volume. This piston
+          can move, so the volume is free to respond, and cooling the gas shrinks
+          it in direct proportion to the absolute temperature.
+
+- multiple_choice:
+    id: q6
+    title: New Pressure of a Gas Compressed in a Constant Temperature Bath
+    points: 2
+    text: |
+      An ideal gas is sealed in a cylinder that sits in a large water bath held
+      at a fixed temperature. The gas starts at pressure <latex>P_o</latex> and
+      volume <latex>V_o</latex>. The gas is then compressed slowly enough that
+      it stays in thermal equilibrium with the bath at all times, until its
+      volume is <latex>\frac{2}{5} V_o</latex>.
+
+      Find the new pressure of the gas.
+    answers:
+    - answer:
+        text: |
+          <latex>\frac{5}{2} P_o</latex>
+        correct: true
+    - answer:
+        text: |
+          <latex>\frac{2}{5} P_o</latex>
+        correct: false
+    - answer:
+        text: |
+          <latex>P_o</latex>, because the temperature did not change.
+        correct: false
+    - answer:
+        text: |
+          It cannot be found without knowing the temperature of the bath.
+        correct: false
+    feedback:
+        general: |
+          The phrase to notice is that the gas stays in thermal equilibrium with
+          a bath held at a fixed temperature. That makes this a constant
+          temperature process, so the temperature cancels:
+          <latex>
+          \frac{P_o V_o}{T_o} = \frac{P_f V_f}{T_o}
+          \quad \Rightarrow \quad
+          P_o V_o = P_f V_f
+          </latex>
+          Pressure and volume are now inversely related, so squeezing the gas
+          into a smaller volume raises its pressure:
+          <latex>
+          P_f = P_o \left( \frac{V_o}{V_f} \right) = P_o \left( \frac{5}{2} \right) = \frac{5}{2} P_o
+          </latex>
+
+          Compressing a gas normally warms it, which is why the question says the
+          compression is slow. The bath has time to carry that energy away and
+          hold the gas at its own temperature. Without that detail you would not
+          be able to treat the temperature as constant.
+        on_correct: |
+          Correct. At constant temperature the product of pressure and volume is
+          what stays the same.
+        on_incorrect: |
+          Constant temperature does not mean constant pressure. Compressing the
+          gas to a smaller volume must raise its pressure, so your answer should
+          be larger than <latex>P_o</latex>.
+
+- multiple_choice:
+    id: q7
+    title: Final Temperature After a Two Stage Process
+    points: 2
+    text: |
+      A sealed sample of ideal gas starts at pressure <latex>P_o</latex>, volume
+      <latex>V_o</latex> and absolute temperature <latex>T_o</latex>. It is
+      taken through two stages. First it is compressed at constant temperature
+      until its volume is <latex>\frac{1}{2} V_o</latex>. Then it is heated with
+      its volume held fixed until its pressure reaches
+      <latex>3 P_o</latex>.
+
+      Find the absolute temperature of the gas at the end of the second stage.
+    answers:
+    - answer:
+        text: |
+          <latex>\frac{3}{2} T_o</latex>
+        correct: true
+    - answer:
+        text: |
+          <latex>3 T_o</latex>
+        correct: false
+    - answer:
+        text: |
+          <latex>6 T_o</latex>
+        correct: false
+    - answer:
+        text: |
+          <latex>\frac{2}{3} T_o</latex>
+        correct: false
+    feedback:
+        general: |
+          You can grind through this one stage at a time, but you do not have to,
+          and seeing why is the point of the question. Pressure, volume and
+          temperature are properties of the state the gas is in right now. They
+          carry no memory of how the gas got there, so the relationship connects
+          the starting state directly to the finishing state no matter what
+          happened in between:
+          <latex>
+          \frac{P_o V_o}{T_o} = \frac{P_f V_f}{T_f}
+          \quad \Rightarrow \quad
+          T_f = T_o \left( \frac{P_f}{P_o} \right) \left( \frac{V_f}{V_o} \right)
+          </latex>
+
+          The final volume is the one set in the first stage, since the second
+          stage held the volume fixed, so <latex>V_f = \frac{1}{2} V_o</latex>.
+          The final pressure is given as <latex>3 P_o</latex>. Substituting,
+          <latex>
+          T_f = T_o (3) \left( \frac{1}{2} \right) = \frac{3}{2} T_o
+          </latex>
+
+          Working stage by stage gives the same answer. The constant temperature
+          compression doubles the pressure to <latex>2 P_o</latex> while leaving
+          the temperature at <latex>T_o</latex>, and the constant volume heating
+          then raises the pressure from <latex>2 P_o</latex> to
+          <latex>3 P_o</latex>, multiplying the temperature by
+          <latex>\frac{3}{2}</latex>. The intermediate pressure cancels, which is
+          exactly what you would expect from a path that the state variables do
+          not remember.
+        on_correct: |
+          Correct. Only the starting and finishing states matter, so the middle
+          of the process never had to be worked out.
+        on_incorrect: |
+          Use the starting state and the finishing state, and ignore the stage in
+          between. The final volume is half the original, because the second
+          stage held whatever volume the first stage produced.
+
+# ── Notes for the next pass (delete once resolved) ────────────────────────────
+#
+# Isomorph design, for reference when extending the bank. Every variant is one
+#   application of P V / T = constant with n fixed. What changes is which
+#   variable is unknown, which one is held constant, and whether the apparatus
+#   states that or implies it:
+#     q1  V x2, T x4/3, find P    — nothing constant, stated   → 2/3 P_o
+#     q2  P x3/2, T x3, find V    — nothing constant, stated   → 2 V_o
+#     q3  P x1/2, V x3/4, find T  — nothing constant; no ratio inverts → 3/8 T_o
+#     q4  rigid steel tank        — V constant, inferred       → 5/3 P_o
+#     q5  free piston, open       — P constant, inferred       → 3/4 V_o
+#     q6  slow, in a fixed bath   — T constant, inferred       → 5/2 P_o
+#     q7  two stage process       — endpoints only             → 3/2 T_o
+#
+# Distractors in q1-q3 and q7 are generated the same way every time: invert one
+#   ratio, invert the other, invert both. That makes a student's specific wrong
+#   answer diagnostic, so it is worth keeping if the bank is edited.
+# q4, q5 and q6 each carry one conceptual distractor built on the belief that a
+#   sealed or closed container fixes something it does not. q4 and q6 also offer
+#   "cannot be found without an absolute value", which is the belief that ratios
+#   need real numbers. Two of those in seven questions felt like enough; adding
+#   more would teach students to never pick that option.
+# q3 is deliberately the only question where neither ratio is inverted. If the
+#   bank is ever cut down, keep q3 alongside q1 so both orientations survive.
+# Still missing from this topic, for future banks: questions where the amount of
+#   gas changes, and numerical questions that put real values into P V = n R T.
