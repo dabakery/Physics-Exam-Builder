@@ -1,6 +1,6 @@
 bank_info:
     title: Volume, Pressure and Temperature Ratios for an Ideal Gas
-    bank_id: APP2-THM-PVTRAT-081626
+    bank_id: APP2-THM-PVT-081626
     description: |-
       Isomorphic proportional-reasoning problems for AP Physics 2, College Board
       Unit 9 Topic 9.2. Every question links a molecular quantity to a change of
