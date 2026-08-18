@@ -1,0 +1,464 @@
+bank_info:
+    title: Possible Changes When Two State Variables Are Held Constant
+    bank_id: APP2-THM-HOLD2-081726
+    description: |-
+      Isomorphic reasoning problems for AP Physics 2, College Board Unit 9 Topic 9.2.
+
+      An ideal gas goes through a process in which two of its four state variables are
+      held constant. You are asked which changes to the remaining two could actually
+      happen. There is no arithmetic here and no numbers are given. Rearrange the ideal
+      gas law so that the two quantities that are free to change sit together, and the
+      relationship between them will tell you which combinations are allowed and which
+      are impossible.
+
+      Teaching notes: the target idea is that holding two of the four variables in
+      <latex>PV = nRT</latex> constant forces a fixed relationship on the other two,
+      which is either a direct proportion or an inverse one depending on which side of
+      the equation they sit. There are six ways to choose the pair that is held fixed,
+      and this bank works through all six. Three of the nine possible change
+      combinations are always allowed, so each question deliberately offers exactly one
+      of them, and students should be told that another valid combination simply may
+      not appear among the choices. The common errors are assuming every process must
+      change something, applying a direct relationship where the pair is actually
+      inverse, forgetting that the number of moles can change when the container is not
+      sealed, and reading a constant pressure as a constant temperature.
+      APP2-THM-PVGRPH-081726 asks the same question with graphs instead of words, and
+      APP2-THM-CGL-081626 works the relationship algebraically.
+    date created: 08-17-2026
+    status: draft # Only use 'draft', 'ready', 'deployed', and 'deprecated' for this field. 'draft' and 'deprecated' files won't be parsed by the exam builder.
+    learning objectives:
+        - THM-IGL-1 # Apply the ideal gas law to relate pressure, volume, temperature and amount of gas
+        - THM-IGL-2 # Predict how one state variable responds to a change in another when the rest are held fixed
+    generation prompts: # The following are the prompts that generated the questions in the problem bank.
+        - prompt 1: |
+            (Modelled on the structure of a released AP Classroom item, deliberately not
+            copied: an ideal gas goes through a process in which two state variables are
+            held constant, and the student picks the possible pair of changes to the
+            other two from a table of Increases / Decreases / Stays the same. The bank
+            covers all six ways of choosing which pair is held fixed, so each question
+            has a genuinely different solution rather than different numbers: q1 holds
+            P and n so volume tracks temperature directly, q2 holds V and n so pressure
+            tracks temperature directly, q3 holds T and n so pressure and volume are
+            inversely related, q4 holds P and T so volume tracks the amount of gas,
+            q5 holds V and T so pressure tracks the amount of gas, and q6 holds P and V
+            so the amount of gas and the temperature are inversely related. q7 returns
+            to the constant temperature case with the degenerate answer, where nothing
+            changes at all, which is the case students most often rule out by reflex.)
+        - prompt 2: |
+            (Three of the nine combinations of Increases / Decreases / Stays the same
+            are physically valid in every question, so each question offers exactly one
+            of them and three impossible ones. The feedback says so explicitly, because
+            a strong student will notice that a second valid combination is missing from
+            the choices and should not read that as a trick. Options are written as
+            complete sentences rather than as a table with row labels, so they can
+            shuffle freely and need no lock.)
+        - formatting prompt: "../../../../Templates/YAML_formatting_prompt.md"
+    updates:
+        - update 1: (08-17-2026) Bank created with q1-q7. Fourth bank in Topic 9.2.
+    generation details:
+            model: Claude Opus 5
+            version: claude-opus-5
+            last updated: 08-17-2026
+    authors:
+        - Michael Baker
+
+questions:
+
+- multiple_choice:
+    id: q1
+    title: Constant Pressure and Constant Amount of Gas
+    points: 2
+    text: |
+      A sample of ideal gas goes through a thermodynamic process during which the
+      pressure of the gas and the number of moles of gas both stay constant. Which of
+      the following describes a possible change to the temperature and the volume of
+      the gas?
+    answers:
+    - answer:
+        text: |
+          The temperature increases and the volume decreases.
+        correct: false
+    - answer:
+        text: |
+          The temperature increases and the volume increases.
+        correct: true
+    - answer:
+        text: |
+          The temperature stays the same and the volume increases.
+        correct: false
+    - answer:
+        text: |
+          The temperature decreases and the volume stays the same.
+        correct: false
+    feedback:
+        general: |
+          Start from the ideal gas law and move everything that is being held constant
+          onto one side. That is the whole method for this kind of question.
+          <latex>
+          PV = nRT
+          \quad \Rightarrow \quad
+          \frac{V}{T} = \frac{nR}{P}
+          </latex>
+
+          The pressure and the number of moles are both constant, and <latex>R</latex>
+          never changes, so the entire right side is a fixed number. That leaves the
+          volume divided by the temperature locked at a constant value, which means the
+          volume and the absolute temperature have to move in the same direction and by
+          the same factor.
+
+          Now the choices sort themselves out. A temperature that rises with a volume
+          that falls would change the ratio, so that one is out. A temperature that
+          holds steady while the volume grows would also change it. So would a
+          temperature that drops while the volume sits still. Only a temperature and a
+          volume that both increase keeps the ratio fixed.
+
+          One honest note, because you may have spotted it. A temperature and a volume
+          that both decreased would work just as well, and so would both staying exactly
+          the same. All three are physically possible, and the question only offers one
+          of them. That is normal for this style of question and it is not a trick.
+        on_correct: |
+          Correct. With the pressure and the amount of gas pinned down, volume and
+          absolute temperature are locked together and have to rise or fall as a pair.
+        on_incorrect: |
+          Rearrange the gas law so the two quantities that can change end up together.
+          With the pressure and the number of moles constant you get a constant value
+          for the volume divided by the temperature, so the two have to move the same
+          way.
+
+- multiple_choice:
+    id: q2
+    title: Constant Volume and Constant Amount of Gas
+    points: 2
+    text: |
+      A sample of ideal gas is sealed in a rigid container that cannot change shape or
+      size. The gas then goes through a thermodynamic process. Which of the following
+      describes a possible change to the temperature and the pressure of the gas?
+    answers:
+    - answer:
+        text: |
+          The temperature decreases and the pressure increases.
+        correct: false
+    - answer:
+        text: |
+          The temperature stays the same and the pressure decreases.
+        correct: false
+    - answer:
+        text: |
+          The temperature decreases and the pressure decreases.
+        correct: true
+    - answer:
+        text: |
+          The temperature increases and the pressure stays the same.
+        correct: false
+    feedback:
+        general: |
+          Read the apparatus before you read the choices. A rigid sealed container fixes
+          two things at once, the volume because the walls cannot move and the number of
+          moles because nothing can get in or out. Those are your two constants.
+
+          Rearrange so the two free quantities sit together:
+          <latex>
+          PV = nRT
+          \quad \Rightarrow \quad
+          \frac{P}{T} = \frac{nR}{V}
+          </latex>
+          and the right side is fixed, so pressure divided by absolute temperature is a
+          constant. Pressure and temperature therefore rise together and fall together.
+
+          A falling temperature with a rising pressure moves them in opposite directions.
+          Holding the temperature while the pressure drops, or raising the temperature
+          while the pressure holds, changes the ratio just as badly. A temperature and a
+          pressure that both decrease is the one that works.
+
+          This is the physics behind the warning printed on an aerosol can. Heating a
+          sealed rigid container has nowhere to go except into the pressure.
+        on_correct: |
+          Correct, and notice that you had to pull both constants out of the description
+          of the container rather than being handed them.
+        on_incorrect: |
+          A rigid sealed container holds the volume and the amount of gas constant. With
+          those two fixed, pressure divided by absolute temperature is a constant, so
+          both have to move the same way.
+
+- multiple_choice:
+    id: q3
+    title: Constant Temperature and Constant Amount of Gas
+    points: 2
+    text: |
+      A sample of ideal gas goes through a thermodynamic process during which the
+      temperature of the gas and the number of moles of gas both stay constant. Which
+      of the following describes a possible change to the pressure and the volume of the
+      gas?
+    answers:
+    - answer:
+        text: |
+          The pressure increases and the volume increases.
+        correct: false
+    - answer:
+        text: |
+          The pressure increases and the volume stays the same.
+        correct: false
+    - answer:
+        text: |
+          The pressure decreases and the volume decreases.
+        correct: false
+    - answer:
+        text: |
+          The pressure increases and the volume decreases.
+        correct: true
+    feedback:
+        general: |
+          This one turns out differently from the first two, and the rearrangement is
+          what shows you why. The two quantities that can change are pressure and volume,
+          and they sit on the same side of the equation multiplied together:
+          <latex>
+          PV = nRT
+          </latex>
+          With the temperature and the number of moles both constant, the whole right
+          side is fixed, so the product of pressure and volume is a constant. That is an
+          inverse relationship, not a direct one. One goes up only if the other comes
+          down.
+
+          A pressure and a volume that both increase would make the product larger.
+          Raising the pressure while the volume holds still does the same. Both
+          decreasing makes the product smaller. Only a rising pressure with a falling
+          volume can keep the product where it was.
+
+          Compare this with the first question in this bank. There the two free
+          quantities ended up divided by one another and moved together, and here they
+          are multiplied and move oppositely. Which side of the equation they land on is
+          what decides it, so do the rearranging before you decide anything.
+        on_correct: |
+          Correct. Pressure and volume multiply to a constant here, so squeezing the gas
+          into less space at a fixed temperature has to push the pressure up.
+        on_incorrect: |
+          Check which side of the equation the two free quantities land on. Here they
+          multiply together to give a constant, which makes the relationship inverse, so
+          they cannot both move the same way.
+
+- multiple_choice:
+    id: q4
+    title: Constant Pressure and Constant Temperature
+    points: 2
+    text: |
+      An ideal gas is held in a container fitted with a piston that slides freely, and
+      the container sits in a bath that holds the gas at a constant temperature. Gas can
+      be added to or removed from the container. Which of the following describes a
+      possible change to the number of moles of gas and the volume of the gas?
+    answers:
+    - answer:
+        text: |
+          The number of moles increases and the volume increases.
+        correct: true
+    - answer:
+        text: |
+          The number of moles increases and the volume decreases.
+        correct: false
+    - answer:
+        text: |
+          The number of moles decreases and the volume stays the same.
+        correct: false
+    - answer:
+        text: |
+          The number of moles stays the same and the volume increases.
+        correct: false
+    feedback:
+        general: |
+          The two constants here are the pressure, because a freely sliding piston
+          settles wherever the gas pressure matches the outside pressure, and the
+          temperature, because the bath holds it. What is free to change is the amount of
+          gas and the volume.
+
+          Put those two together:
+          <latex>
+          PV = nRT
+          \quad \Rightarrow \quad
+          \frac{V}{n} = \frac{RT}{P}
+          </latex>
+          The right side is fixed, so the volume per mole is a constant and the volume
+          tracks the amount of gas directly.
+
+          Adding gas while the volume shrinks contradicts that. So does removing gas
+          while the volume holds still, and so does the volume growing while the amount
+          of gas stays put. Adding gas and getting more volume is the one that fits.
+
+          You have seen this without calling it Physics. Pumping air into a balloon adds
+          moles at roughly constant pressure and room temperature, and the balloon gets
+          bigger in proportion.
+        on_correct: |
+          Correct. With the pressure and the temperature both pinned, volume is simply
+          proportional to how much gas is in there.
+        on_incorrect: |
+          Notice that the number of moles is not fixed in this question, since gas can be
+          added or removed. A free piston fixes the pressure and the bath fixes the
+          temperature, which leaves volume proportional to the amount of gas.
+
+- multiple_choice:
+    id: q5
+    title: Constant Volume and Constant Temperature
+    points: 2
+    text: |
+      An ideal gas is held in a rigid container that sits in a bath holding the gas at a
+      constant temperature. A valve allows gas to be added to or removed from the
+      container. Which of the following describes a possible change to the number of
+      moles of gas and the pressure of the gas?
+    answers:
+    - answer:
+        text: |
+          The number of moles decreases and the pressure increases.
+        correct: false
+    - answer:
+        text: |
+          The number of moles decreases and the pressure decreases.
+        correct: true
+    - answer:
+        text: |
+          The number of moles stays the same and the pressure decreases.
+        correct: false
+    - answer:
+        text: |
+          The number of moles increases and the pressure stays the same.
+        correct: false
+    feedback:
+        general: |
+          The rigid walls fix the volume and the bath fixes the temperature, which leaves
+          the amount of gas and the pressure free.
+          <latex>
+          PV = nRT
+          \quad \Rightarrow \quad
+          \frac{P}{n} = \frac{RT}{V}
+          </latex>
+          The right side is fixed, so pressure per mole is constant and the pressure
+          follows the amount of gas directly.
+
+          Letting gas out while the pressure climbs is impossible. Holding the amount of
+          gas while the pressure falls is impossible, and so is adding gas without the
+          pressure responding. Letting gas out and watching the pressure fall is the one
+          that works.
+
+          Think about what pressure actually is here. It comes from molecules striking
+          the walls, so with the container size and the molecular speeds both fixed,
+          fewer molecules simply means fewer collisions per second on the same area.
+        on_correct: |
+          Correct, and the kinetic theory picture backs it up. Fewer molecules in the
+          same box at the same temperature means less pressure.
+        on_incorrect: |
+          Rigid walls fix the volume and the bath fixes the temperature, so the pressure
+          is left proportional to the number of moles. Removing gas has to lower the
+          pressure.
+
+- multiple_choice:
+    id: q6
+    title: Constant Pressure and Constant Volume
+    points: 2
+    text: |
+      An ideal gas is held in a rigid container fitted with a valve, so gas can be added
+      to or removed from it. During a process the pressure of the gas is measured to be
+      unchanged from start to finish. Which of the following describes a possible change
+      to the number of moles of gas and the temperature of the gas?
+    answers:
+    - answer:
+        text: |
+          The number of moles increases and the temperature increases.
+        correct: false
+    - answer:
+        text: |
+          The number of moles decreases and the temperature decreases.
+        correct: false
+    - answer:
+        text: |
+          The number of moles increases and the temperature decreases.
+        correct: true
+    - answer:
+        text: |
+          The number of moles stays the same and the temperature decreases.
+        correct: false
+    feedback:
+        general: |
+          The rigid container fixes the volume and the measurement tells you the pressure
+          did not change, so those are your two constants. The amount of gas and the
+          temperature are what is left.
+
+          This time the two free quantities end up on the same side, multiplied:
+          <latex>
+          PV = nRT
+          \quad \Rightarrow \quad
+          nT = \frac{PV}{R}
+          </latex>
+          The right side is fixed, so the product of the number of moles and the absolute
+          temperature is constant. That makes them inversely related.
+
+          Both increasing would raise the product, and both decreasing would lower it.
+          Holding the amount of gas while the temperature falls would lower it too. Only
+          adding gas while the temperature falls keeps the product where it started.
+
+          This is the second of the two inverse cases in this bank, and it is the one
+          students find least familiar because we usually keep the amount of gas fixed.
+          When you are allowed to change it, it behaves like any other variable in the
+          equation.
+        on_correct: |
+          Correct. With the pressure and the volume both fixed, the amount of gas and the
+          absolute temperature multiply to a constant, so one rises only as the other
+          falls.
+        on_incorrect: |
+          Rearranging puts the amount of gas and the temperature multiplied together on
+          the same side, equal to a fixed quantity. That is an inverse relationship, so
+          they cannot move the same way.
+
+- multiple_choice:
+    id: q7
+    title: A Process in Which Nothing Has to Change
+    points: 2
+    text: |
+      A sample of ideal gas is sealed in a container, and the container is held in a bath
+      that keeps the gas at a constant temperature throughout a thermodynamic process.
+      Which of the following describes a possible change, if any, to the pressure and the
+      volume of the gas?
+    answers:
+    - answer:
+        text: |
+          The pressure increases and the volume increases.
+        correct: false
+    - answer:
+        text: |
+          The pressure decreases and the volume decreases.
+        correct: false
+    - answer:
+        text: |
+          The pressure stays the same and the volume increases.
+        correct: false
+    - answer:
+        text: |
+          The pressure stays the same and the volume stays the same.
+        correct: true
+    feedback:
+        general: |
+          The container is sealed, so the number of moles is constant, and the bath holds
+          the temperature. That is the same pair held fixed as in the third question of
+          this bank, so the same relationship applies:
+          <latex>
+          PV = nRT
+          </latex>
+          with a fixed right side, meaning the product of pressure and volume cannot
+          change.
+
+          Look carefully at what is offered. Both increasing raises the product and both
+          decreasing lowers it, so those are out. Holding the pressure while the volume
+          grows also raises the product. The only choice left has both staying exactly as
+          they were, and that keeps the product unchanged, so it is allowed.
+
+          Read the wording of the question again. It asks for a possible change to the
+          pressure and volume, if any. Those last two words are doing real work. A
+          process is not required to change every quantity, and a gas that sits in a bath
+          undisturbed is a perfectly good thermodynamic process in which nothing measures
+          differently at the end than at the start.
+
+          If you ruled this out because it felt like a non-answer, that instinct is worth
+          examining. Checking whether the constraints permit no change at all is Physics!
+        on_correct: |
+          Correct. Nothing in the constraint requires anything to change, and no other
+          choice keeps the product of pressure and volume fixed.
+        on_incorrect: |
+          Check each choice against the requirement that pressure times volume stays
+          constant, including the choice where neither one moves. A process is allowed to
+          leave a quantity exactly where it started.
