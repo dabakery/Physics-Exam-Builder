@@ -23,7 +23,7 @@ bank_info:
       calculation with no graph, and APP2-THM-CGL-081626 covers the combined gas law
       algebraically.
     date created: 08-17-2026
-    status: draft # Only use 'draft', 'ready', 'deployed', and 'deprecated' for this field. 'draft' and 'deprecated' files won't be parsed by the exam builder.
+    status: ready # Only use 'draft', 'ready', 'deployed', and 'deprecated' for this field. 'draft' and 'deprecated' files won't be parsed by the exam builder.
     learning objectives:
         - THM-IGL-1 # Apply the ideal gas law to relate pressure, volume, temperature and amount of gas
         - THM-IGL-2 # Predict how one state variable responds to a change in another when the rest are held fixed
