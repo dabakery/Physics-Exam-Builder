@@ -30,7 +30,7 @@ bank_info:
             kelvin conversion, q3 with a below-zero temperature so the sign
             matters; q4 runs the formula backwards to solve for T; q5 names a
             heavy gas beside a light one at the same temperature so the mass
-            has to be recognised as irrelevant; q6 takes a ratio of two gases
+            has to be recognized as irrelevant; q6 takes a ratio of two gases
             at different temperatures, which fails unless both the species
             independence and the direct proportionality to T are used.)
         - formatting prompt: "../../../../Templates/YAML_formatting_prompt.md"

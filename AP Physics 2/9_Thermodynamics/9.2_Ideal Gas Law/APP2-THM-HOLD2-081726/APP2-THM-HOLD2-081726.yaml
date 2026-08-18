@@ -31,7 +31,7 @@ bank_info:
         - THM-IGL-2 # Predict how one state variable responds to a change in another when the rest are held fixed
     generation prompts: # The following are the prompts that generated the questions in the problem bank.
         - prompt 1: |
-            (Modelled on the structure of a released AP Classroom item, deliberately not
+            (Modeledd on the structure of a released AP Classroom item, deliberately not
             copied: an ideal gas goes through a process in which two state variables are
             held constant, and the student picks the possible pair of changes to the
             other two from a table of Increases / Decreases / Stays the same. The bank

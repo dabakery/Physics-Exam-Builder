@@ -277,7 +277,7 @@ questions:
           Two of the wrong answers are worth thinking about. Sealing the tank
           fixes the amount of gas, which is what allows the relationship to be
           used as a ratio at all, but it does not fix the pressure. And the
-          volume never needed a number, because it cancelled. Whenever a question
+          volume never needed a number, because it canceled. Whenever a question
           gives you changes as multiples of starting values, you can expect the
           absolute values to cancel like this.
         on_correct: |

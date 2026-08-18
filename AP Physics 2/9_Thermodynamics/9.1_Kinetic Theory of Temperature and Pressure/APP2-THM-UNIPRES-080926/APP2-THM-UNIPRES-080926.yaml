@@ -19,7 +19,7 @@ bank_info:
     status: ready # Only use 'draft', 'ready', 'deployed', and 'deprecated' for this field. 'draft' and 'deprecated' files won't be parsed by the exam builder.
     learning objectives:
         - THM-KTTP-3 # Explain gas pressure as the result of molecular collisions with the walls
-        - THM-KTTP-4 # Distinguish pressure from force; recognise pressure as uniform throughout a gas in equilibrium
+        - THM-KTTP-4 # Distinguish pressure from force; recognize pressure as uniform throughout a gas in equilibrium
     generation prompts: # The following are the prompts that generated the questions in the problem bank.
         - prompt 1: |
             (q1 authored directly by Michael Baker — no LLM generation.)
@@ -27,7 +27,7 @@ bank_info:
             (q2-q4 authored directly by Michael Baker as isomorphs of q1. Each
             varies the container geometry and the area ratio, and q2/q4 switch
             the quantity asked for from pressure to total force so the solution
-            requires applying F = PA rather than only recognising that pressure
+            requires applying F = PA rather than only recognizing that pressure
             is uniform.)
         - formatting prompt: "../../../../Templates/YAML_formatting_prompt.md"
     updates:

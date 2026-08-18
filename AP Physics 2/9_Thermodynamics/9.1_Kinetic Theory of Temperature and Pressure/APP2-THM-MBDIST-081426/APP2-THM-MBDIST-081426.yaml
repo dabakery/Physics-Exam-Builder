@@ -48,7 +48,7 @@ bank_info:
         - formatting prompt: "../../../../Templates/YAML_formatting_prompt.md"
     updates:
         - update 1: (08-14-2026) Bank created with q1-q7 and Scripts/make_figures.py.
-        - update 2: (08-14-2026) Relabelled the curves in q1-q4 away from A/B/C, which collided with the shuffled answer letters. Samples and gases are now X/Y/Z and q3's process states are numbered. Figures regenerated.
+        - update 2: (08-14-2026) Relabeled the curves in q1-q4 away from A/B/C, which collided with the shuffled answer letters. Samples and gases are now X/Y/Z and q3's process states are numbered. Figures regenerated.
     generation details:
             model: Claude Opus 5
             version: claude-opus-5
@@ -511,12 +511,12 @@ questions:
 #
 # Curve labels deliberately avoid A/B/C. The exporters letter the answer
 #   choices A/B/C/D and then shuffle them (seededShuffle in exam-export.js keyed
-#   on version and exam position), so a curve labelled B sits next to an option
-#   labelled B that is almost never about it. Samples and gases are X/Y/Z, and
+#   on version and exam position), so a curve labeled B sits next to an option
+#   labeled B that is almost never about it. Samples and gases are X/Y/Z, and
 #   q3's process states are numbered. Keep any question added here to that
 #   convention.
 #
-# Figures come from Scripts/make_figures.py, which draws the real normalised
+# Figures come from Scripts/make_figures.py, which draws the real normalized
 #   Maxwell-Boltzmann distribution. Equal areas are load-bearing here in a way
 #   they are not in most banks: q4 asks about the peak height outright, and the
 #   q1/q3 distractors depend on the areas genuinely matching. Do not replace

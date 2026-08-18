@@ -5,7 +5,7 @@ bank_info:
       Isomorphic numerical problems for AP Physics 2, College Board Unit 9
       Topic 9.1.
 
-      You are asked for an actual molecular speed, in metres per second. Some
+      You are asked for an actual molecular speed, in meters per second. Some
       questions hand you a temperature and a mass and ask for the speed, and others
       run the other way, giving you a speed and asking for the temperature or for the
       mass of the gas. Check whether you have been given the mass of one molecule or
@@ -58,7 +58,7 @@ questions:
       <latex>0.028</latex> kg/mol. Treat the nitrogen as an ideal gas. The gas
       constant is <latex>8.31</latex> J/(mol·K).
 
-      Find the root-mean-square speed of the nitrogen molecules, in metres per
+      Find the root-mean-square speed of the nitrogen molecules, in meters per
       second. Round your answer to three significant figures.
     answer:
         value: 517
@@ -79,7 +79,7 @@ questions:
           <latex>
           v_{rms} = \sqrt{\frac{3(8.31)(300)}{0.028}} = \sqrt{2.67 \times 10^{5}} = 517 \text{ m/s}
           </latex>
-          A few hundred metres per second is the size of answer you should
+          A few hundred meters per second is the size of answer you should
           expect for a gas at room temperature, so it is worth checking your
           result against that.
         on_correct: |
@@ -99,7 +99,7 @@ questions:
       <latex>6.65 \times 10^{-27}</latex> kg. Treat the helium as an ideal gas.
       The Boltzmann constant is <latex>1.38 \times 10^{-23}</latex> J/K.
 
-      Find the root-mean-square speed of the helium atoms, in metres per second.
+      Find the root-mean-square speed of the helium atoms, in meters per second.
       Round your answer to three significant figures.
     answer:
         value: 1370
@@ -138,7 +138,7 @@ questions:
       <latex>0.032</latex> kg/mol. Treat the oxygen as an ideal gas. The gas
       constant is <latex>8.31</latex> J/(mol·K).
 
-      Find the root-mean-square speed of the oxygen molecules, in metres per
+      Find the root-mean-square speed of the oxygen molecules, in meters per
       second. Round your answer to three significant figures.
     answer:
         value: 558
