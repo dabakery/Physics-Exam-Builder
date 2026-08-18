@@ -1,0 +1,558 @@
+bank_info:
+    title: Direction of Thermal Energy Transfer Between Two Gases
+    bank_id: APP2-THM-ETDIR-081826
+    description: |-
+      Isomorphic reasoning problems for AP Physics 2, College Board Unit 9 Topic 9.3.
+
+      Two samples of gas are placed in thermal contact with each other and isolated from
+      everything else. You are asked which way energy is transferred between them and,
+      just as importantly, why. Every choice pairs a direction with a reason, so a
+      direction that is right for the wrong reason is still wrong. The last question in
+      the set asks instead what has to be true once the transfer has stopped. Decide what
+      actually sets the direction before you look at the masses of the atoms.
+
+      Teaching notes: the target idea is that the direction of thermal energy transfer
+      is set by the temperature difference alone, and by nothing else about the two
+      samples, and that thermal equilibrium is a statement about temperature and about
+      nothing else. The common errors are deciding the direction from the mass of the
+      particles, from their speeds, from the total internal energy of each sample, from
+      the pressure, or from the number of moles present. The speed argument is the most interesting one
+      to unpack in class, because helium atoms are faster than argon atoms at every
+      temperature, including the temperature at which no net transfer happens at all.
+      APP2-THM-AVGKE-080926 establishes that average translational kinetic energy per
+      particle depends only on absolute temperature, and APP2-THM-VRMS-081426 handles
+      the speed comparison the distractors here lean on.
+    date created: 08-18-2026
+    status: ready # Only use 'draft', 'ready', 'deployed', and 'deprecated' for this field. 'draft' and 'deprecated' files won't be parsed by the exam builder.
+    learning objectives:
+        - THM-TET-1 # Predict the direction of thermal energy transfer between objects in thermal contact from their temperatures
+        - THM-TET-2 # Justify the direction of energy transfer using average kinetic energy per particle rather than mass, speed, or total energy
+    generation prompts: # The following are the prompts that generated the questions in the problem bank.
+        - prompt 1: |
+            (q1 drafted as a worked reference example from the owner's outline: two
+            moles each of a light gas and a heavy gas, the light gas heated to twice
+            the absolute temperature of the heavy one, the two then placed in thermal
+            contact and isolated. The student picks a direction of energy transfer
+            together with its justification. The correct choice justifies the direction
+            by the temperature difference. The distractors justify a direction by the
+            mass of the atoms, by their speeds, and by the equal number of moles, so
+            one distractor carries the right direction with a reason that would fail at
+            equal temperatures.)
+        - prompt 2: |
+            (q2-q6 authored as isomorphs of q1. Each changes something in the solution
+            rather than the nouns: q2 makes the heavy gas the hot one, so the direction
+            reverses and the mass distractor now points at the correct answer for the
+            wrong reason; q3 puts two very different gases at the same temperature, so
+            the answer is that nothing is transferred; q4 gives the cooler sample five
+            times the moles, so it holds three times the total internal energy and the
+            transfer still runs out of the hotter sample; q5 uses the same gas on both
+            sides in containers of different volume, so mass and speed drop out of the
+            argument entirely and the pressure difference points opposite to the
+            temperature difference; q6 stops asking for a direction and asks what must
+            be true at equilibrium, with unequal moles and unequal container volumes so
+            that equal internal energy, equal average speed and equal pressure are all
+            false.)
+        - formatting prompt: "../../../../Templates/YAML_formatting_prompt.md"
+    updates:
+        - update 1: (08-18-2026) Bank created with q1. First bank in Topic 9.3.
+        - update 2: (08-18-2026) Added isomorphs q2-q6 (reversed masses, equal temperatures, cooler sample with more total energy, same gas at different pressures, equilibrium condition).
+    generation details:
+            model: Claude Opus 5
+            version: claude-opus-5
+            last updated: 08-18-2026
+    authors:
+        - Michael Baker
+
+questions:
+
+- multiple_choice:
+    id: q1
+    title: A Hot Light Gas in Contact with a Cool Heavy Gas
+    points: 2
+    text: |
+      Two sealed rigid containers each hold <latex>2.0</latex> moles of a monatomic
+      ideal gas. One container holds helium and the other holds argon, and a single
+      argon atom is about ten times as massive as a single helium atom. The helium is
+      heated until its absolute temperature is twice the absolute temperature of the
+      argon. The two containers are then placed in thermal contact with each other and
+      isolated from their surroundings, and the gases are allowed to reach thermal
+      equilibrium.
+
+      Which of the following describes the direction of the net energy transfer between
+      the two gases, along with a correct justification for that direction?
+    answers:
+    - answer:
+        text: |
+          From the argon to the helium, because an argon atom is far more massive than
+          a helium atom and so carries more energy into each collision.
+        correct: false
+    - answer:
+        text: |
+          From the helium to the argon, because energy is transferred from the sample
+          at the higher temperature to the sample at the lower temperature.
+        correct: true
+    - answer:
+        text: |
+          From the helium to the argon, because helium atoms are less massive than
+          argon atoms and therefore move faster.
+        correct: false
+    - answer:
+        text: |
+          There is no net transfer in either direction, because both containers hold
+          the same number of moles of gas.
+        correct: false
+    feedback:
+        general: |
+          The direction of thermal energy transfer between two things in contact is set
+          by their temperatures, and by nothing else about them. The helium starts at
+          twice the absolute temperature of the argon, so energy is transferred from the
+          helium to the argon until the two samples reach the same temperature.
+
+          It is worth seeing why temperature is the quantity that decides this. For an
+          ideal gas the average translational kinetic energy of one particle is
+          <latex>
+          K_{avg} = \frac{3}{2} k_B T
+          </latex>
+          which depends on the absolute temperature and on nothing else, not on the
+          identity of the gas and not on the mass of its atoms. At twice the temperature,
+          an average helium atom carries twice the kinetic energy of an average argon
+          atom. When the two samples exchange energy through the wall between them, the
+          particles with more energy per particle give up more than they receive, so the
+          net transfer runs from the helium to the argon. It stops when the average
+          kinetic energy per particle matches on both sides, which is the same statement
+          as the two temperatures being equal.
+
+          Now look at the reasons offered by the other choices, because each one is a
+          real line of thinking rather than a random wrong answer.
+
+          Mass by itself decides nothing. Put helium and argon in contact at the same
+          temperature and the argon atoms are still ten times heavier, yet no net energy
+          is transferred in either direction. A heavier atom moving more slowly can carry
+          exactly the same kinetic energy as a lighter atom moving quickly, which is what
+          equal temperatures mean.
+
+          Speed by itself decides nothing either, and this is the choice worth thinking
+          hardest about. Helium atoms do move faster than argon atoms here, and they move
+          faster at every temperature the two gases could share, because
+          <latex>
+          v_{rms} = \sqrt{\frac{3 k_B T}{m}}
+          </latex>
+          puts the mass in the denominator. If speed set the direction, then energy would
+          flow from helium to argon even when the two are already at the same
+          temperature, and the argon would keep heating up on its own forever. That does
+          not happen, so speed cannot be the deciding quantity. The direction here is
+          right, but the reason is not.
+
+          The equal number of moles is a genuine detail of the setup, and it does matter
+          for finding the final equilibrium temperature. It has nothing to do with the
+          direction of the transfer.
+        on_correct: |
+          Correct, and you justified it with the quantity that actually decides the
+          direction. The masses and the speeds in this problem are there to be set aside.
+        on_incorrect: |
+          Every choice here pairs a direction with a reason, so a reason that only
+          happens to work in this particular setup is not enough. If both containers held
+          gases at the same temperature, would the masses and the speeds you used still
+          be different from each other, and would any energy be transferred?
+
+- multiple_choice:
+    id: q2
+    title: A Hot Heavy Gas in Contact with a Cool Light Gas
+    points: 2
+    text: |
+      Two sealed rigid containers each hold <latex>3.0</latex> moles of a monatomic
+      ideal gas. One container holds neon and the other holds xenon, and a single xenon
+      atom is about six times as massive as a single neon atom. The xenon is heated
+      until its absolute temperature is twice the absolute temperature of the neon. The
+      two containers are then placed in thermal contact with each other and isolated
+      from their surroundings, and the gases are allowed to reach thermal equilibrium.
+
+      Which of the following describes the direction of the net energy transfer between
+      the two gases, along with a correct justification for that direction?
+    answers:
+    - answer:
+        text: |
+          From the neon to the xenon, because neon atoms are less massive and therefore
+          move faster than xenon atoms.
+        correct: false
+    - answer:
+        text: |
+          From the xenon to the neon, because a xenon atom is much more massive than a
+          neon atom and so carries more kinetic energy at any temperature.
+        correct: false
+    - answer:
+        text: |
+          From the xenon to the neon, because energy is transferred from the sample at
+          the higher temperature to the sample at the lower temperature.
+        correct: true
+    - answer:
+        text: |
+          There is no net transfer in either direction, because the xenon atoms move
+          slowly while the neon atoms move quickly, and the two effects cancel.
+        correct: false
+    feedback:
+        general: |
+          The xenon is at twice the absolute temperature of the neon, so energy is
+          transferred from the xenon to the neon until the two samples sit at the same
+          temperature. The temperature difference is what sets the direction, and the
+          identity of the two gases plays no part in it.
+
+          The average translational kinetic energy of one particle,
+          <latex>
+          K_{avg} = \frac{3}{2} k_B T
+          </latex>
+          depends only on the absolute temperature. An average xenon atom here carries
+          twice the kinetic energy of an average neon atom, so in the exchange across
+          the wall the xenon gives up more than it receives.
+
+          Compare this with the setup where the light gas was the hot one. The gases
+          have swapped roles, the masses now line up with the direction of transfer
+          instead of against it, and the answer comes from exactly the same place it did
+          before. If a rule you are using gives the right answer in one of these and the
+          wrong answer in the other, it was never the rule doing the work.
+
+          The choice that puts xenon first because xenon atoms are heavier deserves a
+          second look, since it lands on the correct direction. Mass alone does not
+          decide anything. Two gases at the same temperature have the same average
+          kinetic energy per particle no matter how heavy their atoms are, and no net
+          energy is transferred between them. The heavier atom here carries more kinetic
+          energy because it is hotter, not because it is heavy.
+
+          The remaining two choices lean on speed. Neon atoms are indeed faster than
+          xenon atoms at the same temperature, but that is true whether or not any energy
+          is being transferred, so speed cannot be what decides the direction, and it
+          cannot cancel a temperature difference either.
+        on_correct: |
+          Correct. The heavy gas is the hot one this time, and the reasoning did not have
+          to change at all, which is the sign that you were using the right quantity.
+        on_incorrect: |
+          Try your reasoning on the other version of this situation, where the light gas
+          is the hot one. Does the rule you just used give you the same direction in both
+          cases, and should it?
+
+- multiple_choice:
+    id: q3
+    title: Two Different Gases Already at the Same Temperature
+    points: 2
+    text: |
+      A sealed rigid container holds <latex>4.0</latex> moles of krypton gas at
+      <latex>350</latex> K. A second sealed rigid container holds <latex>1.0</latex>
+      mole of helium gas at <latex>350</latex> K. A krypton atom is about twenty times
+      as massive as a helium atom. The two containers are placed in thermal contact with
+      each other and isolated from their surroundings. Treat both gases as ideal.
+
+      Which of the following describes the direction of the net energy transfer between
+      the two gases, along with a correct justification for that direction?
+    answers:
+    - answer:
+        text: |
+          There is no net transfer in either direction, because the two samples are at
+          the same temperature.
+        correct: true
+    - answer:
+        text: |
+          From the krypton to the helium, because the krypton sample contains four times
+          as many atoms and so holds more total energy.
+        correct: false
+    - answer:
+        text: |
+          From the helium to the krypton, because helium atoms move faster than krypton
+          atoms at the same temperature.
+        correct: false
+    - answer:
+        text: |
+          From the krypton to the helium, because a krypton atom is roughly twenty times
+          as massive as a helium atom.
+        correct: false
+    feedback:
+        general: |
+          The two samples start at the same temperature, so there is no net transfer in
+          either direction. They are already in thermal equilibrium, and putting them in
+          contact changes nothing.
+
+          Everything else about these two samples is different, and none of it matters.
+          The average translational kinetic energy of one particle,
+          <latex>
+          K_{avg} = \frac{3}{2} k_B T
+          </latex>
+          is the same on both sides, because both are at <latex>350</latex> K. Energy
+          still crosses the shared wall in both directions as particles collide with it,
+          but the exchange is even, so nothing accumulates on either side.
+
+          Take the choices one at a time, because each names a real difference between
+          the samples.
+
+          The krypton sample does hold four times the total internal energy of the helium
+          sample, since it has four times as many moles at the same temperature. Total
+          energy is not what sets the direction of transfer. A swimming pool at room
+          temperature holds far more internal energy than a cup of hot coffee, and the
+          coffee still cools down rather than heating up.
+
+          Helium atoms do move faster than krypton atoms here, by about a factor of four
+          and a half, since
+          <latex>
+          v_{rms} = \sqrt{\frac{3 k_B T}{m}}
+          </latex>
+          puts the mass in the denominator. Their average kinetic energies are
+          nevertheless identical, because the smaller mass and the larger speed
+          compensate exactly. That is what equal temperatures mean at the particle level.
+
+          The mass difference is the reason for the speed difference and is not a reason
+          for any transfer on its own.
+        on_correct: |
+          Correct. Three real differences between these samples were laid out for you and
+          you set all three aside, which is the harder half of this skill.
+        on_incorrect: |
+          Each wrong choice names something that genuinely is different about these two
+          samples. What quantity is the same in both, and what would have to be true of
+          it for energy to move one way rather than the other?
+
+- multiple_choice:
+    id: q4
+    title: The Cooler Sample Holds More Total Energy
+    points: 2
+    text: |
+      A sealed rigid container holds <latex>1.0</latex> mole of helium gas at
+      <latex>500</latex> K. A second sealed rigid container holds <latex>5.0</latex>
+      moles of argon gas at <latex>300</latex> K. Both gases are monatomic and ideal. The
+      two containers are placed in thermal contact with each other and isolated from
+      their surroundings.
+
+      Which of the following describes the direction of the net energy transfer between
+      the two gases, along with a correct justification for that direction?
+    answers:
+    - answer:
+        text: |
+          From the argon to the helium, because the argon sample holds more total
+          internal energy than the helium sample.
+        correct: false
+    - answer:
+        text: |
+          From the argon to the helium, because the argon sample contains five times as
+          many atoms striking the shared boundary.
+        correct: false
+    - answer:
+        text: |
+          From the helium to the argon, because energy is transferred from the sample at
+          the higher temperature to the sample at the lower temperature.
+        correct: true
+    - answer:
+        text: |
+          There is no net transfer in either direction, because the higher temperature of
+          the helium is offset by the greater amount of argon.
+        correct: false
+    feedback:
+        general: |
+          The helium is at <latex>500</latex> K and the argon is at <latex>300</latex> K,
+          so energy is transferred from the helium to the argon. Nothing else in the
+          problem changes that.
+
+          This one is built to catch a reasonable but incorrect idea, so it is worth
+          checking the total energies before going on. For a monatomic ideal gas the
+          internal energy of the whole sample is
+          <latex>
+          U = \frac{3}{2} n R T
+          </latex>
+          The helium has <latex>1.0</latex> mole at <latex>500</latex> K, and the argon
+          has <latex>5.0</latex> moles at <latex>300</latex> K, so their internal
+          energies are in the ratio
+          <latex>
+          \frac{U_{He}}{U_{Ar}} = \frac{(1.0)(500)}{(5.0)(300)} = \frac{500}{1500}
+          </latex>
+          The cooler argon holds three times as much total energy as the hotter helium.
+          Energy is transferred out of the sample that holds less of it, and into the
+          sample that already holds more.
+
+          That result feels wrong to a lot of students, and the reason it feels wrong is
+          worth naming. We tend to picture energy spreading out from where there is more
+          of it, like water finding its level. What actually equalizes is the average
+          energy per particle, not the total, and temperature is the measure of that
+          average. The helium has fewer atoms, but each one of them is carrying more
+          kinetic energy than an average argon atom, so in the exchange at the boundary
+          the helium loses more than it gains.
+
+          The collision counting argument fails for the same reason. More atoms from the
+          argon side do strike the shared boundary each second, but each of those
+          collisions on average moves less energy than a helium collision does, and the
+          two effects together are exactly what the temperature comparison already
+          accounts for.
+
+          If you want to see where this ends up, both gases are monatomic, so the final
+          temperature is the average of the two starting temperatures weighted by the
+          number of moles:
+          <latex>
+          T_f = \frac{(1.0)(500) + (5.0)(300)}{1.0 + 5.0} = 333
+          </latex>
+          in kelvin. The final temperature sits much closer to the argon's starting value,
+          because there is far more argon, and the helium cools by <latex>167</latex> K
+          while the argon warms by only <latex>33</latex> K.
+        on_correct: |
+          Correct, and notice that you did it in spite of the cooler sample holding three
+          times the total energy. That is exactly the trap this question is built around.
+        on_incorrect: |
+          Work out the total internal energy of each sample before you decide, and then
+          ask whether that is really the quantity the transfer responds to. Which sample
+          would a thermometer placed in each one read higher?
+
+- multiple_choice:
+    id: q5
+    title: Same Gas on Both Sides at Different Pressures
+    points: 2
+    text: |
+      Container X is a sealed rigid <latex>2.0</latex> L vessel holding
+      <latex>3.0</latex> moles of neon gas at <latex>250</latex> K. Container Y is a
+      sealed rigid <latex>8.0</latex> L vessel holding <latex>3.0</latex> moles of neon
+      gas at <latex>400</latex> K. The two containers are placed in thermal contact with
+      each other and isolated from their surroundings. Neither container can change its
+      volume.
+
+      Which of the following describes the direction of the net energy transfer between
+      the two gases, along with a correct justification for that direction?
+    answers:
+    - answer:
+        text: |
+          From container X to container Y, because the gas in X is at the higher pressure
+          and energy is transferred from high pressure to low pressure.
+        correct: false
+    - answer:
+        text: |
+          From container Y to container X, because energy is transferred from the sample
+          at the higher temperature to the sample at the lower temperature.
+        correct: true
+    - answer:
+        text: |
+          From container X to container Y, because the gas in X is packed into a smaller
+          volume, so its atoms strike the shared wall more often.
+        correct: false
+    - answer:
+        text: |
+          There is no net transfer in either direction, because both containers hold the
+          same number of moles of the same gas.
+        correct: false
+    feedback:
+        general: |
+          Container Y is at <latex>400</latex> K and container X is at <latex>250</latex>
+          K, so energy is transferred from Y to X. The gas is the same on both sides this
+          time, which removes the mass and the speed from the argument and leaves the
+          temperature difference standing on its own.
+
+          The pressures point the other way, which is what makes this question worth
+          doing. From the ideal gas law,
+          <latex>
+          P = \frac{nRT}{V}
+          </latex>
+          container X has the same amount of gas in a quarter of the volume at a lower
+          temperature, so
+          <latex>
+          \frac{P_X}{P_Y} = \frac{(250)(8.0)}{(400)(2.0)} = 2.5
+          </latex>
+          The colder gas is at two and a half times the pressure of the hotter one, and
+          energy still moves from Y into X.
+
+          A pressure difference does drive something, and it is worth being clear about
+          what. It drives a flow of gas when there is an opening between two regions, and
+          it does work when a movable wall can be pushed. Neither one happens here.
+          The containers are sealed so no gas moves, and they are rigid so no wall moves
+          and no work is done. What passes between them is thermal energy, and that
+          responds to the temperature difference.
+
+          The collision rate argument gets the physics of pressure right and then asks it
+          to do a job it cannot do. Atoms in X do strike the shared wall more often,
+          because there are more of them per unit volume. Each of those collisions
+          involves an atom with less kinetic energy on average than an atom in Y, since X
+          is colder. The net result of the exchange runs from Y to X, which is what
+          comparing the temperatures told you at the start.
+
+          Equal moles of the same gas do not put two samples in equilibrium either. Two
+          identical samples still exchange energy whenever their temperatures differ, and
+          they stop when the temperatures match, which happens here at
+          <latex>325</latex> K.
+        on_correct: |
+          Correct, and you got there with the pressures pointing the opposite way. Pressure
+          differences and temperature differences drive different things.
+        on_incorrect: |
+          Work out the pressure in each container and notice that it does not line up with
+          the temperature. What does a rigid sealed wall allow to pass between the two
+          gases, and what does it prevent?
+
+- multiple_choice:
+    id: q6
+    title: What Is True Once the Transfer Stops
+    points: 2
+    text: |
+      A sealed rigid container holds <latex>2.0</latex> moles of helium gas. A second
+      sealed rigid container of a different size holds <latex>5.0</latex> moles of argon
+      gas at a different temperature. Both gases are monatomic and ideal. The containers
+      are placed in thermal contact with each other, isolated from their surroundings,
+      and left alone until the net energy transfer between them has stopped.
+
+      Which of the following must be true at that point?
+    answers:
+    - answer:
+        text: |
+          The two samples have the same total internal energy.
+        correct: false
+    - answer:
+        text: |
+          The two gases are at the same temperature.
+        correct: true
+    - answer:
+        text: |
+          The atoms in the two samples have the same average speed.
+        correct: false
+    - answer:
+        text: |
+          The two gases are at the same pressure.
+        correct: false
+    feedback:
+        general: |
+          The net transfer stops when the two gases reach the same temperature, and that
+          is the only one of these four statements that has to be true.
+
+          Temperature is a measure of the average translational kinetic energy of one
+          particle,
+          <latex>
+          K_{avg} = \frac{3}{2} k_B T
+          </latex>
+          so equal temperatures mean equal average energy per particle on both sides.
+          Energy is still crossing the shared wall in both directions once that happens.
+          What stops is the imbalance, because each side now gives up as much as it
+          receives on average. That is what thermal equilibrium is, and it is why nothing
+          further changes.
+
+          The other three statements are each true in some situations and false here.
+
+          The total internal energies are not equal. For a monatomic ideal gas,
+          <latex>
+          U = \frac{3}{2} n R T
+          </latex>
+          and at a shared final temperature the argon has two and a half times the moles,
+          so it holds two and a half times the internal energy.
+
+          The average speeds are not equal. At the same temperature,
+          <latex>
+          v_{rms} = \sqrt{\frac{3 k_B T}{m}}
+          </latex>
+          gives the lighter helium atoms the higher speed, by about a factor of three.
+          Equal average kinetic energy per particle does not mean equal speed unless the
+          particles also have equal mass.
+
+          The pressures are not equal either. The containers are different sizes and hold
+          different amounts of gas, so
+          <latex>
+          P = \frac{nRT}{V}
+          </latex>
+          gives whatever it gives. Thermal contact through a rigid wall equalizes
+          temperature, and nothing here can equalize pressure, since neither container can
+          change its volume and no gas can pass between them.
+
+          Getting this straight is worth some effort, because equilibrium is a word we use
+          loosely in ordinary speech and precisely in Physics. Two things in thermal
+          equilibrium agree on temperature, and they need not agree on anything else.
+        on_correct: |
+          Correct. Thermal equilibrium is a statement about temperature, and about
+          temperature only.
+        on_incorrect: |
+          Three of these are equalized by some process or other, just not by this one.
+          What quantity does a shared rigid wall let the two gases exchange, and what
+          quantity does that exchange act to even out?
