@@ -85,9 +85,9 @@ questions:
         on_correct: |
           Correct. Notice how quickly gas molecules are actually moving.
         on_incorrect: |
-          Check that you took the square root at the end, and that the molar
-          mass went in as <latex>0.028</latex> kg/mol rather than
-          <latex>28</latex> g/mol.
+          Work back through your substitution. Did the molar mass go in carrying the
+          units this relationship expects, and is there an operation still waiting to be
+          done at the end?
 
 - numerical:
     id: q2
@@ -125,8 +125,8 @@ questions:
           Correct. You matched the Boltzmann constant with the mass of a single
           atom.
         on_incorrect: |
-          Check which constant you used. With the mass of one atom in kilograms
-          you need <latex>k_B</latex>, not <latex>R</latex>.
+          You were handed the mass of a single atom here, not a mass per mole. Which
+          constant belongs with that choice?
 
 - numerical:
     id: q3
@@ -161,8 +161,8 @@ questions:
         on_correct: |
           Correct. Converting to kelvin first is what makes the rest work.
         on_incorrect: |
-          Add <latex>273</latex> to the Celsius temperature before substituting.
-          Absolute temperature is the only kind this relationship accepts.
+          What scale of temperature does this relationship require, and is that the
+          scale the question gave you?
 
 - numerical:
     id: q4
@@ -197,9 +197,9 @@ questions:
         on_correct: |
           Correct. Rearranging the same relationship works in either direction.
         on_incorrect: |
-          Square the speed when you rearrange. Since the speed depends on the
-          square root of the temperature, the temperature depends on the square
-          of the speed.
+          You are solving for the temperature from a speed this time. Given where the
+          temperature sits inside the relationship, what has to be undone before you can
+          isolate it?
 
 - numerical:
     id: q5
@@ -237,9 +237,9 @@ questions:
           Correct. The lighter gas is faster, by the square root of the mass
           ratio.
         on_incorrect: |
-          The mass is in the denominator, so the gas with the smaller molar mass
-          has the larger speed. Take the square root of the mass ratio rather
-          than the ratio itself.
+          Where does the molar mass sit in the relationship, and what does that position
+          do for a gas with a smaller mass? Keep in mind that there is an operation
+          wrapping the whole expression.
 
 - numerical:
     id: q6
@@ -276,8 +276,9 @@ questions:
         on_correct: |
           Correct, and the answer tells you the gas is hydrogen.
         on_incorrect: |
-          Rearrange for <latex>M</latex> and remember the speed is squared. The
-          result comes out in kg/mol, so convert to g/mol before answering.
+          You are solving for the molar mass this time, so where does it sit inside the
+          relationship? And once you have a number out, do the units your constant
+          carries match the units the question asked you for?
 
 # ── Notes for the next pass (delete once resolved) ────────────────────────────
 #

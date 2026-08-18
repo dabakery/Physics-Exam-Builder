@@ -73,7 +73,10 @@ questions:
           <latex>K_{avg} = 6.6 \times 10^{-21}</latex> J. Note the result is
           independent of the identity of the gas.
         on_correct: Correct.
-        on_incorrect: Check whether you used absolute temperature in kelvin.
+        on_incorrect: |
+          The temperature you were given is already on the scale this relationship
+          needs, so the slip is somewhere else. What factor sits in front of the
+          Boltzmann constant, and did it make it into your calculation?
 
 - numerical:
     id: q2
@@ -110,9 +113,8 @@ questions:
           Correct. Converting to kelvin before substituting is the step that
           makes this work.
         on_incorrect: |
-          This formula only works with absolute temperature. Add
-          <latex>273</latex> to the Celsius temperature before you substitute
-          it.
+          What temperature scale does this relationship require, and is that the scale
+          the question handed you?
 
 - numerical:
     id: q3
@@ -150,9 +152,8 @@ questions:
           Correct. A negative Celsius temperature still gives a positive
           absolute temperature.
         on_incorrect: |
-          Watch the sign when you convert. A Celsius temperature of
-          <latex>-23</latex> °C becomes <latex>250</latex> K, not
-          <latex>296</latex> K.
+          This temperature is below zero on the Celsius scale. What does your conversion
+          give you, and does that result make sense as an absolute temperature?
 
 - numerical:
     id: q4
@@ -190,9 +191,9 @@ questions:
         on_correct: |
           Correct. Rearranging the same relationship works in either direction.
         on_incorrect: |
-          Solve the relationship for <latex>T</latex> before substituting. The
-          factor of <latex>\frac{3}{2}</latex> becomes
-          <latex>\frac{2}{3}</latex> when it moves to the other side.
+          This question runs in the opposite direction from the earlier ones, since you
+          are handed the energy and asked for the temperature. What has to happen to the
+          relationship before you can put numbers into it?
 
 - numerical:
     id: q5
@@ -230,9 +231,9 @@ questions:
           Correct. Average translational kinetic energy depends on temperature
           alone, not on which gas you have.
         on_incorrect: |
-          The mass of the atom is not part of this relationship. Check whether
-          you scaled your answer by the factor of six, and note that the mass
-          affects the speed rather than the energy.
+          Does the mass of a particle appear anywhere in the relationship between
+          average kinetic energy and temperature? Have a look at which quantity the mass
+          actually governs.
 
 - numerical:
     id: q6
@@ -268,9 +269,8 @@ questions:
           Correct. The masses cancel, and the ratio of absolute temperatures is
           all that survives.
         on_incorrect: |
-          Write out <latex>K_{avg} = \frac{3}{2} k_B T</latex> for each gas and
-          divide. Everything except the temperatures cancels, so the atomic
-          masses never enter the answer.
+          What does the average kinetic energy of one molecule depend on, and which of
+          those things is genuinely different between the two containers?
 
 # ── Notes for the next pass (delete once resolved) ────────────────────────────
 #

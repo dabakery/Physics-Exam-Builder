@@ -115,10 +115,9 @@ questions:
           Correct. You read the speeds off the horizontal axis instead of
           comparing the heights of the curves.
         on_incorrect: |
-          Find the speed at which each curve peaks and compare those speeds.
-          The height of a curve is not the temperature. Since all three samples
-          have the same number of molecules, the widest and lowest curve is the
-          hottest one.
+          The height of a curve is not the temperature. Which feature of each curve
+          tells you about how fast the molecules are moving, and where on the axes
+          should you be reading it?
 
 - multiple_choice:
     id: q2
@@ -172,9 +171,8 @@ questions:
           Correct. The distributions overlap, so the comparison is about which
           outcome is more likely and not about what is certain.
         on_incorrect: |
-          Check whether the two curves overlap. Wherever both curves are above
-          the axis, both samples contain molecules at that speed, so no
-          statement using the word "always" can hold.
+          Look at whether the two curves overlap anywhere at all. If they do, what does
+          that do to a statement built around the word always?
 
 - multiple_choice:
     id: q3
@@ -238,10 +236,9 @@ questions:
           Correct, and you picked the version with the reasoning that actually
           holds up.
         on_incorrect: |
-          Two of these choices say the temperature increased, so getting the
-          direction right is not enough here. Check the reasoning against the
-          graph, and in particular check whether the curves overlap before
-          accepting a claim about every molecule.
+          Two of these choices agree with you about the direction, so the direction is
+          not what separates them. What reason does each one give, and does the graph
+          actually support a claim made about every molecule?
 
 - multiple_choice:
     id: q4
@@ -299,9 +296,9 @@ questions:
           Correct. Fixed area plus greater width leaves the curve no choice but
           to come down.
         on_incorrect: |
-          Ask yourself what the area under the whole curve represents. Since
-          the sample is sealed, that area cannot change, so compare the widths
-          of the two curves and see what that forces the heights to do.
+          What does the area under a whole distribution curve represent, and is that
+          something that can change for a sealed sample? Once you have settled that,
+          look at how the widths of the two curves differ.
 
 - multiple_choice:
     id: q5
@@ -355,9 +352,8 @@ questions:
           Correct. An area under this curve is a count of molecules over a
           range of speeds.
         on_incorrect: |
-          Start from what the vertical axis measures, then ask what multiplying
-          it by a width along the horizontal axis would give you. Also consider
-          what the area of a region with zero width would have to be.
+          What does the vertical axis measure here? If you multiplied that by a width
+          along the horizontal axis, what would the product be counting?
 
 - multiple_choice:
     id: q6
@@ -422,10 +418,8 @@ questions:
           Correct. The high-speed tail has no counterpart on the slow side, so
           it drags the average above the peak.
         on_incorrect: |
-          Compare how much room the curve has on each side of the peak. It runs
-          out of space quickly on the slow side, because speed stops at zero,
-          and it trails a long way on the fast side. An average is pulled
-          toward the side with the longer tail.
+          Look at how much room the curve has on either side of its peak. Is it
+          symmetric, and what stops it from running any further on the low-speed side?
 
 - multiple_choice:
     id: q7
@@ -489,10 +483,8 @@ questions:
           Correct. At a fixed temperature the slowest gas is the heaviest, and
           all three still share the same average kinetic energy.
         on_incorrect: |
-          Ask first which quantity actually depends on mass. Average kinetic
-          energy is fixed by temperature alone, and mass only affects the
-          speed, where a heavier molecule must move more slowly to carry the
-          same energy.
+          Which of the two quantities named in these statements actually depends on the
+          mass of a molecule? Settle that before you decide which gas is which.
 
 # ── Notes for the next pass (delete once resolved) ────────────────────────────
 #

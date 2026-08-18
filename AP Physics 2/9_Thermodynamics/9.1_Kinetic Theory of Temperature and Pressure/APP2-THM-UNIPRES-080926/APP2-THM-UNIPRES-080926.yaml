@@ -78,8 +78,9 @@ questions:
           Correct. The pressure of an ideal gas is the same throughout the gas,
           so the pressure at the container walls is the same everywhere.
         on_incorrect: |
-          Careful to distinguish pressure from force. The side has twice the
-          area, so it experiences twice the total force, but the same pressure.
+          Read the question again and note exactly which quantity it asks you to
+          compare. Does a larger area change the pressure a sealed gas exerts on it, or
+          does it change something else?
 
 - multiple_choice:
     id: q2
@@ -118,8 +119,8 @@ questions:
         on_correct: |
           Correct. Equal pressure over triple the area gives triple the force.
         on_incorrect: |
-          The pressure is the same on both faces — but the question asks about
-          total force, and <latex>F = PA</latex> makes force proportional to area.
+          This question asks about total force rather than pressure. What relationship
+          connects those two, and what part does the area play in it?
 
 - multiple_choice:
     id: q3
@@ -159,8 +160,9 @@ questions:
           Correct. Container shape does not affect the pressure of a gas in
           equilibrium.
         on_incorrect: |
-          Do not carry over intuition about flowing fluids. The gas here is
-          sealed and in equilibrium, so the pressure is uniform throughout.
+          Is anything actually flowing in this flask? Think about what a sealed gas
+          sitting in equilibrium is doing, and what that means for the pressure from one
+          place to another.
 
 - multiple_choice:
     id: q4
@@ -198,8 +200,8 @@ questions:
           Correct. Equal pressure acting over four times the area gives four
           times the force.
         on_incorrect: |
-          Start from the fact that the pressure is identical on both faces, then
-          apply <latex>F = PA</latex> to each.
+          What do you already know about the pressure on the two faces, and what
+          relationship connects the pressure on a face to the total force on it?
 
 # ── Notes for the next pass (delete once resolved) ────────────────────────────
 #

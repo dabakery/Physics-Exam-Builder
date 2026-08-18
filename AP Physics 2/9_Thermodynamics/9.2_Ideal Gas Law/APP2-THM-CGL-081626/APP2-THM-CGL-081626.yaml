@@ -114,10 +114,9 @@ questions:
           Correct. Notice that the volume ratio went in upside down relative to
           the temperature ratio, which is what the rearrangement tells you to do.
         on_incorrect: |
-          Rearrange the relationship for <latex>P_f</latex> first, then read the
-          ratios off it. Volume appears on the same side of the equation as
-          pressure, so it enters as <latex>V_o / V_f</latex>, while temperature
-          enters as <latex>T_f / T_o</latex>.
+          In the combined gas law, does the volume sit on the same side of the fraction
+          as the pressure, or on the opposite side from the temperature? What does each
+          of those positions do to the ratio you build from it?
 
 - multiple_choice:
     id: q2
@@ -172,9 +171,9 @@ questions:
           Correct. Squeezing the gas harder shrinks it, heating it expands it,
           and here the heating wins.
         on_incorrect: |
-          Check which way up your pressure ratio is. The pressure went up, so on
-          its own it would shrink the gas, meaning that ratio has to be less than
-          one.
+          Take the pressure change on its own for a moment, with the temperature
+          imagined as fixed. Would that change by itself make the gas bigger or smaller,
+          and does the ratio you wrote agree with that?
 
 - multiple_choice:
     id: q3
@@ -227,9 +226,9 @@ questions:
         on_correct: |
           Correct, and this is the one case where neither ratio gets inverted.
         on_incorrect: |
-          Both quantities fell, so the temperature must fall too, and by more
-          than either of them separately. Multiply the two new over old ratios
-          without turning either of them over.
+          Both quantities fell here, so work out what each one does to the temperature
+          by itself before you combine them. Does your answer move in the direction the
+          two of them agree on?
 
 - multiple_choice:
     id: q4
@@ -285,9 +284,8 @@ questions:
           Correct. You read the constant volume off the apparatus rather than
           waiting to be told.
         on_incorrect: |
-          Ask what the steel tank is doing physically. It cannot change size, so
-          the volume is the quantity being held constant, and the pressure has to
-          rise along with the absolute temperature.
+          What is the steel tank doing physically? Decide which quantity it refuses to
+          let change before you touch any algebra.
 
 - multiple_choice:
     id: q5
@@ -343,9 +341,8 @@ questions:
           Correct. A piston free to slide is the standard way a problem tells you
           the pressure is constant.
         on_incorrect: |
-          A sealed container fixes the amount of gas, not its volume. This piston
-          can move, so the volume is free to respond, and cooling the gas shrinks
-          it in direct proportion to the absolute temperature.
+          A sealed container fixes the amount of gas in it. Does it also fix the volume,
+          and is there anything in this apparatus that is free to move?
 
 - multiple_choice:
     id: q6
@@ -400,9 +397,9 @@ questions:
           Correct. At constant temperature the product of pressure and volume is
           what stays the same.
         on_incorrect: |
-          Constant temperature does not mean constant pressure. Compressing the
-          gas to a smaller volume must raise its pressure, so your answer should
-          be larger than <latex>P_o</latex>.
+          Constant temperature is not the same thing as constant pressure. If a gas is
+          squeezed into a smaller space while its temperature is held steady, which way
+          should its pressure go, and does your answer agree?
 
 - multiple_choice:
     id: q7
@@ -467,9 +464,8 @@ questions:
           Correct. Only the starting and finishing states matter, so the middle
           of the process never had to be worked out.
         on_incorrect: |
-          Use the starting state and the finishing state, and ignore the stage in
-          between. The final volume is half the original, because the second
-          stage held whatever volume the first stage produced.
+          You only need the state the gas started in and the state it finished in. What
+          is the final volume, given what the second stage was holding fixed?
 
 # ── Notes for the next pass (delete once resolved) ────────────────────────────
 #

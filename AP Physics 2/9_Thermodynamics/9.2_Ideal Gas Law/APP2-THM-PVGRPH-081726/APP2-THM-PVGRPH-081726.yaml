@@ -76,9 +76,6 @@ questions:
       is free to move. The gas is taken from state A to state B by a process in which
       the gas expands and its temperature decreases.
 
-      The four graphs below show pressure against volume on identical axes, with
-      pressure in units of <latex>10^5</latex> Pa and volume in liters. Each graph
-      begins at the same state A and follows a straight line to a different state B.
       Which graph could show this change of state?
     figure: figure_folder/q-1.png
     answers:
@@ -139,9 +136,9 @@ questions:
           rather than trusting the direction of the line, which is what separates
           Graph IV from Graph III.
         on_incorrect: |
-          A falling pressure is not enough on its own. Read the coordinates of A and B
-          off the axes, multiply pressure by volume at each end, and find the graph
-          where that product gets smaller.
+          A falling pressure was not enough to settle this on its own. What does the
+          ideal gas law tie the temperature to, and what can the numbers on the axes
+          tell you that the direction of the line cannot?
 
 - multiple_choice:
     id: q2
@@ -152,9 +149,6 @@ questions:
       is free to move. The gas is taken from state A to state B by a process in which
       the gas expands, its pressure decreases, and its temperature increases.
 
-      The four graphs below show pressure against volume on identical axes, with
-      pressure in units of <latex>10^5</latex> Pa and volume in liters. Each graph
-      begins at the same state A and follows a straight line to a different state B.
       Which graph could show this change of state?
     figure: figure_folder/q-2.png
     answers:
@@ -209,9 +203,8 @@ questions:
           <latex>PV</latex> was the only thing that could separate them, and Graph II
           is the one where it grows.
         on_incorrect: |
-          Every graph here shows an expansion with a falling pressure, so that part
-          cannot help you choose. Multiply pressure by volume at A and at B, and look
-          for the graph where the product ends up larger than it started.
+          Every graph here expands the gas while the pressure falls, so that description
+          cannot separate them. What else is different about these four endpoints?
 
 - multiple_choice:
     id: q3
@@ -222,9 +215,6 @@ questions:
       is free to move. The gas is taken from state A to state B by a process in which
       the gas is compressed and its temperature increases.
 
-      The four graphs below show pressure against volume on identical axes, with
-      pressure in units of <latex>10^5</latex> Pa and volume in liters. Each graph
-      begins at the same state A and follows a straight line to a different state B.
       Which graph could show this change of state?
     figure: figure_folder/q-3.png
     answers:
@@ -275,9 +265,9 @@ questions:
           Correct. Compressing a gas does not warm it by itself, and you checked that
           the product <latex>PV</latex> actually grew.
         on_incorrect: |
-          Compressing a gas does not guarantee that it warms up. Look at Graph I, where
-          the pressure stays put and the volume shrinks, and the product drops. Multiply
-          pressure by volume at both ends of each line and find the one that grows.
+          Compressing a gas does not guarantee that it warms up. Look again at Graph I,
+          where the pressure holds steady while the volume shrinks. What is happening to
+          the temperature there, and how could you tell the four endpoints apart?
 
 - multiple_choice:
     id: q4
@@ -288,9 +278,6 @@ questions:
       is free to move. The gas is taken from state A to state B by a process in which
       the gas is compressed, its pressure increases, and its temperature decreases.
 
-      The four graphs below show pressure against volume on identical axes, with
-      pressure in units of <latex>10^5</latex> Pa and volume in liters. Each graph
-      begins at the same state A and follows a straight line to a different state B.
       Which graph could show this change of state?
     figure: figure_folder/q-4.png
     answers:
@@ -342,9 +329,9 @@ questions:
           Correct. Both the pressure and the volume were working against each other
           here, and the product <latex>PV</latex> is what tells you which one won.
         on_incorrect: |
-          All four graphs compress the gas and raise the pressure, so neither of those
-          can pick the answer. Multiply pressure by volume at each end and find the
-          graph where the product ends up smaller.
+          All four graphs compress the gas and raise its pressure, so neither of those
+          facts can choose for you. When two quantities are changing in opposite
+          directions, what does the gas law say settles the temperature?
 
 - multiple_choice:
     id: q5
@@ -356,9 +343,6 @@ questions:
       the gas expands, and the temperature at state B turns out to be the same as the
       temperature at state A.
 
-      The four graphs below show pressure against volume on identical axes, with
-      pressure in units of <latex>10^5</latex> Pa and volume in liters. Each graph
-      begins at the same state A and follows a straight line to a different state B.
       Which graph could show this change of state?
     figure: figure_folder/q-5.png
     answers:
@@ -412,8 +396,8 @@ questions:
           out in the first question of this bank is the one you needed here. Reading the
           same picture differently depending on what is being asked is Physics!
         on_incorrect: |
-          Equal temperatures mean equal products. Multiply pressure by volume at A, then
-          look for the graph whose state B gives you the same number back.
+          What has to be true of the two states if the gas is at the same temperature at
+          both? Work out that condition before you look at the graphs again.
 
 - multiple_choice:
     id: q6
@@ -425,9 +409,6 @@ questions:
       the gas expands, and the absolute temperature at state B is half the absolute
       temperature at state A.
 
-      The four graphs below show pressure against volume on identical axes, with
-      pressure in units of <latex>10^5</latex> Pa and volume in liters. Each graph
-      begins at the same state A and follows a straight line to a different state B.
       Which graph could show this change of state?
     figure: figure_folder/q-6.png
     answers:
@@ -480,9 +461,9 @@ questions:
           Correct. You halved the product rather than settling for any line that cools
           the gas, which is what ruled out Graph IV.
         on_incorrect: |
-          Find the product at A first, then halve it, and only then look at the four
-          endpoints. Two of these graphs cool the gas, so checking the direction alone
-          will not get you there.
+          Two of these graphs do cool the gas, so ruling out the ones that warm it is
+          only half the job. The question named an exact fraction, so what does that let
+          you demand of state B?
 
 - multiple_choice:
     id: q7
@@ -494,9 +475,6 @@ questions:
       the gas is compressed, and the absolute temperature at state B is twice the
       absolute temperature at state A.
 
-      The four graphs below show pressure against volume on identical axes, with
-      pressure in units of <latex>10^5</latex> Pa and volume in liters. Each graph
-      begins at the same state A and follows a straight line to a different state B.
       Which graph could show this change of state?
     figure: figure_folder/q-7.png
     answers:
@@ -547,6 +525,6 @@ questions:
           Correct. Three of the four graphs warmed the gas, and doubling the product is
           what picked out the right one.
         on_incorrect: |
-          Work out the product at A, double it, and then check each endpoint against
-          that target. Most of these graphs do warm the gas, so you have to compare the
-          actual numbers rather than the direction.
+          Most of these graphs warm the gas, so the direction alone will never narrow
+          this to one. The question named an exact factor, so what does that require of
+          state B?

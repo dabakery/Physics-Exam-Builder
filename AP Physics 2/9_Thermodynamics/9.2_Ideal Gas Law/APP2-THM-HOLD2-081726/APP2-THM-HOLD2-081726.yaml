@@ -120,10 +120,8 @@ questions:
           Correct. With the pressure and the amount of gas pinned down, volume and
           absolute temperature are locked together and have to rise or fall as a pair.
         on_incorrect: |
-          Rearrange the gas law so the two quantities that can change end up together.
-          With the pressure and the number of moles constant you get a constant value
-          for the volume divided by the temperature, so the two have to move the same
-          way.
+          The stem hands you the two constants. What does the gas law let you say about
+          the remaining two once the constants are gathered on one side?
 
 - multiple_choice:
     id: q2
@@ -176,9 +174,8 @@ questions:
           Correct, and notice that you had to pull both constants out of the description
           of the container rather than being handed them.
         on_incorrect: |
-          A rigid sealed container holds the volume and the amount of gas constant. With
-          those two fixed, pressure divided by absolute temperature is a constant, so
-          both have to move the same way.
+          This question never uses the word constant, so the constants have to come from
+          the apparatus. What does a rigid sealed container prevent from changing?
 
 - multiple_choice:
     id: q3
@@ -232,9 +229,9 @@ questions:
           Correct. Pressure and volume multiply to a constant here, so squeezing the gas
           into less space at a fixed temperature has to push the pressure up.
         on_incorrect: |
-          Check which side of the equation the two free quantities land on. Here they
-          multiply together to give a constant, which makes the relationship inverse, so
-          they cannot both move the same way.
+          You may be carrying over the relationship from an earlier question in this
+          set. Where do the two free quantities sit relative to one another once you
+          rearrange, and is that the same place they sat before?
 
 - multiple_choice:
     id: q4
@@ -289,9 +286,9 @@ questions:
           Correct. With the pressure and the temperature both pinned, volume is simply
           proportional to how much gas is in there.
         on_incorrect: |
-          Notice that the number of moles is not fixed in this question, since gas can be
-          added or removed. A free piston fixes the pressure and the bath fixes the
-          temperature, which leaves volume proportional to the amount of gas.
+          Check your list of constants before anything else. Is the amount of gas
+          actually fixed in this question, and what does a freely sliding piston do to
+          the pressure?
 
 - multiple_choice:
     id: q5
@@ -343,9 +340,8 @@ questions:
           Correct, and the kinetic theory picture backs it up. Fewer molecules in the
           same box at the same temperature means less pressure.
         on_incorrect: |
-          Rigid walls fix the volume and the bath fixes the temperature, so the pressure
-          is left proportional to the number of moles. Removing gas has to lower the
-          pressure.
+          What two quantities does this apparatus hold fixed, and where does that leave
+          the remaining pair when you rearrange the gas law?
 
 - multiple_choice:
     id: q6
@@ -401,9 +397,9 @@ questions:
           absolute temperature multiply to a constant, so one rises only as the other
           falls.
         on_incorrect: |
-          Rearranging puts the amount of gas and the temperature multiplied together on
-          the same side, equal to a fixed quantity. That is an inverse relationship, so
-          they cannot move the same way.
+          Where do the amount of gas and the temperature end up relative to one another
+          once the constants are moved aside, and what kind of relationship does that
+          leave between them?
 
 - multiple_choice:
     id: q7
@@ -459,6 +455,5 @@ questions:
           Correct. Nothing in the constraint requires anything to change, and no other
           choice keeps the product of pressure and volume fixed.
         on_incorrect: |
-          Check each choice against the requirement that pressure times volume stays
-          constant, including the choice where neither one moves. A process is allowed to
-          leave a quantity exactly where it started.
+          Read the question once more, especially the two words that follow "possible
+          changes". Does a thermodynamic process have to change anything at all?

@@ -92,9 +92,9 @@ questions:
           Correct. Kinetic energy scales with <latex>T</latex>, speed with
           <latex>\sqrt{T}</latex>.
         on_incorrect: |
-          The two quantities do not scale the same way — compare
-          <latex>K_{avg} \propto T</latex> with
-          <latex>v_{rms} \propto \sqrt{T}</latex>.
+          These two quantities do not respond to a temperature change in the same way.
+          How does each one depend on temperature, and are those two dependencies the
+          same?
 
 - multiple_choice:
     id: q2
@@ -143,9 +143,9 @@ questions:
         on_correct: |
           Correct. Squaring the speed factor gives the temperature factor.
         on_incorrect: |
-          Work backwards from <latex>v_{rms} \propto \sqrt{T}</latex>. If the
-          speed grows by a factor, the temperature grows by the square of that
-          factor.
+          You are working backwards here, from a change in speed to the change in
+          temperature that would cause it. How is the speed related to the temperature,
+          and what does reversing that relationship do to your factor?
 
 - multiple_choice:
     id: q3
@@ -193,9 +193,8 @@ questions:
           Correct. The speed falls by <latex>\sqrt{2}</latex> while the energy
           falls by <latex>2</latex>.
         on_incorrect: |
-          Take the square root of the temperature factor to get the speed
-          factor. Half the temperature gives <latex>\sqrt{1/2}</latex> of the
-          speed, not half.
+          Halving the temperature does not halve everything in sight. Which of these two
+          quantities tracks the temperature directly, and which one does not?
 
 - multiple_choice:
     id: q4
@@ -252,8 +251,8 @@ questions:
           Correct. A speed ratio of <latex>2</latex> read off the graph means a
           temperature ratio of <latex>4</latex>.
         on_incorrect: |
-          Read the peak speeds off the horizontal axis first, then remember that
-          the temperature ratio is the square of the speed ratio.
+          Start by reading the two peak speeds off the horizontal axis and forming their
+          ratio. What does a ratio of speeds let you say about a ratio of temperatures?
 
 - multiple_choice:
     id: q5
@@ -303,10 +302,8 @@ questions:
           Correct. At a fixed temperature the heavier gas is slower, and both
           gases still have the same average kinetic energy.
         on_incorrect: |
-          Moving faster does not mean carrying more kinetic energy here, because
-          the two gases have different molecular masses. At the same
-          temperature, the average kinetic energy is the same and only the
-          speeds differ.
+          Both samples are sitting at the same temperature. What does that pin down
+          about the molecules, and does moving faster have to mean carrying more energy?
 
 - multiple_choice:
     id: q6
@@ -348,9 +345,8 @@ questions:
         on_correct: |
           Correct. Speed goes as the square root of the energy.
         on_incorrect: |
-          Start from <latex>K_{avg} = \frac{1}{2} m v_{rms}^2</latex>. Since the
-          energy depends on the speed squared, the speed changes by the square
-          root of the energy factor.
+          Which relationship connects kinetic energy to speed directly, without going
+          through the temperature? Look at what power the speed is raised to in it.
 
 # ── Notes for the next pass (delete once resolved) ────────────────────────────
 #

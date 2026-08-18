@@ -122,9 +122,9 @@ questions:
           Correct. You squared the speed ratio to get the temperature ratio, and
           the volume then followed the temperature directly.
         on_incorrect: |
-          Find the temperature ratio first. Speed grows as the square root of
-          absolute temperature, so a speed that doubles means a temperature that
-          quadruples rather than one that doubles.
+          Take this in two steps rather than one. How is the rms speed related to the
+          absolute temperature, and does a doubling of the one mean a doubling of the
+          other?
 
 - multiple_choice:
     id: q2
@@ -184,8 +184,9 @@ questions:
           Correct. Halving the speed quarters the absolute temperature, and the
           volume follows.
         on_incorrect: |
-          Square the speed ratio before you use it. Half the speed corresponds
-          to a quarter of the absolute temperature, not half of it.
+          The direction has reversed from the previous question but the relationship has
+          not. What does the link between speed and absolute temperature do to a factor
+          of one half?
 
 - multiple_choice:
     id: q3
@@ -246,9 +247,8 @@ questions:
           Correct. Kinetic energy is proportional to absolute temperature, so no
           squaring was needed here.
         on_incorrect: |
-          Check whether you were given a speed or an energy. Average kinetic
-          energy is proportional to absolute temperature directly, so it does
-          not need to be squared the way a speed does.
+          Look carefully at whether this question handed you a speed or an energy. Do
+          those two depend on absolute temperature in the same way?
 
 - multiple_choice:
     id: q4
@@ -300,9 +300,9 @@ questions:
           Correct. Working backwards means taking a square root where the
           forward problem asked you to square.
         on_incorrect: |
-          Going from temperature to speed calls for a square root. The volume
-          ratio of <latex>9</latex> gives a temperature ratio of
-          <latex>9</latex>, and the speed ratio is the square root of that.
+          You are travelling from a volume change to a speed change here, which is the
+          reverse of the earlier questions. Which leg of that trip involves a square
+          root, and did you take it?
 
 - multiple_choice:
     id: q5
@@ -362,9 +362,8 @@ questions:
           Correct. Clamping the piston moves the response from the volume to the
           pressure.
         on_incorrect: |
-          Ask yourself which quantity the apparatus is holding constant. A
-          clamped piston fixes the volume, so the pressure is what has to
-          change when the temperature rises.
+          What is the clamp doing to this apparatus? Work out which quantity is being
+          held fixed before you decide what the answer should be a ratio of.
 
 - multiple_choice:
     id: q6
@@ -420,9 +419,9 @@ questions:
           Correct. Multiplying the two ratios gives the temperature ratio, and
           the square root of that gives the speed.
         on_incorrect: |
-          Pressure and volume only work against each other at constant
-          temperature. Here they multiply, giving four times the absolute
-          temperature and twice the speed.
+          Pressure and volume only trade against one another when the temperature is
+          fixed, and it is not fixed here. What does the gas law say the temperature
+          does when both of them double?
 
 - multiple_choice:
     id: q7
@@ -493,10 +492,9 @@ questions:
           Correct. Converting to kelvin first is what makes both ratios come out
           right.
         on_incorrect: |
-          Add <latex>273</latex> to each Celsius temperature before comparing
-          them. A Celsius ratio has no physical meaning, because zero on that
-          scale is just the freezing point of water rather than an absence of
-          thermal energy.
+          Check the temperature scale before you form any ratio at all. Does a ratio of
+          two Celsius temperatures mean anything physically, given where zero sits on
+          that scale?
 
 # ── Notes for the next pass (delete once resolved) ────────────────────────────
 #
