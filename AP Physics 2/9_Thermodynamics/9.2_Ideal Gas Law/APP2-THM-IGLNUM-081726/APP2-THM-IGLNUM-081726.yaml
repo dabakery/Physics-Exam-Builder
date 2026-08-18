@@ -1,0 +1,355 @@
+bank_info:
+    title: Numerical Calculations with the Ideal Gas Law
+    bank_id: APP2-THM-IGLNUM-081726
+    description: |-
+      Isomorphic calculation problems for AP Physics 2, College Board Unit 9 Topic 9.2.
+
+      Each question hands you three of the quantities in the ideal gas law and asks you
+      to find the fourth. The arithmetic is straightforward once the relationship is
+      arranged the way you need it, so the work is in deciding which quantity you are
+      solving for, checking that every given arrived in the units the gas constant
+      expects, and noticing when a question hands you something that has to be turned
+      into moles first.
+
+      Teaching notes: the target idea is fluency with <latex>PV = nRT</latex> in all
+      four directions rather than only the forward one. Each question solves for a
+      different quantity, and the last three add a step before the substitution, a mass
+      that has to become an amount, a Celsius temperature, and a count of molecules
+      rather than moles. The common errors are leaving a temperature in Celsius, mixing
+      the gas constant with the mass of a single particle, treating a mass in kilograms
+      as though it were an amount in moles, and reporting moles when the question asked
+      for molecules. APP2-THM-CGL-081626 works the same relationship as ratios with no
+      numbers attached, and APP2-THM-HOLD2-081726 asks only which direction things move.
+    date created: 08-17-2026
+    status: ready # Only use 'draft', 'ready', 'deployed', and 'deprecated' for this field. 'draft' and 'deprecated' files won't be parsed by the exam builder.
+    learning objectives:
+        - THM-IGL-1 # Apply the ideal gas law to relate pressure, volume, temperature and amount of gas
+        - THM-IGL-2 # Predict how one state variable responds to a change in another when the rest are held fixed
+    generation prompts: # The following are the prompts that generated the questions in the problem bank.
+        - prompt 1: |
+            (Numerical companion to the other Topic 9.2 banks, from the owner's outline:
+            straightforward calculations with the ideal gas law where q1 asks for a
+            pressure, q2 a volume, and so on through the four quantities. q1 solves for
+            pressure, q2 for volume, q3 for temperature and q4 for the amount of gas,
+            which covers all four rearrangements. q5, q6 and q7 keep the same difficulty
+            but add one step ahead of the substitution so the solution differs rather
+            than only the numbers: q5 supplies a mass and a molar mass so the amount of
+            gas has to be found first, q6 supplies a Celsius temperature, and q7 asks
+            for a number of molecules, which can be reached either through the
+            Boltzmann constant directly or through moles and Avogadro's number.)
+        - prompt 2: |
+            (Values chosen so every answer lands cleanly at three significant figures and
+            sits in a physically sensible range, roughly atmospheric pressures, room to
+            furnace temperatures, and container volumes a student can picture. q7 was
+            retuned away from an answer of exactly 3.00e23, which is guessable. Units are
+            written as "cubic meters" in prose rather than with a superscript, because
+            the exporter's unit absorber has no mapping for that glyph and only the units
+            listed in UNIT_BASE are safe directly after a closing latex tag.)
+        - formatting prompt: "../../../../Templates/YAML_formatting_prompt.md"
+    updates:
+        - update 1: (08-17-2026) Bank created with q1-q7. Fifth bank in Topic 9.2, and the first numerical one in it.
+    generation details:
+            model: Claude Opus 5
+            version: claude-opus-5
+            last updated: 08-17-2026
+    authors:
+        - Michael Baker
+
+questions:
+
+- numerical:
+    id: q1
+    title: Pressure of a Gas from Amount, Volume and Temperature
+    points: 2
+    text: |
+      A sealed rigid container of volume <latex>0.0500</latex> cubic meters holds
+      <latex>2.00</latex> mol of an ideal gas at an absolute temperature of
+      <latex>300</latex> K. The gas constant is <latex>8.31</latex> J/(mol·K).
+
+      Find the pressure of the gas, in pascals. Round your answer to three significant
+      figures.
+    answer:
+        value: 9.97e4
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          Everything you need is in the ideal gas law:
+          <latex>
+          PV = nRT
+          </latex>
+          The pressure is the unknown, so isolate it and the rest is substitution:
+          <latex>
+          P = \frac{nRT}{V}
+          = \frac{(2.00)(8.31)(300)}{0.0500}
+          </latex>
+          which gives <latex>P = 9.97 \times 10^{4}</latex> Pa.
+
+          It is worth pausing on that number. Atmospheric pressure is about
+          <latex>1.01 \times 10^{5}</latex> Pa, so this gas is sitting just below the
+          pressure of the air around you. Checking whether an answer is physically
+          sensible is a habit that will catch a misplaced power of ten long before the
+          exam does.
+        on_correct: |
+          Correct, and notice the answer landed near atmospheric pressure, which is a
+          good sign that nothing went wrong by a factor of ten.
+        on_incorrect: |
+          Which quantity is the one being asked for, and where does it sit in the ideal
+          gas law? Check as well that every given arrived in the units the gas constant
+          expects.
+
+- numerical:
+    id: q2
+    title: Volume of a Gas from Amount, Pressure and Temperature
+    points: 2
+    text: |
+      A sealed container holds <latex>3.00</latex> mol of an ideal gas at a pressure of
+      <latex>1.50 \times 10^{5}</latex> Pa and an absolute temperature of
+      <latex>350</latex> K. The gas constant is <latex>8.31</latex> J/(mol·K).
+
+      Find the volume of the gas, in cubic meters. Round your answer to three
+      significant figures.
+    answer:
+        value: 0.0582
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          Start from the ideal gas law and isolate the volume:
+          <latex>
+          PV = nRT
+          \quad \Rightarrow \quad
+          V = \frac{nRT}{P}
+          = \frac{(3.00)(8.31)(350)}{1.50 \times 10^{5}}
+          </latex>
+          which gives <latex>V = 0.0582</latex> cubic meters.
+
+          Before you move on, check that the answer behaves the way it should. The
+          pressure sits underneath, so a gas held at a higher pressure occupies a
+          smaller volume. If you ever get those two moving in the same direction, the
+          rearrangement is where to look.
+        on_correct: |
+          Correct. About <latex>58</latex> liters, which is a container you could
+          picture in the room with you.
+        on_incorrect: |
+          Look at where the pressure sits relative to the volume in the ideal gas law.
+          Should a higher pressure give you a larger volume or a smaller one, and does
+          your answer behave that way?
+
+- numerical:
+    id: q3
+    title: Temperature of a Gas from Pressure, Volume and Amount
+    points: 2
+    text: |
+      A sealed rigid container of volume <latex>0.0250</latex> cubic meters holds
+      <latex>1.50</latex> mol of an ideal gas at a pressure of
+      <latex>2.00 \times 10^{5}</latex> Pa. The gas constant is <latex>8.31</latex>
+      J/(mol·K).
+
+      Find the absolute temperature of the gas, in kelvin. Round your answer to three
+      significant figures.
+    answer:
+        value: 401
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          The temperature is the unknown here, so it has to come out from underneath
+          everything else:
+          <latex>
+          PV = nRT
+          \quad \Rightarrow \quad
+          T = \frac{PV}{nR}
+          = \frac{(2.00 \times 10^{5})(0.0250)}{(1.50)(8.31)}
+          </latex>
+          which gives <latex>T = 401</latex> K.
+
+          That is roughly <latex>128</latex> °C, hot enough to boil water, which fits a
+          gas held at about twice atmospheric pressure in a container that cannot
+          expand. An answer in kelvin should almost always come out as a few hundred for
+          everyday situations, so a result of <latex>4</latex> or <latex>40000</latex>
+          is a signal to go back and check.
+        on_correct: |
+          Correct. A few hundred kelvin is the range most everyday gas problems land in,
+          which makes it a useful sanity check.
+        on_incorrect: |
+          You are being asked for the temperature this time, so it is no longer one of
+          the things you were handed. Where does it sit in the relationship, and what
+          has to happen before it stands on its own?
+
+- numerical:
+    id: q4
+    title: Amount of Gas from Pressure, Volume and Temperature
+    points: 2
+    text: |
+      A sealed container of volume <latex>0.100</latex> cubic meters holds an ideal gas
+      at a pressure of <latex>1.01 \times 10^{5}</latex> Pa and an absolute temperature
+      of <latex>293</latex> K. The gas constant is <latex>8.31</latex> J/(mol·K).
+
+      Find the amount of gas in the container, in moles. Round your answer to three
+      significant figures.
+    answer:
+        value: 4.15
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          This time the amount of gas is the unknown:
+          <latex>
+          PV = nRT
+          \quad \Rightarrow \quad
+          n = \frac{PV}{RT}
+          = \frac{(1.01 \times 10^{5})(0.100)}{(8.31)(293)}
+          </latex>
+          which gives <latex>n = 4.15</latex> mol.
+
+          Notice what the conditions describe. Atmospheric pressure and about
+          <latex>20</latex> °C is ordinary room air, and <latex>0.100</latex> cubic
+          meters is a box roughly half a meter on a side. So this result says a box that
+          size sitting open in your classroom holds about four moles of air, which is
+          well over <latex>10^{24}</latex> molecules.
+        on_correct: |
+          Correct. Four moles of ordinary room air in a box half a meter on a side.
+        on_incorrect: |
+          What does the gas constant carry in its own units, and what does that tell you
+          about the quantity this question is after? Check whether your answer is a
+          count of moles or something else.
+
+- numerical:
+    id: q5
+    title: Pressure of a Gas Given Its Mass
+    points: 2
+    text: |
+      A sealed rigid container of volume <latex>0.0200</latex> cubic meters holds
+      <latex>0.140</latex> kg of nitrogen gas at an absolute temperature of
+      <latex>310</latex> K. The molar mass of nitrogen is <latex>0.028</latex> kg/mol,
+      and the gas constant is <latex>8.31</latex> J/(mol·K). Treat the nitrogen as an
+      ideal gas.
+
+      Find the pressure of the gas, in pascals. Round your answer to three significant
+      figures.
+    answer:
+        value: 6.44e5
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          There is a step here before the ideal gas law can be used at all. The
+          relationship counts gas in moles, and you were handed kilograms, so the molar
+          mass is what bridges the two:
+          <latex>
+          n = \frac{m}{M} = \frac{0.140}{0.028} = 5.00 \text{ mol}
+          </latex>
+
+          Now the rest is the same calculation as the first question in this bank:
+          <latex>
+          P = \frac{nRT}{V}
+          = \frac{(5.00)(8.31)(310)}{0.0200}
+          </latex>
+          which gives <latex>P = 6.44 \times 10^{5}</latex> Pa.
+
+          That is about six times atmospheric pressure, which is reasonable for five
+          moles squeezed into <latex>20</latex> liters. The molar mass is doing real
+          work here, so watch for questions that describe a gas by its mass and quietly
+          expect you to find the amount yourself.
+        on_correct: |
+          Correct. You spotted that the mass had to become an amount before the ideal
+          gas law would accept it.
+        on_incorrect: |
+          This question gave you a mass rather than an amount of gas. Does the ideal gas
+          law take a mass directly, and if it does not, what else in the question would
+          get you what it does take?
+
+- numerical:
+    id: q6
+    title: Volume of a Gas Given a Celsius Temperature
+    points: 2
+    text: |
+      A sealed container holds <latex>0.500</latex> mol of an ideal gas at a pressure of
+      <latex>1.20 \times 10^{5}</latex> Pa and a temperature of <latex>77</latex> °C.
+      The gas constant is <latex>8.31</latex> J/(mol·K).
+
+      Find the volume of the gas, in cubic meters. Round your answer to three
+      significant figures.
+    answer:
+        value: 0.0121
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          The ideal gas law only ever accepts absolute temperature, so the Celsius
+          reading has to become kelvin before anything else happens:
+          <latex>
+          T = 77 + 273 = 350 \text{ K}
+          </latex>
+
+          Then the calculation is the one from the second question in this bank:
+          <latex>
+          V = \frac{nRT}{P}
+          = \frac{(0.500)(8.31)(350)}{1.20 \times 10^{5}}
+          </latex>
+          which gives <latex>V = 0.0121</latex> cubic meters.
+
+          It is worth seeing how badly this goes wrong if the conversion is skipped.
+          Using <latex>77</latex> in place of <latex>350</latex> gives an answer smaller
+          by a factor of about four and a half, and nothing in the arithmetic would warn
+          you. Kelvin is the only scale where zero means no thermal energy, which is why
+          it is the only one a proportionality can be built on.
+        on_correct: |
+          Correct. The conversion to kelvin came first, which is the step this question
+          was really testing.
+        on_incorrect: |
+          Look hard at the temperature you were handed. Is it on the scale this
+          relationship requires, and what would happen to your answer if it is not?
+
+- numerical:
+    id: q7
+    title: Number of Molecules in a Container
+    points: 2
+    text: |
+      A sealed rigid container of volume <latex>0.0160</latex> cubic meters holds an
+      ideal gas at a pressure of <latex>7.50 \times 10^{4}</latex> Pa and an absolute
+      temperature of <latex>295</latex> K. The Boltzmann constant is
+      <latex>1.38 \times 10^{-23}</latex> J/K, the gas constant is <latex>8.31</latex>
+      J/(mol·K), and Avogadro's number is <latex>6.02 \times 10^{23}</latex> per mole.
+
+      Find the number of gas molecules in the container. Round your answer to three
+      significant figures.
+    answer:
+        value: 2.95e23
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          The question asks for molecules rather than moles, and there are two honest
+          routes to it.
+
+          The direct one uses the form of the gas law written for individual molecules,
+          where the Boltzmann constant replaces the gas constant:
+          <latex>
+          PV = N k_B T
+          \quad \Rightarrow \quad
+          N = \frac{PV}{k_B T}
+          = \frac{(7.50 \times 10^{4})(0.0160)}{(1.38 \times 10^{-23})(295)}
+          </latex>
+          which gives <latex>N = 2.95 \times 10^{23}</latex> molecules.
+
+          The longer route gets the amount in moles first and then converts:
+          <latex>
+          n = \frac{PV}{RT} = 0.490 \text{ mol}
+          \quad \text{then} \quad
+          N = n N_A = (0.490)(6.02 \times 10^{23})
+          </latex>
+          which lands in the same place. Both are correct, and getting the same answer
+          two different ways is one of the better ways to trust a result.
+
+          The two constants are related by <latex>R = k_B N_A</latex>, which is why the
+          routes agree. Pair the Boltzmann constant with counts of molecules and the gas
+          constant with counts of moles, and the units will look after themselves.
+        on_correct: |
+          Correct. Either route gets there, and matching answers from two different
+          methods is worth more than one answer on its own.
+        on_incorrect: |
+          The question asks for a number of molecules, not a number of moles. Which
+          constant connects those two, and did the one you reached for belong with the
+          quantity you were actually after?
