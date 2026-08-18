@@ -57,8 +57,9 @@ bank_info:
             segments used in APP2-THM-FLPV-081826, because no question in this bank asks
             for the value of an area, only for which curve lies above the other.
             Isotherms are PV constant and adiabats are PV^(5/3) constant, the monatomic
-            value. Each curve is named on the figure, which is not a giveaway, since the
-            questions ask which process changes a quantity more and why.)
+            value. The curves carry no names. Telling one from the other by its shape is
+            expected knowledge at this level, and every stem says in words which process
+            is which.)
         - formatting prompt: "../../../../Templates/YAML_formatting_prompt.md"
     updates:
         - update 1: (08-18-2026) Bank created with q1. Second bank in Topic 9.4.

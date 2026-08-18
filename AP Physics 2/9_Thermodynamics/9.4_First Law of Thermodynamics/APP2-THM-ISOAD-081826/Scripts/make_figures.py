@@ -21,10 +21,10 @@ Design rules, so later additions match:
     misrepresent both processes.
   - Isotherms are PV = constant. Adiabats are PV^(5/3) = constant, the
     monatomic ideal gas value, which every stem in this bank states.
-  - Processes are named on the figure, next to the curve they belong to.
-    Naming them is not a giveaway: the questions ask which process changes a
-    quantity more and why, and a student who cannot tell the two curves apart
-    is being tested on the wrong thing.
+  - Processes are NOT named on the figure. Telling an isotherm from an adiabat
+    by its shape is expected knowledge at this level, and every stem says which
+    process is which in words, so a label on the curve would only be reading
+    practice. The drawing code has no path for one.
   - States are lettered in the order the stem introduces them, with an
     arrowhead partway along each path showing the direction of travel.
   - Label offsets are given per state in points, because the curves crowd
@@ -106,12 +106,6 @@ def draw(ax, spec):
                                     linewidth=1.8, mutation_scale=16),
                     zorder=4)
 
-        if proc.get("name"):
-            nx, ny = proc["name_at"]
-            ax.text(nx, ny, proc["name"], fontsize=10, style="italic",
-                    ha=proc.get("name_ha", "center"),
-                    va=proc.get("name_va", "center"), zorder=5)
-
     for letter, (x, y), (dx, dy) in spec["states"]:
         ax.plot([x], [y], "o", color="black", markersize=5, zorder=4)
         ax.annotate(letter, (x, y), textcoords="offset points", xytext=(dx, dy),
@@ -130,12 +124,8 @@ TALL = dict(xmax=3.7, ymax=7.0, xticks=[1, 2, 3], yticks=[1, 2, 3, 4, 5, 6])
 def expansion_pair():
     """The picture q1, q2 and q5 share: one start, two expansions to 3V_0."""
     return dict(SMALL, processes=[
-        dict(kind="isotherm", start=(1, 3), vf=3, name="isothermal",
-             arrow_at=0.3, name_at=(2.45, 1.38), name_ha="center",
-             name_va="bottom"),
-        dict(kind="adiabat", start=(1, 3), vf=3, name="adiabatic",
-             arrow_at=0.3, name_at=(2.35, 0.62), name_ha="center",
-             name_va="top"),
+        dict(kind="isotherm", start=(1, 3), vf=3, arrow_at=0.3),
+        dict(kind="adiabat", start=(1, 3), vf=3, arrow_at=0.3),
     ], states=[("A", (1, 3), (-16, 8)), ("B", (3, 1), (16, 8)),
                ("C", (3, ADIA_END), (16, -8))])
 
@@ -151,12 +141,8 @@ QUESTIONS = {
     # q3: the mirror image, both processes compressing from 3V_0 back to V_0.
     #     The adiabat climbs to 6.24 P_0, so this one needs the taller axis.
     "q-3": dict(TALL, processes=[
-        dict(kind="isotherm", start=(3, 1), vf=1, name="isothermal",
-             arrow_at=0.3, name_at=(2.15, 1.22), name_ha="center",
-             name_va="top"),
-        dict(kind="adiabat", start=(3, 1), vf=1, name="adiabatic",
-             arrow_at=0.6, name_at=(1.78, 3.15), name_ha="left",
-             name_va="bottom"),
+        dict(kind="isotherm", start=(3, 1), vf=1, arrow_at=0.3),
+        dict(kind="adiabat", start=(3, 1), vf=1, arrow_at=0.6),
     ], states=[("A", (3, 1), (16, -8)), ("B", (1, 3), (-16, 6)),
                ("C", (1, ADIA_UP), (-16, 6))]),
 
@@ -164,8 +150,7 @@ QUESTIONS = {
     #     has to match. The two-leg path is drawn straight because it is an
     #     isobaric leg followed by an isochoric one.
     "q-4": dict(SMALL, processes=[
-        dict(kind="isotherm", start=(1, 3), vf=3, name="isothermal",
-             name_at=(2.0, 1.35), name_ha="center", name_va="top"),
+        dict(kind="isotherm", start=(1, 3), vf=3),
         dict(kind="segments", points=[(1, 3), (3, 3)], arrow_at=0.5),
         dict(kind="segments", points=[(3, 3), (3, 1)], arrow_at=0.5),
     ], states=[("A", (1, 3), (-16, 8)), ("D", (3, 3), (16, 8)),
@@ -175,11 +160,8 @@ QUESTIONS = {
     #     internal energy change is large and positive against small and
     #     negative.
     "q-6": dict(SMALL, processes=[
-        dict(kind="isobar", start=(1, 3), vf=3, name="isobaric",
-             name_at=(2.0, 3.1), name_ha="center", name_va="bottom"),
-        dict(kind="adiabat", start=(1, 3), vf=3, name="adiabatic",
-             arrow_at=0.3, name_at=(2.35, 0.62), name_ha="center",
-             name_va="top"),
+        dict(kind="isobar", start=(1, 3), vf=3),
+        dict(kind="adiabat", start=(1, 3), vf=3, arrow_at=0.3),
     ], states=[("A", (1, 3), (-16, 8)), ("B", (3, 3), (16, 8)),
                ("C", (3, ADIA_END), (16, -8))]),
 
@@ -187,9 +169,7 @@ QUESTIONS = {
     #     work to its internal energy change without a second process to
     #     compare against.
     "q-7": dict(SMALL, processes=[
-        dict(kind="adiabat", start=(1, 3), vf=3, name="adiabatic",
-             arrow_at=0.3, name_at=(2.35, 0.62), name_ha="center",
-             name_va="top"),
+        dict(kind="adiabat", start=(1, 3), vf=3, arrow_at=0.3),
     ], states=[("A", (1, 3), (-16, 8)), ("B", (3, ADIA_END), (16, -8))]),
 }
 
