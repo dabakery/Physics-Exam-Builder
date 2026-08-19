@@ -1,0 +1,482 @@
+bank_info:
+    title: Specific Heat Calculations
+    bank_id: APP2-THM-SPHT-081826
+    description: |-
+      Isomorphic numerical problems for AP Physics 2, College Board Unit 9 Topic 9.5.
+
+      Energy transferred by heating, mass, specific heat and temperature change are tied
+      together by one relationship, and these questions run it in every direction.
+      Several of them give you a measurement on one sample of a substance and ask about
+      a different sample of the same substance, so the specific heat is something you
+      work out on the way rather than something you are handed. The arithmetic is light
+      enough to check by hand, and a calculator will still save you time.
+
+      Teaching notes: the target idea is that the specific heat is a property of the
+      substance, so a measurement on one sample carries over to any other sample of it.
+      Temperatures are given in degrees Celsius throughout and never need converting,
+      because only a temperature difference enters, and a change of one degree Celsius
+      is a change of one kelvin. That is worth saying out loud, since Topic 9.1 spends
+      its time insisting on kelvin. The common errors are using a temperature rather
+      than a temperature change, dropping the mass ratio when the sample size changes,
+      converting to kelvin and then subtracting anyway, and stopping at the temperature
+      change when the question asked for a final temperature. This bank is specific heat
+      only. Thermal conductivity is the other half of Topic 9.5 and belongs in its own
+      bank.
+    date created: 08-18-2026
+    status: ready # Only use 'draft', 'ready', 'deployed', and 'deprecated' for this field. 'draft' and 'deprecated' files won't be parsed by the exam builder.
+    learning objectives:
+        - THM-SPH-1 # Relate energy transferred by heating to mass, specific heat, and temperature change
+        - THM-SPH-2 # Determine the specific heat of a substance from a measurement on one sample and apply it to another
+        - THM-SPH-3 # Find the equilibrium temperature reached when two samples exchange energy in isolation
+    generation prompts: # The following are the prompts that generated the questions in the problem bank.
+        - prompt 1: |
+            (q1 drafted as a worked reference example from the owner's outline: a
+            calibration measurement on one sample, then a question about a different
+            mass of the same substance over a different temperature change. Numbers
+            chosen so the ratio route is clean, four times the mass and twice the
+            temperature change giving eight times the energy, while the explicit
+            specific heat comes out as a repeating decimal. Both routes are shown in the
+            feedback, because the ratio route is the one that survives a bad calculator
+            entry. No question in this bank is a rounding trap.)
+        - prompt 2: |
+            (q2-q7 authored as isomorphs of q1. Each changes which quantity is unknown or
+            how many samples are involved: q2 solves for the mass rather than the energy;
+            q3 solves for a final temperature, so the calculation gives a change and the
+            last step is adding it to the starting value; q4 hands over the specific heat
+            directly and runs the process backwards, with the block cooling and releasing
+            energy; q5 puts two samples of the same substance together, so the specific
+            heat cancels and never has to be known; q6 asks for the specific heat itself,
+            which is the step the other questions perform on the way to something else;
+            q7 puts two different substances together, so nothing cancels and the answer
+            lands close to the sample with the larger product of mass and specific heat.)
+        - formatting prompt: "../../../../Templates/YAML_formatting_prompt.md"
+    updates:
+        - update 1: (08-18-2026) Bank created with q1. First bank in Topic 9.5.
+        - update 2: (08-18-2026) Added isomorphs q2-q7 (solve for mass, solve for final temperature, cooling sample with the specific heat given, mixing two samples of one substance, measuring a specific heat, mixing two different substances).
+    generation details:
+            model: Claude Opus 5
+            version: claude-opus-5
+            last updated: 08-18-2026
+    authors:
+        - Michael Baker
+
+questions:
+
+- numerical:
+    id: q1
+    title: Energy Needed for a Larger Sample of the Same Substance
+    points: 3
+    text: |
+      It takes <latex>10</latex> kJ of energy to raise the temperature of
+      <latex>2.0</latex> kg of a substance from <latex>20</latex> °C to
+      <latex>35</latex> °C.
+
+      How much energy is required to raise the temperature of <latex>8.0</latex> kg of
+      the same substance from <latex>40</latex> °C to <latex>70</latex> °C? Give your
+      answer in kilojoules.
+    answer:
+        value: 80
+        margin_type: percent
+        tolerance: 2
+    feedback:
+        general: |
+          Everything here rests on one relationship:
+          <latex>
+          Q = m c \Delta T
+          </latex>
+          where <latex>Q</latex> is the energy transferred by heating,
+          <latex>m</latex> is the mass, <latex>c</latex> is the specific heat of the
+          substance, and <latex>\Delta T</latex> is the temperature change. The specific
+          heat is a property of the substance and not of the sample, so whatever the
+          first measurement tells you about this substance is just as true of the second
+          sample.
+
+          There are two routes to the answer and both are worth knowing.
+
+          The direct route finds the specific heat first. The first sample rises by
+          <latex>15</latex> °C, so
+          <latex>
+          c = \frac{Q}{m \Delta T} = \frac{10000}{(2.0)(15)} = 333
+          </latex>
+          in J/(kg·K). Then apply it to the second sample, which rises by
+          <latex>30</latex> °C:
+          <latex>
+          Q = m c \Delta T = (8.0)(333)(30) = 80000
+          </latex>
+          in joules, which is <latex>80</latex> kJ.
+
+          The ratio route skips the specific heat altogether. The second sample has four
+          times the mass and goes through twice the temperature change, and
+          <latex>Q</latex> is proportional to both, so it needs
+          <latex>4 \times 2 = 8</latex> times the energy:
+          <latex>
+          Q = (8)(10) = 80
+          </latex>
+          in kilojoules. Same answer, no repeating decimal, and much harder to fumble on
+          a calculator. I would reach for this one first and use the other as a check.
+
+          One thing to notice, because it runs against the habit Topic 9.1 built. The
+          temperatures are in degrees Celsius and they stay that way. Only the difference
+          between two temperatures appears in this relationship, and a change of one
+          degree Celsius is exactly a change of one kelvin, so converting would give you
+          the same two numbers to subtract and the same answer. Converting is not wrong
+          here, it is only wasted effort. What would be wrong is using a temperature
+          instead of a temperature change.
+
+          The starting temperatures also do not matter. The second sample starts at
+          <latex>40</latex> °C rather than <latex>20</latex> °C and nothing in the
+          calculation notices.
+        on_correct: |
+          Correct. The specific heat belongs to the substance, so one measurement covers
+          every sample of it.
+        on_incorrect: |
+          The two samples are the same substance, so something in the first measurement
+          carries over to the second. What is that quantity, and what does the first
+          measurement let you work out about it?
+
+- numerical:
+    id: q2
+    title: Finding the Mass That a Given Amount of Energy Will Heat
+    points: 3
+    text: |
+      It takes <latex>24</latex> kJ of energy to raise the temperature of
+      <latex>3.0</latex> kg of a substance from <latex>15</latex> °C to
+      <latex>55</latex> °C.
+
+      What mass of the same substance could be raised from <latex>10</latex> °C to
+      <latex>35</latex> °C by <latex>30</latex> kJ of energy? Give your answer in
+      kilograms.
+    answer:
+        value: 6.0
+        margin_type: percent
+        tolerance: 2
+    feedback:
+        general: |
+          The relationship is the same one, rearranged for the quantity you were asked
+          for.
+
+          Start with the measurement you were given. The first sample rises by
+          <latex>40</latex> °C, so
+          <latex>
+          c = \frac{Q}{m \Delta T} = \frac{24000}{(3.0)(40)} = 200
+          </latex>
+          in J/(kg·K). This time the number is a clean one, so carrying it forward is no
+          trouble.
+
+          Now solve for the mass in the second situation, where the temperature rises by
+          <latex>25</latex> °C:
+          <latex>
+          m = \frac{Q}{c \Delta T} = \frac{30000}{(200)(25)} = 6.0
+          </latex>
+          in kilograms.
+
+          Watch the units on the way in. The energies are given in kilojoules and the
+          specific heat is in joules per kilogram per kelvin, so both energies have to
+          become joules before they are used. Mixing kilojoules into a relationship built
+          on joules gives an answer a thousand times too big or too small, which is at
+          least an error large enough to notice.
+
+          A rough check is worth ten seconds. The second sample gets a little more energy
+          than the first, <latex>30</latex> kJ against <latex>24</latex> kJ, and it only
+          has to be warmed by <latex>25</latex> °C rather than <latex>40</latex> °C. More
+          energy spread over a smaller temperature change has to mean a bigger mass, and
+          <latex>6.0</latex> kg against <latex>3.0</latex> kg is bigger. If your answer
+          had come out below <latex>3.0</latex> kg, that check would have caught it.
+        on_correct: |
+          Correct, and you rearranged for the mass rather than solving the whole thing
+          twice.
+        on_incorrect: |
+          You are being asked for a mass this time, and the same relationship holds.
+          Which quantity does the first measurement give you, and which one is left
+          unknown in the second?
+
+- numerical:
+    id: q3
+    title: Finding the Final Temperature After Energy Is Added
+    points: 3
+    text: |
+      It takes <latex>12</latex> kJ of energy to raise the temperature of
+      <latex>4.0</latex> kg of a substance from <latex>10</latex> °C to
+      <latex>25</latex> °C.
+
+      A <latex>5.0</latex> kg sample of the same substance starts at
+      <latex>20</latex> °C, and <latex>18</latex> kJ of energy is transferred into it.
+      What is its final temperature, in degrees Celsius?
+    answer:
+        value: 38
+        margin_type: percent
+        tolerance: 2
+    feedback:
+        general: |
+          Work out the specific heat from the measurement you were given. The first
+          sample rises by <latex>15</latex> °C, so
+          <latex>
+          c = \frac{Q}{m \Delta T} = \frac{12000}{(4.0)(15)} = 200
+          </latex>
+          in J/(kg·K).
+
+          Now find how much the second sample warms:
+          <latex>
+          \Delta T = \frac{Q}{m c} = \frac{18000}{(5.0)(200)} = 18
+          </latex>
+          in degrees Celsius, or equally in kelvin.
+
+          That is not the answer. The question asked for a final temperature, and
+          <latex>18</latex> is a change. Add it to where the sample started:
+          <latex>
+          T_f = 20 + 18 = 38
+          </latex>
+          in degrees Celsius.
+
+          Stopping one step early is one of the most common ways to lose marks on a
+          question like this, and it is worth building a habit against. When you finish a
+          calculation, read the question again and check that the thing you have written
+          down is the thing that was asked for. A temperature change and a temperature
+          are different quantities, and the difference is the starting value.
+
+          This is also where the starting temperature finally earns its place. In the
+          earlier questions of this set the starting temperature could be anything at all
+          without affecting the answer, and here it is part of it.
+        on_correct: |
+          Correct, and you took the last step. The calculation gives a change and the
+          question asked for a temperature.
+        on_incorrect: |
+          Check what your number actually represents before comparing it with the
+          question. Does the relationship you used give you a temperature, or the amount
+          by which a temperature moved?
+
+- numerical:
+    id: q4
+    title: Energy Released by a Cooling Sample
+    points: 3
+    text: |
+      A <latex>1.5</latex> kg block of a substance with a specific heat of
+      <latex>900</latex> J/(kg·K) cools from <latex>95</latex> °C to
+      <latex>25</latex> °C.
+
+      How much energy does the block release as it cools? Give your answer in
+      kilojoules.
+    answer:
+        value: 94.5
+        margin_type: percent
+        tolerance: 2
+    feedback:
+        general: |
+          The specific heat is handed to you this time, so there is no calibration step.
+          The temperature falls by
+          <latex>
+          95 - 25 = 70
+          </latex>
+          degrees, and
+          <latex>
+          Q = m c \Delta T = (1.5)(900)(70) = 94500
+          </latex>
+          in joules, which is <latex>94.5</latex> kJ.
+
+          The relationship does not care which way the temperature went. Cooling a block
+          by <latex>70</latex> °C releases exactly as much energy as heating the same
+          block by <latex>70</latex> °C would absorb, because the block passes between
+          the same two states either way, just in the opposite order.
+
+          If you are working with signs, a falling temperature makes
+          <latex>\Delta T</latex> negative and <latex>Q</latex> comes out negative, which
+          is the bookkeeping way of saying the energy left the block. The question asked
+          how much energy is released, so the answer is the size of that,
+          <latex>94.5</latex> kJ, and writing it as a negative number would be answering
+          a question that was not asked. Decide what the sign is telling you, then report
+          the quantity in the form the question wants.
+
+          Where does that energy go? Into whatever the block is sitting in. A block
+          cooling on a bench warms the air and the bench by exactly this much, spread over
+          however long it takes. Energy is not consumed by cooling, it moves.
+        on_correct: |
+          Correct. The size of the temperature change is what the relationship needs, and
+          the direction tells you which way the energy went.
+        on_incorrect: |
+          Every quantity you need is given directly in this one, so the slip is in the
+          setup rather than in finding a missing value. What exactly goes in the last
+          factor of the relationship, and is that what you used?
+
+- numerical:
+    id: q5
+    title: Mixing Two Samples of the Same Substance
+    points: 3
+    text: |
+      A <latex>2.0</latex> kg sample of a substance at <latex>80</latex> °C is placed in
+      thermal contact with a <latex>3.0</latex> kg sample of the same substance at
+      <latex>30</latex> °C. The two samples are isolated from their surroundings and
+      exchange energy only with each other.
+
+      What is the temperature of the two samples once they reach thermal equilibrium, in
+      degrees Celsius?
+    answer:
+        value: 50
+        margin_type: percent
+        tolerance: 2
+    feedback:
+        general: |
+          The specific heat is never given here, and it turns out you do not need it.
+
+          Energy leaves the hot sample and enters the cold one, and since nothing escapes
+          to the surroundings, the amount that leaves one equals the amount that enters
+          the other. Writing that out, with <latex>T</latex> for the final temperature:
+          <latex>
+          m_1 c (80 - T) = m_2 c (T - 30)
+          </latex>
+          Both samples are the same substance, so the specific heat is the same on both
+          sides and divides straight out:
+          <latex>
+          (2.0)(80 - T) = (3.0)(T - 30)
+          </latex>
+          which gives
+          <latex>
+          160 - 2T = 3T - 90
+          \quad \Rightarrow \quad
+          250 = 5T
+          \quad \Rightarrow \quad
+          T = 50
+          </latex>
+          in degrees Celsius.
+
+          There is a faster way to see it. With one substance and no losses, the final
+          temperature is the average of the starting temperatures weighted by the masses:
+          <latex>
+          T_f = \frac{(2.0)(80) + (3.0)(30)}{2.0 + 3.0} = \frac{160 + 90}{5.0} = 50
+          </latex>
+          Notice where that lands. The plain average of <latex>80</latex> °C and
+          <latex>30</latex> °C would be <latex>55</latex> °C, and the true answer sits
+          below it, closer to the colder sample, because there is more of the colder
+          sample. The bigger sample pulls the result toward itself, and checking that
+          your answer falls on the correct side of the plain average is a quick way to
+          catch a reversed fraction.
+
+          Check the two changes against each other as well. The hot sample falls by
+          <latex>30</latex> °C and the cold one rises by <latex>20</latex> °C, and the
+          ratio of those is the inverse of the ratio of the masses, which is exactly what
+          equal amounts of energy moving in and out requires.
+        on_correct: |
+          Correct, and you did it without ever needing to know what the substance was.
+        on_incorrect: |
+          Both samples are the same substance, and the energy that leaves one is the
+          energy that enters the other. What happens to the specific heat when you write
+          those two amounts as equal to each other?
+
+- numerical:
+    id: q6
+    title: Measuring the Specific Heat of an Unknown Metal
+    points: 3
+    text: |
+      A <latex>0.50</latex> kg block of an unknown metal absorbs <latex>4.5</latex> kJ
+      of energy, and its temperature rises from <latex>22</latex> °C to
+      <latex>42</latex> °C.
+
+      What is the specific heat of the metal, in J/(kg·K)?
+    answer:
+        value: 450
+        margin_type: percent
+        tolerance: 2
+    feedback:
+        general: |
+          This is the measurement the earlier questions in this set kept doing on the way
+          to something else, asked for on its own.
+
+          The temperature rises by <latex>42 - 22 = 20</latex> degrees, and rearranging
+          for the specific heat gives
+          <latex>
+          c = \frac{Q}{m \Delta T} = \frac{4500}{(0.50)(20)} = 450
+          </latex>
+          in J/(kg·K).
+
+          Take a moment over what that number means. It says that raising the temperature
+          of one kilogram of this metal by one kelvin takes <latex>450</latex> joules.
+          Every specific heat you meet is a statement of that form, which is why the
+          units are joules per kilogram per kelvin.
+
+          The energy in kilojoules is the trap in this one. Putting <latex>4.5</latex>
+          into the numerator instead of <latex>4500</latex> gives a specific heat of
+          <latex>0.45</latex>, which is off by a factor of a thousand. That is worth
+          catching by eye rather than by arithmetic. Real specific heats for metals run
+          in the hundreds, water is <latex>4186</latex> J/(kg·K), and nothing you will be
+          asked about comes out near a value below one.
+
+          For reference, iron is close to <latex>450</latex> J/(kg·K), aluminum is around
+          <latex>900</latex>, and copper is near <latex>390</latex>. A measurement like
+          this one is how a sample of unknown metal gets identified in a laboratory.
+        on_correct: |
+          Correct, and the answer is a real one. This is very close to the specific heat
+          of iron.
+        on_incorrect: |
+          Every quantity you need is given, so check the form each one is in before it
+          goes into the relationship. What unit does a specific heat in J/(kg·K) expect
+          the energy to be in?
+
+- numerical:
+    id: q7
+    title: A Hot Metal Dropped into Water
+    points: 3
+    text: |
+      A <latex>0.30</latex> kg piece of metal at <latex>200</latex> °C, with a specific
+      heat of <latex>500</latex> J/(kg·K), is dropped into <latex>0.50</latex> kg of
+      water at <latex>20</latex> °C. The specific heat of water is <latex>4200</latex>
+      J/(kg·K). The container is insulated, and it absorbs a negligible amount of energy
+      itself.
+
+      What is the final temperature of the metal and the water, in degrees Celsius?
+    answer:
+        value: 32
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          The energy that leaves the metal is the energy that enters the water, and this
+          time the two specific heats are different, so nothing cancels. Writing
+          <latex>T</latex> for the final temperature they share:
+          <latex>
+          m_m c_m (200 - T) = m_w c_w (T - 20)
+          </latex>
+          The two products in front are worth computing first, because they are what
+          actually decides the answer:
+          <latex>
+          m_m c_m = (0.30)(500) = 150
+          \qquad
+          m_w c_w = (0.50)(4200) = 2100
+          </latex>
+          in J/K. Each one says how much energy that sample needs in order to change by
+          one kelvin. Then
+          <latex>
+          150(200 - T) = 2100(T - 20)
+          \quad \Rightarrow \quad
+          30000 - 150T = 2100T - 42000
+          </latex>
+          and collecting the terms,
+          <latex>
+          72000 = 2250T
+          \quad \Rightarrow \quad
+          T = 32
+          </latex>
+          in degrees Celsius.
+
+          Look at where that answer sits. The metal started <latex>180</latex> degrees
+          above the water, and the final temperature is only <latex>12</latex> degrees
+          above where the water began. The water barely moved and the metal fell almost
+          all the way, because the water takes fourteen times as much energy per kelvin
+          as the metal does. That is the same reason a hot pan cools quickly under a
+          running tap while the water going down the drain feels barely warm.
+
+          If your answer landed halfway between the two starting temperatures, you have
+          treated the two samples as equally influential. The plain average is only right
+          when both samples have the same mass and the same specific heat, and here
+          neither matches. A final temperature has to lie between the two starting
+          temperatures, and it lies closer to whichever sample has the larger product of
+          mass and specific heat.
+
+          The equilibrium temperature you found also tells you the transfer stops, and it
+          does not tell you it stops because the energies are equal. It stops when the two
+          temperatures are equal, which is where they both are now.
+        on_correct: |
+          Correct, and the answer sitting so close to the water's starting temperature is
+          the physically telling part.
+        on_incorrect: |
+          Work out the product of mass and specific heat for each sample before solving
+          anything. Which of the two takes more energy to change by one kelvin, and what
+          should that do to where the final temperature lands?
