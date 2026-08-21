@@ -1,0 +1,568 @@
+bank_info:
+    title: Estimating Answers in Specific Heat Problems
+    bank_id: APP2-THM-ESTIM-082026
+    description: |-
+      Isomorphic multiple choice problems for AP Physics 2, College Board Unit 9 Topic 9.5.
+
+      Each question asks which choice is approximately equal to the answer, and the
+      choices are spread far enough apart that rough arithmetic will separate them.
+      Several of them can be settled before any arithmetic happens, because a wrong
+      choice sits somewhere the answer is not allowed to be. Round the specific heats to
+      one digit, keep track of which numbers are temperatures and which are temperature
+      changes, and see how far you can get before you reach for anything else.
+
+      Teaching notes: the target idea is that an approximate answer reached quickly is
+      both a real skill and a check on the careful calculation that follows. Two moves
+      carry the whole bank. The first is bounding, since a final temperature has to lie
+      between the two starting temperatures and nearer the sample with the larger
+      product of mass and specific heat. The second is rounding to one significant
+      figure so that the arithmetic collapses to something that can be done in the head.
+      The College Board writes choices this way often, and students who never practice
+      it spend calculator time they did not need to spend. The common errors the
+      distractors are aimed at are using a temperature in place of a temperature change,
+      leaving an energy in kilojoules, taking the plain average of two starting
+      temperatures when the samples are not equally influential, and inverting a ratio.
+      APP2-THM-SPHT-081826 is the companion bank that asks for exact numerical answers
+      to the same kinds of situations, and it is the better one to assign first. This
+      bank is specific heat only. Thermal conductivity is the other half of Topic 9.5
+      and belongs in its own bank.
+    date created: 08-20-2026
+    status: ready # Only use 'draft', 'ready', 'deployed', and 'deprecated' for this field. 'draft' and 'deprecated' files won't be parsed by the exam builder.
+    learning objectives:
+        - THM-EST-1 # Bound an equilibrium temperature between the two starting temperatures and place it nearer the dominant sample
+        - THM-EST-2 # Estimate an energy, a specific heat, or a temperature change to the nearest order of magnitude by rounding to one significant figure
+        - THM-EST-3 # Eliminate answer choices that are physically impossible or the wrong size before calculating
+    generation prompts: # The following are the prompts that generated the questions in the problem bank.
+        - prompt 1: |
+            (q1 drafted from the owner's outline: a hot steel sphere submerged in a much
+            larger mass of water, with both specific heats given in the problem so that
+            nothing has to be looked up. The student picks the choice approximately
+            equal to the equilibrium temperature. The four choices are chosen so that
+            two of them lie outside the range a final temperature can occupy at all, one
+            is the plain average of the two starting temperatures, and only one survives
+            the elimination. The wording is "approximately equal to" rather than any
+            instruction about calculator use.)
+        - prompt 2: |
+            (q2-q7 authored as isomorphs of q1. Each keeps the estimation skill and
+            changes what is being estimated and which shortcut settles it: q2 asks for an
+            energy with choices a decade apart, so the answer is an order of magnitude
+            and the near distractor comes from using the final temperature in place of
+            the temperature change; q3 asks for a specific heat with choices a decade
+            apart, so the answer can be checked against the range that real substances
+            occupy, and the small distractor comes from leaving the energy in kilojoules;
+            q4 mixes two samples of one substance in a three to one mass ratio, so the
+            specific heat cancels and the plain average is the distractor; q5 asks for a
+            ratio of temperature changes at equal mass and equal energy, so the answer is
+            a ratio of specific heats and the inverted ratio is the distractor; q6 runs a
+            sample downward in temperature and asks for the energy released, with the
+            starting temperature offered as the near distractor; q7 mixes two substances
+            at equal mass, so mass drops out and the specific heats alone decide, with
+            the plain average and both starting temperatures offered as distractors.
+            Every question's choices are locked so that they stay in ascending order.)
+        - formatting prompt: "../../../../Templates/YAML_formatting_prompt.md"
+    updates:
+        - update 1: (08-20-2026) Bank created with q1. First estimation bank in Topic 9.5.
+        - update 2: (08-20-2026) Added isomorphs q2-q7 (energy to warm water, specific heat of an unknown metal, mixing two samples of water, ratio of temperature changes at equal energy, energy released by a cooling pan, mixing equal masses of aluminum and water).
+    generation details:
+            model: Claude Opus 5
+            version: claude-opus-5
+            last updated: 08-20-2026
+    authors:
+        - Michael Baker
+
+questions:
+
+- multiple_choice:
+    id: q1
+    title: A Hot Steel Sphere Dropped into Water
+    points: 2
+    text: |
+      A <latex>0.75</latex> kg steel sphere at <latex>800</latex> K is lowered into
+      <latex>5.0</latex> kg of water at <latex>300</latex> K. The specific heat of steel
+      is <latex>490</latex> J/(kg·K) and the specific heat of water is
+      <latex>4180</latex> J/(kg·K). The container is insulated and absorbs a negligible
+      amount of energy itself.
+
+      Which of the following is approximately equal to the final temperature of the
+      sphere and the water?
+    answers:
+    - answer:
+        text: <latex>250</latex> K
+        lock: true
+        correct: false
+    - answer:
+        text: <latex>310</latex> K
+        lock: true
+        correct: true
+    - answer:
+        text: <latex>550</latex> K
+        lock: true
+        correct: false
+    - answer:
+        text: <latex>1100</latex> K
+        lock: true
+        correct: false
+    feedback:
+        general: |
+          Start by asking where the answer is allowed to be, because that alone removes
+          half of these choices.
+
+          Energy moves from the sphere to the water until the two share a temperature.
+          The sphere can only cool and the water can only warm, so the final temperature
+          has to sit somewhere between <latex>300</latex> K and <latex>800</latex> K.
+          That rules out <latex>250</latex> K, which is colder than the water ever was
+          and is below the freezing point of water besides, and it rules out
+          <latex>1100</latex> K, which is hotter than the sphere ever was.
+
+          Two choices are left, and the size of each sample decides between them. What
+          matters is the product of mass and specific heat, because that product is the
+          energy a sample needs in order to change by one kelvin. Round the specific
+          heats to one digit and both products are easy:
+          <latex>
+          m_s c_s \approx (0.75)(500) = 375
+          \qquad
+          m_w c_w \approx (5)(4000) = 20000
+          </latex>
+          in J/K. The water needs roughly fifty times as much energy per kelvin as the
+          steel does, so the water is going to barely move and the steel is going to fall
+          almost all the way.
+
+          You can put a number on it without much work. Suppose the sphere cooled the
+          whole way to <latex>300</latex> K. It would give up about
+          <latex>
+          (375)(500) = 190000
+          </latex>
+          joules, and that much energy raises the water by about
+          <latex>
+          \frac{190000}{20000} \approx 9
+          </latex>
+          kelvin. The real answer is a little under that, because the sphere stops
+          cooling once it reaches the shared temperature. So the final temperature is
+          just above <latex>300</latex> K, and <latex>310</latex> K is the only choice
+          anywhere near it. The exact value is <latex>309</latex> K.
+
+          The choice of <latex>550</latex> K is the plain average of
+          <latex>800</latex> K and <latex>300</latex> K. A plain average is only the
+          right answer when the two samples are equally influential, which means equal
+          masses and equal specific heats, and here they are neither. Whenever you see
+          the midpoint of the two starting temperatures offered as a choice, check
+          whether the two samples really are evenly matched before you take it.
+        on_correct: |
+          Correct, and notice how little arithmetic that took. Two of the choices were
+          outside the range a final temperature can occupy at all, and the amount of
+          water settled the rest.
+        on_incorrect: |
+          The sphere and the water end up sharing one temperature, and that temperature
+          is not free to be anything at all. What sets the limits it has to fall between,
+          and how many of these choices survive that test?
+
+- multiple_choice:
+    id: q2
+    title: Energy Needed to Warm Two Kilograms of Water
+    points: 2
+    text: |
+      A <latex>2.0</latex> kg sample of water is warmed from <latex>290</latex> K to
+      <latex>340</latex> K. The specific heat of water is <latex>4180</latex> J/(kg·K).
+
+      Which of the following is approximately equal to the energy transferred into the
+      water?
+    answers:
+    - answer:
+        text: <latex>4 \times 10^{2}</latex> J
+        lock: true
+        correct: false
+    - answer:
+        text: <latex>4 \times 10^{5}</latex> J
+        lock: true
+        correct: true
+    - answer:
+        text: <latex>3 \times 10^{6}</latex> J
+        lock: true
+        correct: false
+    - answer:
+        text: <latex>2 \times 10^{7}</latex> J
+        lock: true
+        correct: false
+    feedback:
+        general: |
+          These choices are far enough apart that you only need the size of the answer,
+          not its digits.
+
+          The relationship is
+          <latex>
+          Q = m c \Delta T
+          </latex>
+          and the piece worth pausing on is the last factor. The water goes from
+          <latex>290</latex> K to <latex>340</latex> K, so the temperature change is
+          <latex>50</latex> K. Neither <latex>290</latex> nor <latex>340</latex> belongs
+          in this calculation on its own.
+
+          Now round the specific heat to <latex>4000</latex> J/(kg·K) and the arithmetic
+          is small:
+          <latex>
+          Q \approx (2)(4000)(50) = 400000
+          </latex>
+          joules, which is <latex>4 \times 10^{5}</latex> J. The exact value is
+          <latex>418000</latex> J, so rounding cost you about four percent and none of
+          the other choices are within a factor of seven.
+
+          The choice of <latex>3 \times 10^{6}</latex> J is the one to understand,
+          because it comes from a real mistake rather than from bad arithmetic. Using the
+          final temperature of <latex>340</latex> K in place of the change gives
+          <latex>2.8 \times 10^{6}</latex> J. The choice of
+          <latex>4 \times 10^{2}</latex> J comes from leaving the specific heat in
+          kilojoules, which is off by exactly the factor of a thousand you would expect.
+
+          It is worth having a feel for what <latex>4 \times 10^{5}</latex> J is. A
+          kitchen kettle draws about a kilowatt, so it delivers a thousand joules every
+          second and would need somewhere near seven minutes to do this job. That matches
+          what a kettle actually does with a couple of litres of water, which is a good
+          sign that the answer is the right size.
+        on_correct: |
+          Correct. Rounding the specific heat to one digit made this small enough to do
+          in your head, and it cost you nothing at this spacing of choices.
+        on_incorrect: |
+          Every wrong choice here is a different size rather than a different idea, so
+          the slip is in what went into the calculation rather than in the physics. Which
+          of the two temperatures in this problem belongs there, or did neither one
+          belong there by itself?
+
+- multiple_choice:
+    id: q3
+    title: The Specific Heat of an Unknown Metal
+    points: 2
+    text: |
+      A <latex>0.25</latex> kg block of an unknown metal absorbs <latex>5.0</latex> kJ
+      of energy, and its temperature rises by <latex>50</latex> K.
+
+      Which of the following is approximately equal to the specific heat of the metal?
+    answers:
+    - answer:
+        text: <latex>0.4</latex> J/(kg·K)
+        lock: true
+        correct: false
+    - answer:
+        text: <latex>40</latex> J/(kg·K)
+        lock: true
+        correct: false
+    - answer:
+        text: <latex>400</latex> J/(kg·K)
+        lock: true
+        correct: true
+    - answer:
+        text: <latex>4000</latex> J/(kg·K)
+        lock: true
+        correct: false
+    feedback:
+        general: |
+          Two of these can be thrown out on sight, before any arithmetic, and that is
+          worth doing first.
+
+          Real specific heats have a range they live in. Metals run in the hundreds of
+          joules per kilogram per kelvin, water is about <latex>4180</latex> J/(kg·K) and
+          is the largest value you are likely to meet, and nothing solid comes out below
+          one. So <latex>0.4</latex> J/(kg·K) is not a substance, and
+          <latex>4000</latex> J/(kg·K) would make this block of metal behave like water.
+
+          Now do the calculation and confirm it. Rearranging for the specific heat,
+          <latex>
+          c = \frac{Q}{m \Delta T}
+          </latex>
+          Dividing by <latex>0.25</latex> is the same as multiplying by four, which is
+          the whole trick to doing this one in your head:
+          <latex>
+          c = \frac{5000}{(0.25)(50)} = \frac{(5000)(4)}{50} = \frac{20000}{50} = 400
+          </latex>
+          in J/(kg·K). Notice that the energy had to become <latex>5000</latex> joules
+          first. Using <latex>5.0</latex> straight from the problem gives
+          <latex>0.4</latex>, which is exactly the choice that the range check already
+          told you was impossible.
+
+          A specific heat of <latex>400</latex> J/(kg·K) is a believable result. Copper
+          is near <latex>390</latex>, iron is near <latex>450</latex>, and steel sits
+          between them, so a measurement like this one is how a laboratory narrows down
+          what a sample is made of. Aluminum is the outlier among common metals at about
+          <latex>900</latex> J/(kg·K).
+        on_correct: |
+          Correct, and the answer is a believable one. This block could reasonably be
+          copper or iron.
+        on_incorrect: |
+          Before any arithmetic, think about the range of values that real specific heats
+          actually fall in, and how many of these choices are inside it. What unit does
+          the energy have to be in before it goes into that relationship?
+
+- multiple_choice:
+    id: q4
+    title: Mixing Two Samples of Water
+    points: 2
+    text: |
+      A <latex>1.0</latex> kg sample of water at <latex>350</latex> K is mixed with a
+      <latex>3.0</latex> kg sample of water at <latex>290</latex> K in an insulated
+      container.
+
+      Which of the following is approximately equal to the temperature of the mixture
+      once it settles?
+    answers:
+    - answer:
+        text: <latex>280</latex> K
+        lock: true
+        correct: false
+    - answer:
+        text: <latex>305</latex> K
+        lock: true
+        correct: true
+    - answer:
+        text: <latex>320</latex> K
+        lock: true
+        correct: false
+    - answer:
+        text: <latex>350</latex> K
+        lock: true
+        correct: false
+    feedback:
+        general: |
+          Both samples are water, so the specific heat is the same on both sides of the
+          energy balance and divides straight out. Nothing about water in particular
+          enters the answer, which is why you were never given its specific heat here.
+
+          That leaves mass as the only thing separating the two samples. Three quarters
+          of the mixture starts at <latex>290</latex> K and one quarter starts at
+          <latex>350</latex> K, so the answer sits three quarters of the way down the
+          <latex>60</latex> K gap:
+          <latex>
+          T_f = 350 - (0.75)(60) = 350 - 45 = 305
+          </latex>
+          in kelvin. Written as a weighted average it is the same thing:
+          <latex>
+          T_f = \frac{(1.0)(350) + (3.0)(290)}{4.0} = \frac{350 + 870}{4.0} = 305
+          </latex>
+
+          The choice of <latex>320</latex> K is the plain average of the two starting
+          temperatures, and it is what you get by forgetting that there is three times as
+          much cold water as hot. Any time the two samples are not evenly matched, the
+          answer has to land on the side of the larger one, so checking which side of the
+          plain average your answer falls on is a quick way to catch a fraction written
+          upside down.
+
+          The other two choices are outside the range entirely.
+          <latex>280</latex> K is colder than either sample started, and mixing two
+          things cannot produce something colder than both of them.
+          <latex>350</latex> K would mean the hot sample never changed temperature at
+          all, which would require the cold water to absorb nothing.
+        on_correct: |
+          Correct, and you did that without ever needing the specific heat of water. With
+          one substance on both sides it cancels, and only the masses are left.
+        on_incorrect: |
+          There is three times as much of one sample as the other, and that has to show
+          up somewhere in the answer. Where does it show up, and does the choice you made
+          sit on the side of the range you would expect?
+
+- multiple_choice:
+    id: q5
+    title: Equal Energy into Water and Aluminum
+    points: 2
+    text: |
+      Equal amounts of energy are transferred into a <latex>1.0</latex> kg sample of
+      water and a <latex>1.0</latex> kg sample of aluminum. The specific heat of water is
+      <latex>4180</latex> J/(kg·K) and the specific heat of aluminum is
+      <latex>900</latex> J/(kg·K).
+
+      Which of the following is approximately equal to the ratio of the aluminum's
+      temperature change to the water's temperature change?
+    answers:
+    - answer:
+        text: <latex>0.2</latex>
+        lock: true
+        correct: false
+    - answer:
+        text: <latex>1</latex>
+        lock: true
+        correct: false
+    - answer:
+        text: <latex>5</latex>
+        lock: true
+        correct: true
+    - answer:
+        text: <latex>20</latex>
+        lock: true
+        correct: false
+    feedback:
+        general: |
+          Rearrange the relationship so that the quantity you were asked about is on its
+          own:
+          <latex>
+          \Delta T = \frac{Q}{m c}
+          </latex>
+          The energies are equal and the masses are equal, so those cancel when you take
+          the ratio and only the specific heats are left:
+          <latex>
+          \frac{\Delta T_{Al}}{\Delta T_{w}} = \frac{c_{w}}{c_{Al}}
+          \approx \frac{4200}{900} \approx 4.6
+          </latex>
+          which is close enough to <latex>5</latex> for the spacing of these choices.
+
+          Watch the way the specific heats end up swapped relative to the temperature
+          changes. Aluminum is the one with the smaller specific heat, so aluminum is the
+          one whose temperature climbs faster, and its specific heat has to end up on the
+          bottom. The choice of <latex>0.2</latex> is this same ratio written upside
+          down, and it says that aluminum warms more slowly than water, which is the
+          opposite of what a small specific heat means.
+
+          The choice of <latex>1</latex> says the substance makes no difference at all.
+          If that were true there would be no such thing as a specific heat, and every
+          kilogram of everything would warm at the same rate.
+
+          Water is remarkable in this respect. It takes more energy per kilogram per
+          kelvin than nearly anything else you will handle, which is why it is used as a
+          coolant in engines and reactors, why a lake stays cool through a hot afternoon
+          while the sand beside it becomes too hot to stand on, and why towns on a coast
+          have milder winters than towns the same distance north but inland.
+        on_correct: |
+          Correct, and you kept the ratio the right way up. The substance with the
+          smaller specific heat is the one whose temperature moves more.
+        on_incorrect: |
+          The masses are equal and the energies are equal, so mass and energy are not
+          what decide this. Of the two substances, which one do you expect to heat up
+          more readily, and does the number you chose say that about the aluminum?
+
+- multiple_choice:
+    id: q6
+    title: Energy Released by a Cooling Steel Pan
+    points: 2
+    text: |
+      A <latex>3.0</latex> kg steel pan cools from <latex>500</latex> K to
+      <latex>300</latex> K. The specific heat of steel is <latex>490</latex> J/(kg·K).
+
+      Which of the following is approximately equal to the energy the pan releases as it
+      cools?
+    answers:
+    - answer:
+        text: <latex>3 \times 10^{3}</latex> J
+        lock: true
+        correct: false
+    - answer:
+        text: <latex>3 \times 10^{5}</latex> J
+        lock: true
+        correct: true
+    - answer:
+        text: <latex>7 \times 10^{5}</latex> J
+        lock: true
+        correct: false
+    - answer:
+        text: <latex>3 \times 10^{7}</latex> J
+        lock: true
+        correct: false
+    feedback:
+        general: |
+          Round <latex>490</latex> up to <latex>500</latex> J/(kg·K) and the whole
+          calculation fits in your head. The pan needs
+          <latex>
+          m c \approx (3.0)(500) = 1500
+          </latex>
+          joules for every kelvin it changes, and it changes by
+          <latex>
+          500 - 300 = 200
+          </latex>
+          kelvin, so
+          <latex>
+          Q \approx (1500)(200) = 300000
+          </latex>
+          joules, which is <latex>3 \times 10^{5}</latex> J. The exact value is
+          <latex>294000</latex> J, so rounding the specific heat up by two percent cost
+          you two percent.
+
+          The direction of the change does not affect the size of the answer. Cooling
+          this pan by <latex>200</latex> K releases exactly as much energy as heating it
+          by <latex>200</latex> K would absorb, because the pan passes between the same
+          two states either way. If you are keeping track of signs, a falling temperature
+          makes <latex>\Delta T</latex> negative and the energy comes out negative, which
+          is the bookkeeping way of saying the energy left the pan. The question asked how
+          much was released, so the size is what gets reported.
+
+          The near distractor is <latex>7 \times 10^{5}</latex> J, and it comes from
+          using <latex>500</latex> K, the starting temperature, in place of the
+          <latex>200</latex> K change. That number is handed to you directly by the
+          problem, which is part of what makes it tempting. The temperature change is the
+          one quantity in this calculation that you have to work out for yourself.
+        on_correct: |
+          Correct. Rounding <latex>490</latex> to <latex>500</latex> made the arithmetic
+          trivial and moved the answer by two percent, which is nothing at this spacing.
+        on_incorrect: |
+          The relationship you need has three factors in it, and only two of them are
+          handed to you directly by the problem. Which one did you have to work out for
+          yourself, and did you work it out?
+
+- multiple_choice:
+    id: q7
+    title: Equal Masses of Aluminum and Water
+    points: 2
+    text: |
+      A <latex>0.50</latex> kg block of aluminum at <latex>400</latex> K is dropped into
+      <latex>0.50</latex> kg of water at <latex>300</latex> K in an insulated container.
+      The specific heat of aluminum is <latex>900</latex> J/(kg·K) and the specific heat
+      of water is <latex>4180</latex> J/(kg·K).
+
+      Which of the following is approximately equal to the final temperature of the
+      aluminum and the water?
+    answers:
+    - answer:
+        text: <latex>300</latex> K
+        lock: true
+        correct: false
+    - answer:
+        text: <latex>320</latex> K
+        lock: true
+        correct: true
+    - answer:
+        text: <latex>350</latex> K
+        lock: true
+        correct: false
+    - answer:
+        text: <latex>400</latex> K
+        lock: true
+        correct: false
+    feedback:
+        general: |
+          The masses are equal this time, so mass cannot be what decides the answer. Take
+          it out of the comparison and the specific heats are the only thing left, which
+          makes this the cleanest possible demonstration of what a specific heat does.
+
+          Water needs about <latex>4180</latex> joules per kilogram per kelvin and
+          aluminum needs about <latex>900</latex>, so the water needs roughly four and a
+          half times as much energy per kelvin as the aluminum does. The aluminum is
+          going to fall a long way and the water is going to rise a little.
+
+          You can bound it in one step. Suppose the aluminum cooled the whole way to
+          <latex>300</latex> K. It would release
+          <latex>
+          Q = (0.50)(900)(100) = 45000
+          </latex>
+          joules, and the water, which needs
+          <latex>
+          (0.50)(4180) \approx 2100
+          </latex>
+          joules per kelvin, would rise by about
+          <latex>
+          \frac{45000}{2100} \approx 21
+          </latex>
+          kelvin. That is the most the water could possibly rise, so the final
+          temperature is at most about <latex>321</latex> K and in fact a little below
+          it. Only <latex>320</latex> K is anywhere near. The exact value is
+          <latex>318</latex> K.
+
+          Look at what the other three choices would mean.
+          <latex>350</latex> K is the plain average, which would be correct only if the
+          two samples were evenly matched, and equal masses alone do not make them
+          evenly matched. <latex>300</latex> K would mean the water absorbed a hundred
+          degrees worth of energy from the aluminum without warming at all, and
+          <latex>400</latex> K would mean the aluminum gave up nothing.
+
+          This is the reason a hot pan quiets down so quickly under a running tap while
+          the water going down the drain feels barely warm.
+        on_correct: |
+          Correct, and the whole result came from the specific heats. With equal masses
+          there was nothing else left to decide it.
+        on_incorrect: |
+          The two masses are equal here, so mass is not what separates these samples.
+          What else about the two substances is different, and which of them changes
+          temperature more readily for the same amount of energy?
