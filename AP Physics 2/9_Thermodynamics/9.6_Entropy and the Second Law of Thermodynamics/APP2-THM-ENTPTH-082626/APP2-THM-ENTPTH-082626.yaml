@@ -1,0 +1,649 @@
+bank_info:
+    title: Entropy Along Different Thermodynamic Paths
+    bank_id: APP2-THM-ENTPTH-082626
+    description: |-
+      Isomorphic reasoning problems for AP Physics 2, College Board Unit 9 Topic 9.6.
+
+      A gas is taken from one state to another by more than one route, or around a loop and
+      back to where it began, and you are asked to compare the entropy changes. Some of these
+      have the answer that every route gives the same change, and some of them do not, so
+      check what each process actually starts and ends with before you decide. Watch the
+      wording too, because it matters a great deal whether a question is asking about the
+      entropy of the gas or about the entropy of the gas together with everything around it.
+
+      Teaching notes: the target idea is that the entropy of the gas is a state function and
+      the entropy of the gas plus its surroundings is not, so "which process changes the
+      entropy most" has two different answers depending on which one is meant. The common
+      errors are dividing a path dependent Q by one temperature when the temperature did not
+      hold still, reading no energy transferred by heating as no entropy change, applying
+      path independence to processes that end in different states, and assuming a cycle
+      cannot return the gas to its original entropy if any step of it was irreversible.
+      One trap for the author rather than the student: through any state there is exactly one
+      isotherm and one reversible adiabat and they meet only at that state, so a figure
+      offering both as routes between the same two states draws something that cannot exist.
+      States A and B here are chosen with the same product of pressure and volume so that the
+      isotherm is a genuine route between them. APP2-THM-WPATH-081826 establishes that work
+      and heating are path dependent while internal energy is not, and this bank assumes it
+      rather than re-teaching it. APP2-THM-ISOAD-081826 covers what makes a process
+      isothermal or adiabatic, and APP2-THM-ENTSYS-082626 introduces the free expansion that
+      q5 returns to.
+    date created: 08-26-2026
+    status: ready # Only use 'draft', 'ready', 'deployed', and 'deprecated' for this field. 'draft' and 'deprecated' files won't be parsed by the exam builder.
+    learning objectives:
+        - THM-ENT-13 # Recognize the entropy of a system as a state function, so its change depends only on the initial and final states and not on the route between them
+        - THM-ENT-14 # Distinguish the entropy change of a gas from that of the gas together with its surroundings, and identify which of the two depends on the path
+        - THM-ENT-15 # Determine the entropy change of a system taken around a complete cycle
+        - THM-ENT-16 # Check whether two processes end in the same state before applying path independence, and rank entropy changes when they do not
+    generation prompts: # The following are the prompts that generated the questions in the problem bank.
+        - prompt 1: |
+            (q1 drafted from the owner's outline: a gas taken from state A to state B along
+            three different routes drawn on a pressure volume diagram, with the student
+            asked which route produces the greatest change in the entropy of the gas. The
+            correct choice is that all three are equal because entropy depends only on the
+            state. The distractors pick the route with the most energy transferred by
+            heating, the route along which the temperature never changes, and the route
+            along which the gas does the least work. The owner's original sketch offered
+            isothermal, adiabatic and isobaric routes between one pair of states, which
+            cannot be drawn: through any state there is one isotherm and one reversible
+            adiabat and they cross only at that state. The routes here are therefore two leg
+            paths plus the isotherm, and A and B share a pressure volume product so the
+            isotherm really does connect them.)
+        - prompt 2: |
+            (q2-q7 authored as isomorphs of q1, with the set deliberately built so that only
+            three of the seven answer "they are all the same". A bank in which every answer
+            is path independence teaches a reflex rather than an idea, and the exam builder
+            draws isomorphs from one bank into one paper, so a student who met two of them
+            would get the second one free. q2 keeps the q1 figure and hands the student the
+            path dependence of the energy transferred by heating as a given, asking what
+            follows for the entropy; q3 compares a slow expansion with a sudden one between
+            the same two states, so the gas gives the same answer; q4 asks the same pair
+            about the gas and the bath together, where the answer is no longer the same; q5
+            sets a free expansion against a slow isothermal one to the same final state, so
+            the entropy changes match although one of them transfers no energy at all; q6
+            takes the gas around a closed cycle, where the answer is exactly zero rather
+            than merely equal; q7 runs four processes from one state to four different
+            states, so "they are all the same, entropy is a state function" is the trap
+            rather than the answer.)
+        - prompt 3: |
+            (Figures for q1 and q7 generated by Scripts/make_figures.py, in the pressure
+            volume conventions of APP2-THM-WPATH-081826 so a student meets one style of
+            diagram across the whole unit. q1 and q2 share q-1.png deliberately, since the
+            pair exists to ask two questions about one picture. q-7.png holds four processes
+            from one state to four visibly different end states, which is what makes the
+            path independence answer wrong there.)
+        - formatting prompt: "../../../../Templates/YAML_formatting_prompt.md"
+    updates:
+        - update 1: (08-26-2026) Bank created with q1-q7 and figures for q1, q2 and q7. Fourth bank in Topic 9.6.
+    generation details:
+            model: Claude Opus 5
+            version: claude-opus-5
+            last updated: 08-26-2026
+    authors:
+        - Michael Baker
+
+questions:
+
+- multiple_choice:
+    id: q1
+    title: Three Routes Between the Same Two States
+    points: 2
+    figure: figure_folder/q-1.png
+    text: |
+      A fixed amount of monatomic ideal gas is taken from state A to state B. The figure
+      shows three different routes between those two states. Along route I the gas expands
+      at constant pressure and is then cooled at constant volume. Along route II the gas
+      expands while its temperature is held constant. Along route III the gas is first
+      cooled at constant volume and then expands at constant pressure. Every route starts at
+      A and ends at B.
+
+      Which route produces the greatest change in the entropy of the gas?
+    answers:
+    - answer:
+        text: |
+          Route I, because more energy is transferred into the gas by heating along it than
+          along either of the others.
+        correct: false
+    - answer:
+        text: |
+          All three produce the same change, because the entropy of the gas depends only on
+          the state it is in, and all three routes end at the same state.
+        correct: true
+    - answer:
+        text: |
+          Route II, because it is the only route along which the temperature of the gas
+          never changes.
+        correct: false
+    - answer:
+        text: |
+          Route III, because the gas does the least work along it, so the least energy is
+          wasted on the surroundings.
+        correct: false
+    feedback:
+        general: |
+          All three routes produce exactly the same change in the entropy of the gas. Your
+          instinct here should be to stop looking at the routes altogether and look at the
+          endpoints instead.
+
+          Entropy is a property of the state a system is in, in the same way that pressure,
+          volume, temperature and internal energy are. When the gas is sitting at state B, it
+          has a particular entropy, and that value does not carry any memory of how it got
+          there. So the change from A to B is settled the moment those two states are named,
+          and the shape of the line between them on the diagram cannot affect it.
+
+          This is worth putting beside what you already know about work. Work is not like
+          this at all. It is an amount of energy transferred during a process, so it depends
+          on the whole route, which is why the area under each of these three curves is
+          different. Energy transferred by heating behaves the same way. Internal energy does
+          not, and neither does entropy. Sorting thermodynamic quantities into these two
+          families is one of the more useful things you can carry out of this unit.
+
+          Now the other choices, because each one names something that really is different
+          between these routes.
+
+          More energy really is transferred into the gas by heating along route I than along
+          the others, and it changes nothing here. The energy transferred depends on the
+          route, and it is not the quantity the question asked about. It is worth noticing
+          that this choice is a true statement attached to the wrong conclusion, which is the
+          most dangerous kind of distractor.
+
+          Route II really is the one at constant temperature. States A and B were chosen with
+          the same product of pressure and volume, which for an ideal gas means the same
+          temperature, so the isotherm through A passes through B and is a real route between
+          them. Being the constant temperature route gives it no special claim on the entropy
+          change, since the other two routes begin and end at those same two temperatures as
+          well. They simply wander away and come back in between.
+
+          The last choice is right that route III involves the least work by the gas. Wasted
+          is not a word that belongs here, and in any case the work done is a fact about the
+          route rather than about the endpoints.
+        on_correct: |
+          Correct. Once you had noticed which family entropy belongs to, the three routes
+          stopped mattering, and that is exactly the move this question is looking for.
+        on_incorrect: |
+          Some quantities in thermodynamics are fixed once you name the state a system is in,
+          and others depend on the whole journey. Which family does entropy belong to, and
+          how would that change what you need to look at in the figure?
+
+- multiple_choice:
+    id: q2
+    title: A Route That Transfers More Energy by Heating
+    points: 2
+    figure: figure_folder/q-1.png
+    text: |
+      The figure shows the same three routes from state A to state B. Working through the
+      first law along each one shows that <latex>6P_0V_0</latex> of energy is transferred
+      into the gas by heating along route I, while only <latex>2P_0V_0</latex> is
+      transferred into it along route III.
+
+      What does that difference tell you about the change in the entropy of the gas along
+      the two routes?
+    answers:
+    - answer:
+        text: |
+          The change is greater along route I, since a larger amount of energy transferred
+          into the gas divided by the temperature gives a larger entropy change.
+        correct: false
+    - answer:
+        text: |
+          Nothing at all. The change is the same along both, because it is fixed by the two
+          states while the energy transferred by heating depends on the route between them.
+        correct: true
+    - answer:
+        text: |
+          The change is greater along route III, since less energy entered the gas along it,
+          so less of the energy was spread out and lost.
+        correct: false
+    - answer:
+        text: |
+          Nothing can be decided, because the entropy change cannot be found without knowing
+          the temperature of the gas at every point along each route.
+        correct: false
+    feedback:
+        general: |
+          The difference tells you nothing about the entropy change of the gas, which is the
+          same along both routes. Both start at A and end at B, and that settles it.
+
+          This deserves more than a one line answer, because there is a genuine puzzle
+          underneath it. You have been taught that
+          <latex>
+          \Delta S = \frac{Q}{T}
+          </latex>
+          and here are two routes with very different values of <latex>Q</latex> and the
+          same entropy change. Both of those statements are true, and seeing how they fit
+          together is the whole point of this question.
+
+          The resolution is in the temperature. That expression gives the entropy change when
+          energy is transferred at one fixed temperature, which is why it worked so cleanly
+          for a phase change. Neither of these routes holds the temperature still. Along
+          route I the gas expands at constant pressure, and tripling the volume at fixed
+          pressure triples the absolute temperature, so the gas climbs to
+          <latex>3T_A</latex> before being cooled back down to <latex>T_A</latex> at
+          constant volume. Along route III the gas is cooled first, dropping to
+          <latex>T_A/3</latex>, and then warms back up to <latex>T_A</latex> as it expands at
+          the lower pressure. There is no single temperature to divide by on either route.
+
+          Now think about what that does to the accounting. Along route I the energy goes
+          into the gas while the gas is hot, and along route III it goes in while the gas is
+          cold. A given amount of energy delivered at a low temperature changes the entropy
+          more than the same energy delivered at a high temperature, which is the result from
+          the two blocks at different temperatures. Route III moves a third as much energy,
+          and it moves it where each joule counts for more. The two effects compensate
+          exactly, and they have to, because the endpoints already fixed the answer before
+          either route was drawn.
+
+          The first choice is the natural error and it comes from applying the expression
+          above outside the situation it describes. Check whether the temperature actually
+          holds still before dividing by it.
+
+          The third choice treats energy transferred by heating as something lost. Nothing is
+          lost. All of the accounting balances by the first law, and along both of these
+          routes the internal energy of the gas ends exactly where it started.
+
+          The last choice asks for information you would genuinely need if you wanted to work
+          the entropy change out from the route. You do not need to, and that is the point.
+          Knowing A and knowing B is enough.
+        on_correct: |
+          Correct, and you held on to path independence while a very persuasive number was
+          pointing the other way.
+        on_incorrect: |
+          The relation between an entropy change and an energy transfer carries a temperature
+          in it. What is the temperature of the gas doing along each of these two routes, and
+          does that let you use the relation the way you just did?
+
+- multiple_choice:
+    id: q3
+    title: The Same Expansion Done Slowly and Done Suddenly
+    points: 2
+    text: |
+      A gas is sealed in a cylinder by a piston, and the cylinder sits in a large water bath
+      that holds the gas at a constant temperature. The gas is expanded from its starting
+      volume to twice that volume in two different ways. In the slow version the piston is
+      let out a tiny amount at a time, so the gas is never far from balance with the outside.
+      In the sudden version the piston is released all at once and the gas rushes out against
+      a much lower outside pressure. Both times the gas ends at twice its starting volume,
+      and the bath holds it at the same temperature it began at.
+
+      How does the change in the entropy of the gas in the sudden expansion compare with the
+      change in the slow one?
+    answers:
+    - answer:
+        text: |
+          It is larger in the sudden expansion, because a violent, uncontrolled process
+          leaves the gas in a more disordered condition than a gentle one does.
+        correct: false
+    - answer:
+        text: |
+          It is larger in the slow expansion, because more energy is transferred into the gas
+          from the bath while the piston is being let out slowly.
+        correct: false
+    - answer:
+        text: |
+          The two changes are equal, because the gas begins in the same state and ends in the
+          same state in both versions.
+        correct: true
+    - answer:
+        text: |
+          The two cannot be compared, because during the sudden expansion the gas is not in
+          equilibrium and so does not have a well defined entropy.
+        correct: false
+    feedback:
+        general: |
+          The two changes are equal. The gas starts at one volume and one temperature both
+          times, and it ends at twice that volume and the same temperature both times, so the
+          entropy change is the same.
+
+          Notice how little you had to know to answer that. You were not told the outside
+          pressure during the sudden expansion, or how fast the piston moved, or how much
+          energy came out of the bath, and none of it was needed. Naming the two states was
+          enough.
+
+          The second choice states something true, and it is worth confirming rather than
+          waving away. More energy really does come out of the bath during the slow
+          expansion. In the slow version the gas pushes against a pressure that stays close
+          to its own the whole way out, so it does the most work it possibly could, and the
+          bath has to replace every joule of it to keep the temperature from falling. In the
+          sudden version the gas pushes against a much lower pressure, does far less work, and
+          therefore draws far less energy from the bath. Different amounts of energy
+          transferred, identical entropy change for the gas. The same lesson as the three
+          routes, arriving from a different direction.
+
+          The first choice reaches for the everyday sense of the word disorder. Violence and
+          speed are not what entropy measures. It counts the arrangements available to the
+          molecules in the state the gas has ended up in, and the gas has ended up in the
+          same state either way.
+
+          The last choice raises the sharpest objection on the list and deserves a straight
+          answer. It is correct that during the sudden expansion the gas is genuinely not in
+          equilibrium. Pressure and temperature are not even uniform through it while it is
+          rushing outward, and for those moments there is no single value of the entropy to
+          speak of. That does not stop you comparing the beginning with the end. Both of those
+          are perfectly ordinary equilibrium states with perfectly ordinary entropies, and the
+          change between them is the difference of the two. Entropy is a state function, so the
+          unruly middle of the process never enters the answer.
+        on_correct: |
+          Correct, and you did it without needing a single number about the sudden expansion.
+          That is what path independence buys you.
+        on_incorrect: |
+          Write down what you know about the gas at the very start and at the very end of each
+          version. How many differences are there between those two lists?
+
+- multiple_choice:
+    id: q4
+    title: The Same Two Expansions, Counting the Bath As Well
+    points: 2
+    text: |
+      A gas is sealed in a cylinder by a piston, and the cylinder sits in a large water bath
+      that holds the gas at a constant temperature. In the slow version the piston is let out
+      a tiny amount at a time until the volume has doubled. In the sudden version the piston
+      is released all at once and the gas rushes out against a much lower outside pressure
+      until the volume has doubled. Both times the gas ends at twice its starting volume and
+      at the temperature it began at.
+
+      Now consider the gas and the water bath together. How does the change in the total
+      entropy of the gas and the bath in the sudden expansion compare with the change in the
+      slow one?
+    answers:
+    - answer:
+        text: |
+          It is larger in the sudden expansion, because the gas takes less energy from the
+          bath than it would have taken if let out slowly.
+        correct: true
+    - answer:
+        text: |
+          The two changes are equal, because the gas begins and ends in the same state in
+          both versions.
+        correct: false
+    - answer:
+        text: |
+          It is larger in the slow expansion, because more energy leaves the bath, and more
+          energy transferred means more entropy produced.
+        correct: false
+    - answer:
+        text: |
+          Both changes are zero, because the gas and the bath together exchange nothing with
+          anything else, and the total entropy of an isolated system is conserved.
+        correct: false
+    feedback:
+        general: |
+          The total goes up more in the sudden expansion. In fact the slow expansion changes
+          the total essentially not at all, and this pair of questions is the clearest place
+          in the unit to see why the second law needs the word total in it.
+
+          The gas is the same in both versions, as the previous question established. Its
+          entropy goes up by the same amount whichever way the piston comes out. So the
+          difference has to be in the bath, and the bath is where the energy accounting
+          differs.
+
+          Take the slow version first. The gas pushes out against a pressure that stays close
+          to its own the whole way, so it does the most work available to it, and the bath has
+          to hand over exactly that much energy to keep the temperature steady. The bath loses
+          entropy as that energy leaves it, and it turns out to lose precisely as much as the
+          gas gains. The total change is zero. A process that can be run in either direction
+          with nothing left behind is called reversible, and this is what one looks like: the
+          entropy of the world does not move.
+
+          Now the sudden version. The gas pushes against a much lower pressure, so it does far
+          less work and draws far less energy out of the bath. The gas gains the same entropy
+          as before, and the bath loses less than it did before, so the two no longer cancel
+          and the total rises. That leftover is the entropy the irreversible process produced,
+          and it is not going anywhere afterwards.
+
+          The choice that calls the two equal is the answer to the previous question rather
+          than to this one. Read carefully which system a question is asking about. It is the
+          single most common way to lose marks in this topic.
+
+          The choice about more energy leaving the bath has the sign of the effect backwards.
+          Energy leaving the bath lowers the entropy of the bath, so moving more of it out
+          brings the total down toward the balance point rather than up.
+
+          The last choice quotes the second law with one word altered. An isolated system does
+          not conserve its entropy. Its entropy never decreases, which permits it to rise, and
+          rising is exactly what it does whenever something irreversible happens inside.
+        on_correct: |
+          Correct. Same gas, same two states, and a different answer once the bath came inside
+          the boundary. That difference is the second law doing its work.
+        on_incorrect: |
+          The gas behaves identically in the two versions, so whatever separates them has to be
+          somewhere else. What is different about the amount of energy the bath gives up, and
+          what does losing energy do to the entropy of the bath?
+
+- multiple_choice:
+    id: q5
+    title: An Expansion That Transfers No Energy At All
+    points: 2
+    text: |
+      In the first process, a gas is sealed in one half of a rigid insulated container and the
+      other half is evacuated. The partition between them is removed and the gas fills the
+      whole container, ending at twice its original volume and, because no energy entered or
+      left it, at the temperature it started at.
+
+      In the second process, the same amount of the same gas expands slowly from the same
+      starting volume to twice that volume in a cylinder held at that same temperature by a
+      water bath.
+
+      How does the change in the entropy of the gas in the first process compare with the
+      change in the second?
+    answers:
+    - answer:
+        text: |
+          It is zero in the first process, because no energy is transferred into the gas by
+          heating, and an entropy change requires an energy transfer.
+        correct: false
+    - answer:
+        text: |
+          The two changes are equal, because the gas ends at the same volume and the same
+          temperature in both processes.
+        correct: true
+    - answer:
+        text: |
+          It is smaller in the first process, because energy is transferred into the gas from
+          the bath in the second one and no energy is transferred in the first.
+        correct: false
+    - answer:
+        text: |
+          It is larger in the first process, because the free expansion is irreversible while
+          the slow expansion is not.
+        correct: false
+    feedback:
+        general: |
+          The two changes are equal. This is the sharpest version of path independence in the
+          whole topic, because one of the two processes transfers no energy whatsoever and the
+          entropy change comes out the same anyway.
+
+          Check the two end states and you will see there is nothing to argue about. Both
+          processes start with the same gas at the same volume and temperature. The free
+          expansion doubles the volume and leaves the temperature alone, because no energy
+          crosses the insulated wall and the gas does no work pushing into a vacuum. The slow
+          expansion doubles the volume and the bath holds the temperature. Same volume, same
+          temperature, same state, same entropy.
+
+          The first choice is the error this question exists to catch, and it is an easy one
+          to fall into because
+          <latex>
+          \Delta S = \frac{Q}{T}
+          </latex>
+          invites it. That expression describes the entropy carried along by an energy
+          transfer at a fixed temperature. It is not a definition of entropy, and a zero on
+          the top does not mean the entropy could not change by some other means. Here it
+          changed because the gas ended up with twice as much room, which is a fact about
+          where its molecules can be rather than about energy.
+
+          The fourth choice is right about the physics and wrong about the system. The free
+          expansion genuinely is irreversible and the slow expansion genuinely is not, and
+          that difference shows up in full when you count the surroundings. In the free
+          expansion the container is insulated, so nothing outside it changes at all and the
+          entropy of the gas is the whole of the increase in the total. In the slow expansion
+          the gas gains that same entropy and the bath loses exactly as much, so the total does
+          not move. Two processes, the same change for the gas, and completely different
+          changes for the world.
+
+          The third choice compares the energy transfers, which differ, and reads the entropy
+          change off them, which does not follow. The energy is a fact about the route.
+        on_correct: |
+          Correct, and this is the one to remember when someone tells you no energy transfer
+          means no entropy change.
+        on_incorrect: |
+          Describe the gas at the end of each process: how much room does it have, and how hot
+          is it? If those two answers match, what does that tell you about a quantity that
+          depends only on the state?
+
+- multiple_choice:
+    id: q6
+    title: A Gas Taken All the Way Around a Cycle
+    points: 2
+    text: |
+      The gas in a real engine is taken through a complete cycle and returns to exactly the
+      state it started in, with the same pressure, the same volume and the same temperature.
+      Some steps of the cycle happen quickly, there is friction in the moving parts, and
+      energy is transferred by heating during several of the steps.
+
+      What is the change in the entropy of the gas over one complete cycle?
+    answers:
+    - answer:
+        text: |
+          It is positive, because several steps of the cycle are irreversible and irreversible
+          processes increase entropy.
+        correct: false
+    - answer:
+        text: |
+          It is exactly zero, because the gas ends in the state it began in.
+        correct: true
+    - answer:
+        text: |
+          It is positive, because energy is transferred into the gas by heating during part of
+          the cycle.
+        correct: false
+    - answer:
+        text: |
+          It depends on the shape of the cycle and on how much area it encloses on a pressure
+          volume diagram.
+        correct: false
+    feedback:
+        general: |
+          The change is exactly zero, and it is zero no matter what shape the cycle is, how
+          much friction there was, or how roughly any of the steps were carried out. The gas
+          finishes in the state it started in, and a state function has the same value there
+          that it had before.
+
+          This is not a special property of well behaved engines. It follows from what entropy
+          is. If the gas is back at the same pressure, volume and temperature, then it is back
+          in the same condition in every respect, and there is nothing left over to record what
+          it went through on the way. The same is true of its internal energy, which also
+          returns to its starting value around any cycle.
+
+          The important companion to this is that the engine still produces entropy, and it is
+          worth being clear about where that entropy went. The gas hands it off. Over the
+          cycle, energy is taken in from a hot reservoir and rejected to a cooler one, and the
+          friction warms the surroundings. Add up the entropy changes of the gas, the two
+          reservoirs and everything the friction warmed, and the total for a real engine comes
+          out positive. It has to, or the engine would be a perfect one. The gas contributes
+          zero to that sum, and everything else contributes the rest.
+
+          The first choice takes a true statement about the cycle and attaches it to the wrong
+          system. Irreversible steps do produce entropy. They produce it in the world, not in
+          a gas that has come back to where it started.
+
+          The third choice notices the energy transferred by heating, which is real and which
+          does not accumulate in the gas. Energy comes in during some steps of a cycle and goes
+          out during others, and around a complete loop those balance against the work, leaving
+          the internal energy unchanged as well.
+
+          The last choice describes something that genuinely does depend on the area enclosed.
+          That is the net work done by the gas over the cycle, which is what an engine is built
+          to produce. It is a different quantity, and the entropy change of the gas is zero
+          whatever it comes to.
+        on_correct: |
+          Correct, and notice how little the messy details of the cycle mattered once you knew
+          where the gas ended up.
+        on_incorrect: |
+          Compare the gas at the very end of the cycle with the gas at the very beginning. What
+          is different about it, and what does your answer mean for a quantity that depends only
+          on the state?
+
+- multiple_choice:
+    id: q7
+    title: Four Processes That End in Four Different Places
+    points: 2
+    figure: figure_folder/q-7.png
+    text: |
+      A fixed amount of monatomic ideal gas starts in state A. The figure shows four different
+      processes, each one beginning at A and each one ending at a different state.
+
+      <b>Process I:</b> the gas is thoroughly insulated and expands slowly to three times its
+      original volume, so no energy is transferred into or out of it by heating.<br>
+      <b>Process II:</b> the gas expands slowly to three times its original volume while a
+      water bath holds it at a constant temperature.<br>
+      <b>Process III:</b> the gas expands slowly to three times its original volume while its
+      pressure is held constant.<br>
+      <b>Process IV:</b> the gas is cooled at constant volume until its pressure falls to one
+      third of its original value.
+
+      Which process produces the greatest increase in the entropy of the gas?
+    answers:
+    - answer:
+        text: |
+          Process II, because holding the temperature constant is what allows energy to keep
+          entering the gas throughout the expansion.
+        correct: false
+    - answer:
+        text: |
+          Process III, because the gas spreads into the same larger volume as in process II
+          and gets hotter as well, and both of those raise its entropy.
+        correct: true
+    - answer:
+        text: |
+          Process I, because no energy is transferred by heating, so none of the entropy the
+          gas gains can escape into the surroundings.
+        correct: false
+    - answer:
+        text: |
+          All four produce the same change, because entropy is a state function and all four
+          processes begin at the same state.
+        correct: false
+    feedback:
+        general: |
+          Process III produces the largest increase. Before anything else, notice what is
+          different about this question: the four processes end at four different states. Look
+          at the figure and find the four endpoints. They are in four different places.
+
+          That is the whole trap, and it is worth saying plainly. Path independence tells you
+          that the entropy change is fixed by the starting state and the finishing state. Four
+          processes sharing a starting state have three quarters of nothing in common. You need
+          both ends before the argument applies, and here only one end matches.
+
+          With that settled the ranking is straightforward, and you can do it without a
+          calculation. Compare process III with process II first. Both expand the gas to three
+          times its volume, so both give the molecules the same amount of extra room. Process
+          II does it at constant temperature, while process III holds the pressure fixed, and
+          tripling the volume at constant pressure triples the absolute temperature. So process
+          III does everything process II does and heats the gas as well. Both of those raise the
+          entropy, so process III has to come out ahead.
+
+          Process I is the interesting one. The gas expands, which pulls the entropy up, and
+          because it is insulated the expansion costs it internal energy and it cools, which
+          pulls the entropy down. For a slow expansion of an insulated gas those two effects
+          cancel exactly, and the entropy change is zero. That is what a reversible adiabatic
+          process is: the one path along which the entropy of the gas does not move at all. It
+          is worth holding on to, because exactly one such path leaves any given state. That is
+          why you will never be shown an insulated slow expansion and a constant temperature
+          expansion as two routes between the same pair of states. The two curves leave A
+          together and never meet again.
+
+          Process IV is the only one that goes down. The gas does not expand at all, so its
+          molecules gain no extra room, and cooling it at constant volume takes energy out.
+
+          The choice for process II describes the constant temperature expansion correctly and
+          then treats a continuing energy transfer as though it were the measure of the entropy
+          change. Energy enters during process III as well, and rather more of it.
+
+          The choice for process I imagines entropy escaping into the surroundings, as though
+          the gas keeps whatever it is not allowed to give away. Entropy is not stored and moved
+          around like a fluid in a sealed can. The insulation is precisely why the entropy of
+          this gas does not change.
+        on_correct: |
+          Correct, and you checked the endpoints before reaching for path independence. That is
+          the habit that makes this whole topic safe.
+        on_incorrect: |
+          Look at where each of the four processes finishes on the figure before you decide.
+          Are the four processes doing the same job as each other, and does the rule you reached
+          for actually apply to what you are looking at?
