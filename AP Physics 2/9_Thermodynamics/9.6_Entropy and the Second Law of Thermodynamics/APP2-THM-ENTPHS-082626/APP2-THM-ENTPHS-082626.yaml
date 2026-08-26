@@ -1,0 +1,625 @@
+bank_info:
+    title: Entropy When Energy Is Added and a Substance Changes Phase
+    bank_id: APP2-THM-ENTPHS-082626
+    description: |-
+      Isomorphic reasoning problems for AP Physics 2, College Board Unit 9 Topic 9.6.
+
+      Energy is transferred into or out of a sample, and you are asked what happens to the
+      entropy of that sample. In several of these the temperature never changes while the
+      energy goes in, which is the whole difficulty. Every choice pairs an answer with a
+      reason, so an answer that is right for the wrong reason is still wrong. Before you
+      decide, be clear about what entropy is counting, because it is not the temperature and
+      it is not the total energy.
+
+      Teaching notes: the target idea is that entropy responds to energy transferred at a
+      temperature rather than to a change in temperature, so a phase change at constant
+      temperature carries the largest entropy change in an ordinary heating curve. The common
+      errors are reading a constant temperature as a constant entropy, treating an input of
+      energy as a push away from equilibrium and therefore as a decrease in entropy, ranking
+      the solid above the gas because a solid is denser and looks more substantial, assuming
+      two phase changes of the same substance must give the same entropy change, and applying
+      the second law's floor to a sample that is plainly exchanging energy with a heater or a
+      reservoir. APP2-THM-ENTSYS-082626 establishes where the system boundary goes and that a
+      part of a system is free to lose entropy, and APP2-THM-SPHT-081826 covers the specific
+      heat relationships that the heating curve questions here lean on.
+    date created: 08-26-2026
+    status: ready # Only use 'draft', 'ready', 'deployed', and 'deprecated' for this field. 'draft' and 'deprecated' files won't be parsed by the exam builder.
+    learning objectives:
+        - THM-ENT-5 # Predict whether the entropy of a sample rises or falls as it changes phase, and justify the direction by the arrangements available to its molecules
+        - THM-ENT-6 # Recognize that a constant temperature does not mean a constant entropy, since entropy responds to energy transferred at a temperature
+        - THM-ENT-7 # Rank the entropies of the solid, liquid and gas phases of one substance and explain the ranking
+        - THM-ENT-8 # Compare the sizes of two entropy changes from the energy transferred and the temperature at which it is transferred
+    generation prompts: # The following are the prompts that generated the questions in the problem bank.
+        - prompt 1: |
+            (q1 drafted from the owner's outline: a pure solid heated to its melting point
+            and then held there while part of it melts, with the student comparing the
+            entropy of the sample before melting begins with its entropy once melting is
+            under way. The correct choice attributes the increase to the molecules being
+            free to move past one another, so that far more arrangements produce the same
+            sample. The distractors call the input of energy a push away from equilibrium
+            and therefore a decrease in entropy; hold the entropy constant because the
+            temperature is constant; and get the direction right by claiming a temperature
+            rise that does not happen.)
+        - prompt 2: |
+            (q2-q7 authored as isomorphs of q1. Each changes something in the solution
+            rather than the nouns: q2 runs the process backwards so the sample's entropy
+            falls as it solidifies; q3 compares melting with boiling for the same mass of
+            the same substance, so the answer turns on the energy transferred beating the
+            temperature it is transferred at; q4 drops the phase change and gives two
+            identical samples the same energy at different temperatures, so the colder one
+            gains more entropy; q5 walks a sample along a whole heating curve and asks where
+            the largest single increase sits; q6 keeps the temperature constant with an
+            isothermal expansion instead of a phase change, so the same conclusion arrives
+            by a different route; q7 puts all three phases together at one temperature and
+            asks for a ranking, which the equal temperatures cannot supply.)
+        - formatting prompt: "../../../../Templates/YAML_formatting_prompt.md"
+    updates:
+        - update 1: (08-26-2026) Bank created with q1-q7. Second bank in Topic 9.6.
+    generation details:
+            model: Claude Opus 5
+            version: claude-opus-5
+            last updated: 08-26-2026
+    authors:
+        - Michael Baker
+
+questions:
+
+- multiple_choice:
+    id: q1
+    title: A Solid Held at Its Melting Point While It Melts
+    points: 2
+    text: |
+      A sample of a pure solid sits in a sealed container with a small electric heater
+      inside it. The heater runs until the sample reaches its melting point, and then keeps
+      running while part of the sample melts. A thermometer in the sample reads the same
+      temperature from the moment melting begins until the moment the last of the solid is
+      gone.
+
+      How does the entropy of the sample once melting is under way compare with its entropy
+      as a solid just before melting began?
+    answers:
+    - answer:
+        text: |
+          It is greater, because the molecules in the liquid are free to move past one
+          another, so far more arrangements of them produce the same sample.
+        correct: true
+    - answer:
+        text: |
+          It is smaller, because the energy going in pushes the sample away from
+          equilibrium, and a system away from equilibrium is in a more ordered state.
+        correct: false
+    - answer:
+        text: |
+          It is the same, because the temperature does not change while the sample melts and
+          the entropy of a sample is set by its temperature.
+        correct: false
+    - answer:
+        text: |
+          It is greater, because the energy from the heater raises the temperature of the
+          sample and a hotter sample always has more entropy.
+        correct: false
+    feedback:
+        general: |
+          The entropy of the sample is greater once melting is under way. Energy is going in
+          the whole time, and where that energy goes is the key to the question.
+
+          In the solid the molecules are held near fixed sites in a lattice. They vibrate,
+          but each one stays where it belongs, and only a small number of arrangements of the
+          molecules produce a sample that looks like that solid. The energy from the heater
+          does not speed those vibrations up once the melting point is reached. It goes into
+          breaking the bonds that hold the molecules in place. Once they are free to slide
+          past one another, a molecule can be almost anywhere in the sample, and an
+          enormous number of arrangements now produce the same liquid. Entropy counts those
+          arrangements, so the entropy climbs.
+
+          You can reach the same answer from the energy side, and it is worth doing both ways
+          because they agree. The entropy change of a sample that receives energy at a
+          steady temperature is
+          <latex>
+          \Delta S = \frac{Q}{T}
+          </latex>
+          The energy transferred in is positive, the melting point in kelvin is positive, so
+          the entropy change is positive. The expression asks for the temperature at which
+          the energy is transferred. It does not ask for a change in temperature, and that
+          distinction is what this whole question is about.
+
+          Now the other choices, because each one comes from a real idea.
+
+          The choice about being pushed away from equilibrium has the relationship backwards.
+          Adding energy to a sample sitting at its melting point does not disorganize it in
+          the sense of making it more ordered. Ordered means constrained, with the molecules
+          restricted to a small set of arrangements, and the solid is the constrained
+          situation here. Melting removes constraints rather than adding them.
+
+          The choice that fixes the entropy because the temperature is fixed is the most
+          common answer to this question, and it is worth being able to say exactly what is
+          wrong with it. Temperature and entropy are related, and they are not the same
+          thing. The temperature tells you the average kinetic energy per molecule, and while
+          the sample melts that average really does hold steady. The entropy tells you how
+          many microscopic arrangements produce what you see, and that is climbing steeply
+          the entire time, because more and more of the sample is free to move.
+
+          The last choice lands on the right answer with a claim the problem rules out. The
+          thermometer reads the same value throughout, so the temperature is not rising, and
+          a reason that depends on a rise cannot be the reason.
+        on_correct: |
+          Correct, and you did it while the thermometer sat perfectly still. Separating what
+          the temperature is doing from what the entropy is doing is the hard part of this
+          topic.
+        on_incorrect: |
+          The problem tells you the temperature holds steady while the sample melts, so
+          something else about the sample has to be different at the end. What is the energy
+          from the heater doing to the molecules if it is not speeding them up?
+
+- multiple_choice:
+    id: q2
+    title: Molten Metal Solidifying at Its Freezing Point
+    points: 2
+    text: |
+      A crucible of molten lead is left to cool. It reaches the freezing point of lead and
+      then sits at that temperature while energy continues to leave it and part of the lead
+      solidifies. A thermometer in the lead reads the same temperature from the moment the
+      first solid appears until the last of the liquid is gone.
+
+      How does the entropy of the lead once it has partly solidified compare with its
+      entropy as a liquid just before solidifying began?
+    answers:
+    - answer:
+        text: |
+          It is greater, because solidifying is an irreversible process, and irreversible
+          processes increase entropy.
+        correct: false
+    - answer:
+        text: |
+          It is smaller, because energy leaves the lead and its molecules become locked into
+          a lattice, so far fewer arrangements produce the sample.
+        correct: true
+    - answer:
+        text: |
+          It is the same, because energy leaving at a constant temperature cannot change the
+          entropy of a sample.
+        correct: false
+    - answer:
+        text: |
+          It is smaller, because the lead is cooling and a cooler sample always has less
+          entropy.
+        correct: false
+    feedback:
+        general: |
+          The entropy of the lead is smaller once it has partly solidified. This is the
+          melting question run backwards, and the reasoning runs backwards with it.
+
+          Energy is leaving the sample the whole time, so in
+          <latex>
+          \Delta S = \frac{Q}{T}
+          </latex>
+          the energy transferred is negative for the lead and the entropy change is negative.
+          At the molecular level, the atoms that were sliding freely past one another in the
+          liquid are being captured into fixed sites in a lattice. Far fewer arrangements
+          produce a solid than produce a liquid, so the entropy falls.
+
+          A sample is allowed to lose entropy, and it is worth pausing on why. The crucible
+          is not isolated. Energy leaves it freely and warms the air and the bench around it.
+          The second law puts its floor on an isolated system, and this lead is not one. Take
+          the lead and the room together and the total entropy rises, because the energy
+          leaves the lead at the freezing point and arrives in a room that is a good deal
+          cooler.
+
+          That last point is what the irreversibility choice gets tangled in. Solidifying
+          really is irreversible in the sense that the room will not spontaneously melt the
+          lead again, and that irreversibility guarantees an entropy increase for the lead
+          and the room together. It guarantees nothing about the lead on its own. Every
+          freezer, every furnace, and every living thing depends on one piece of the world
+          being able to lose entropy while a larger piece gains more.
+
+          The choice that holds the entropy fixed makes the same assumption as the melting
+          question and deserves the same answer. A constant temperature is not a constant
+          entropy. Energy is crossing the boundary of the sample the entire time, and the
+          expression above has a temperature in it rather than a change in temperature.
+
+          The last choice arrives at the right direction from a claim the problem denies. The
+          lead is not cooling while it solidifies. The thermometer reads the freezing point
+          throughout, which is exactly what makes the question worth asking.
+        on_correct: |
+          Correct, and notice that the sample lost entropy without anything going wrong. A
+          part of the world is allowed to do that.
+        on_incorrect: |
+          Compare this with the sample that was melting. Which direction is the energy moving
+          this time, and what is happening to the freedom the atoms had a moment before?
+
+- multiple_choice:
+    id: q3
+    title: Melting Compared with Boiling for the Same Sample
+    points: 2
+    text: |
+      One kilogram of water is taken from ice at <latex>0</latex> °C to liquid water at
+      <latex>0</latex> °C, so the whole sample melts. Separately, one kilogram of water is
+      taken from liquid at <latex>100</latex> °C to steam at <latex>100</latex> °C, so the
+      whole sample boils away. Boiling this sample takes several times as much energy as
+      melting it does.
+
+      Which of the following correctly compares the entropy change of the water in the two
+      processes?
+    answers:
+    - answer:
+        text: |
+          The two entropy changes are equal, because the sample is the same substance and the
+          same mass in both processes.
+        correct: false
+    - answer:
+        text: |
+          Melting produces the larger increase, because it happens at the lower of the two
+          temperatures.
+        correct: false
+    - answer:
+        text: |
+          Boiling produces the larger increase, because it takes far more energy and it frees
+          the molecules to spread through a much larger volume.
+        correct: true
+    - answer:
+        text: |
+          Melting produces the larger increase, because turning a rigid solid into a flowing
+          liquid is a more dramatic change than turning a liquid into a gas.
+        correct: false
+    feedback:
+        general: |
+          Boiling produces the much larger increase in entropy, by a factor of about five for
+          water.
+
+          Both processes happen at a fixed temperature, so
+          <latex>
+          \Delta S = \frac{Q}{T}
+          </latex>
+          applies to each, and the comparison comes down to two competing ratios. Melting
+          takes about <latex>3.3 \times 10^{5}</latex> J per kilogram and happens at
+          <latex>273</latex> K, giving roughly <latex>1200</latex> J/(kg·K). Boiling takes
+          about <latex>2.3 \times 10^{6}</latex> J per kilogram and happens at
+          <latex>373</latex> K, giving roughly <latex>6100</latex> J/(kg·K). Boiling takes
+          nearly seven times the energy and transfers it at only about one and a third times
+          the temperature, so the energy wins comfortably.
+
+          The molecular picture says the same thing and is easier to remember. Melting frees
+          the molecules to move past one another, but they stay in contact and the sample
+          keeps its volume. Boiling separates them completely, and a kilogram of steam at
+          atmospheric pressure occupies more than a thousand times the volume of a kilogram
+          of liquid water. The number of arrangements available goes up enormously more in
+          the second step than in the first. This is not special to water. For nearly every
+          substance, vaporizing carries a far larger entropy change than melting.
+
+          The choice that makes them equal treats entropy as a property of the substance
+          alone. Entropy is a property of the state the substance is in, and ice, liquid and
+          steam are three very different states of the same kilogram.
+
+          The choice that picks melting for its lower temperature is using the right
+          relationship and stopping halfway. The temperature really is in the denominator,
+          and a lower temperature really does make a given energy transfer count for more.
+          The two temperatures here differ by a factor of about one and a third, and the two
+          energies differ by a factor of about seven. When two effects pull opposite ways,
+          you have to see which one is larger rather than which one you noticed first.
+
+          The last choice trusts how the two changes look from the outside. Watching ice
+          become water is a striking change to the eye, and watching water become an
+          invisible gas is less so. Entropy counts arrangements of molecules, and the eye is
+          not a good guide to that count.
+        on_correct: |
+          Correct, and you weighed the two effects against each other instead of settling for
+          the first one. That is the habit this question is built to reward.
+        on_incorrect: |
+          Two things differ between these processes, and they do not both point the same way.
+          What are the two quantities in play, and which of them differs by more?
+
+- multiple_choice:
+    id: q4
+    title: The Same Energy Delivered to a Cold Sample and a Hot One
+    points: 2
+    text: |
+      Two identical copper blocks are prepared, one at <latex>200</latex> K and the other at
+      <latex>600</latex> K. Each block is given the same small amount of energy by a heater.
+      The amount is small enough that the temperature of each block barely changes, and
+      neither block comes close to melting.
+
+      Which of the following correctly compares the entropy change of the two blocks?
+    answers:
+    - answer:
+        text: |
+          The cold block gains more entropy, because the same energy delivered at a lower
+          temperature produces a larger entropy change.
+        correct: true
+    - answer:
+        text: |
+          The two blocks gain the same entropy, because they receive the same amount of
+          energy and they are made of the same material.
+        correct: false
+    - answer:
+        text: |
+          The hot block gains more entropy, because its molecules are already moving faster
+          and are therefore more disordered to begin with.
+        correct: false
+    - answer:
+        text: |
+          The cold block gains more entropy, because a cold object absorbs energy more
+          readily than a hot one.
+        correct: false
+    feedback:
+        general: |
+          The cold block gains more entropy, by a factor of three.
+
+          The temperature of each block barely changes, so each one receives its energy at
+          essentially a fixed temperature and
+          <latex>
+          \Delta S = \frac{Q}{T}
+          </latex>
+          applies directly. The same <latex>Q</latex> divided by <latex>200</latex> K gives
+          three times what it gives when divided by <latex>600</latex> K.
+
+          There is a picture underneath the arithmetic that is worth carrying with you. A
+          fixed amount of energy makes a bigger difference to something cold than to
+          something hot, in the same way that a dollar means more to someone who has very
+          little than to someone who has a great deal. The cold block had comparatively few
+          arrangements available to it, so adding energy multiplies that number by more. The
+          hot block already had an enormous number, so the same energy is a smaller relative
+          change.
+
+          This is the same result that makes energy flow from hot to cold irreversible. When
+          a hot object hands energy to a cold one, the cold one gains more entropy than the
+          hot one loses, and the total goes up. If entropy changes did not depend on the
+          temperature at which the energy was transferred, thermal energy transfer would not
+          have a preferred direction at all.
+
+          The choice that makes the two equal uses only the energy, which is half of what the
+          relationship above needs. Equal energies at unequal temperatures do not give equal
+          entropy changes.
+
+          The choice that favours the hot block confuses a state with a change. The hot block
+          does start with more entropy than the cold one, since its molecules do have more
+          arrangements available. The question asks which block's entropy changes more, and
+          starting high is exactly what makes a given addition count for less.
+
+          The last choice reaches for a property that does not exist here. Both blocks are
+          given the same energy by construction, so how readily they absorb energy is not in
+          play, and the direction it lands on is right for a reason that is not doing any
+          work.
+        on_correct: |
+          Correct. You used the temperature at which the energy arrived rather than just the
+          amount, which is the whole content of this idea.
+        on_incorrect: |
+          Both blocks receive the same energy, so the energy alone cannot separate them. What
+          else does an entropy change depend on, and how do the two blocks differ in it?
+
+- multiple_choice:
+    id: q5
+    title: Ice Warmed All the Way to Warm Water
+    points: 2
+    text: |
+      A block of ice starts at <latex>-20</latex> °C. A heater warms it steadily until it
+      reaches <latex>0</latex> °C, holds it there while all of it melts, and then keeps
+      running until the liquid water reaches <latex>20</latex> °C.
+
+      Which of the following correctly describes the entropy of the sample during this
+      process?
+    answers:
+    - answer:
+        text: |
+          It increases while the temperature is rising and holds constant while the ice is
+          melting.
+        correct: false
+    - answer:
+        text: |
+          It increases throughout, and the largest single increase happens while the sample
+          is melting at a constant temperature.
+        correct: true
+    - answer:
+        text: |
+          It increases throughout, and the largest single increase happens while the liquid
+          water warms from <latex>0</latex> °C to <latex>20</latex> °C, since water has a
+          large specific heat.
+        correct: false
+    - answer:
+        text: |
+          It decreases while the sample melts, because the energy going in is used up
+          breaking bonds instead of raising the temperature.
+        correct: false
+    feedback:
+        general: |
+          The entropy increases throughout, and the melting step carries by far the largest
+          single increase, even though the thermometer does not move during it.
+
+          Energy is entering the sample at every stage, so the entropy is rising at every
+          stage. To see which stage dominates, compare the three per kilogram. Warming the
+          ice from <latex>253</latex> K to <latex>273</latex> K adds roughly
+          <latex>160</latex> J/(kg·K). Melting the ice adds about <latex>1200</latex>
+          J/(kg·K). Warming the liquid from <latex>273</latex> K to <latex>293</latex> K adds
+          roughly <latex>300</latex> J/(kg·K). Melting contributes more than the two warming
+          stages put together, by a factor of about two and a half.
+
+          The reason is the amount of energy involved. Warming a kilogram of ice by
+          <latex>20</latex> K takes about <latex>4 \times 10^{4}</latex> J. Melting that same
+          kilogram takes about <latex>3.3 \times 10^{5}</latex> J, roughly eight times as
+          much, and all of it is transferred at one temperature while the molecules are being
+          set free from the lattice. The stage where nothing appears to be happening on the
+          thermometer is the stage where the most is happening to the entropy.
+
+          If you have drawn a heating curve, this is worth putting next to it. The flat
+          section of a heating curve is the longest stretch of the graph, because that is
+          where the most energy goes in. It is also where the entropy climbs the most, for
+          exactly the same reason. A flat line on a temperature graph is not a flat line on
+          an entropy graph.
+
+          The first choice holds the entropy constant during melting, which is the idea this
+          bank keeps coming back to. Energy is crossing into the sample during that stage, so
+          the entropy cannot be standing still.
+
+          The third choice is right that liquid water has a large specific heat, and it stops
+          before comparing the sizes. Warming water through <latex>20</latex> K takes about
+          <latex>8 \times 10^{4}</latex> J per kilogram, which is still only about a quarter
+          of what melting takes.
+
+          The last choice notices something true and draws the wrong conclusion from it. The
+          energy really is going into breaking bonds rather than into raising the temperature.
+          Breaking those bonds is what frees the molecules to move, and freeing them raises
+          the entropy rather than lowering it.
+        on_correct: |
+          Correct. The flat part of the heating curve is where the entropy climbs fastest,
+          which is not what the graph looks like it is telling you.
+        on_incorrect: |
+          The entropy of the sample is not standing still at any point here, since energy is
+          going in the whole time. Which of these three stages takes the most energy from the
+          heater, and how could you check?
+
+- multiple_choice:
+    id: q6
+    title: A Gas Expanding at a Constant Temperature
+    points: 2
+    text: |
+      A gas is sealed in a cylinder by a piston that can slide without friction. The cylinder
+      sits in a large water bath that holds the gas at a constant temperature. The piston is
+      released and the gas expands slowly to twice its original volume, pushing the piston
+      out as it goes. The temperature of the gas is the same at the end as it was at the
+      start, and energy is transferred into the gas from the bath during the expansion.
+
+      Which of the following describes what happens to the entropy of the gas, along with a
+      correct justification?
+    answers:
+    - answer:
+        text: |
+          It stays the same, because the temperature of the gas is unchanged and the gas
+          therefore ends in the state it started in.
+        correct: false
+    - answer:
+        text: |
+          It increases, because energy is transferred into the gas and the molecules now have
+          twice the volume to be spread through.
+        correct: true
+    - answer:
+        text: |
+          It decreases, because the gas does work on the piston and so gives up energy to its
+          surroundings.
+        correct: false
+    - answer:
+        text: |
+          It stays the same, because the internal energy of the gas does not change, so
+          nothing about the gas has changed.
+        correct: false
+    feedback:
+        general: |
+          The entropy of the gas increases. This is a constant temperature process with no
+          phase change anywhere in it, and it reaches the same conclusion as the melting
+          question by the same route.
+
+          Follow the energy first. The temperature of an ideal gas fixes its internal energy,
+          and the temperature does not change, so
+          <latex>
+          \Delta U = 0
+          </latex>
+          The gas does work pushing the piston out, and the first law then requires that the
+          bath transfers exactly that much energy into the gas to keep the internal energy
+          steady. The energy transferred in is positive, so
+          <latex>
+          \Delta S = \frac{Q}{T}
+          </latex>
+          is positive for the gas.
+
+          The molecular picture agrees. Each molecule now has twice as much room to be found
+          in, and with something like <latex>10^{23}</latex> molecules the number of
+          arrangements is multiplied by an enormous factor. Nothing about their speeds
+          changed, since the temperature held steady. What changed is where they can be.
+
+          Compare this with the melting question and with the free expansion into a vacuum. In
+          all three the temperature is constant, energy or volume changes, and the entropy of
+          the sample rises. A constant temperature never on its own tells you that the entropy
+          is constant.
+
+          The first choice claims the gas ends in the state it started in, which is not true.
+          Temperature is one of the quantities that specify the state of a gas, and volume and
+          pressure are two more. Two of the three are different at the end.
+
+          The choice that has the entropy falling gets half of the energy accounting right. The
+          gas does do work on the piston and it does give up energy that way, and it takes in
+          at least as much from the bath at the same time. The net energy transferred into the
+          gas by the bath is what appears in the expression above, and it is positive.
+
+          The last choice is correct that the internal energy is unchanged and then treats
+          internal energy as the whole description of the gas. The gas occupies twice the
+          volume it did before. Entropy counts arrangements, and where the molecules can be is
+          part of that count.
+        on_correct: |
+          Correct. No phase change, no temperature change, and the entropy still rose, which is
+          the point of putting this question beside the melting one.
+        on_incorrect: |
+          The temperature of the gas is the same at the end as at the start, and the gas is
+          not. What else about the gas would you need to state in order to describe its
+          condition completely, and has any of it changed?
+
+- multiple_choice:
+    id: q7
+    title: Three Phases Together at One Temperature
+    points: 2
+    text: |
+      A sealed rigid container holds a single pure substance under conditions where solid,
+      liquid and vapour are all present at once and none of them is growing at the expense of
+      the others. All three phases sit at the same temperature and the same pressure.
+
+      How do the entropies of one kilogram of each phase compare?
+    answers:
+    - answer:
+        text: |
+          All three are equal, because all three phases are at the same temperature.
+        correct: false
+    - answer:
+        text: |
+          The vapour has the most, the liquid the next most, and the solid the least, because
+          each phase in that order allows its molecules more ways to be arranged.
+        correct: true
+    - answer:
+        text: |
+          The solid has the most, the liquid the next most, and the vapour the least, because
+          the solid packs the most molecules into a given space.
+        correct: false
+    - answer:
+        text: |
+          The vapour has the most, the liquid the next most, and the solid the least, because
+          the vapour is the hottest of the three and the solid is the coldest.
+        correct: false
+    feedback:
+        general: |
+          A kilogram of the vapour has the most entropy, a kilogram of the liquid the next
+          most, and a kilogram of the solid the least, and all three are at the same
+          temperature while that is true.
+
+          This arrangement has a name. A substance can have all three phases coexist at only
+          one particular temperature and pressure, called its triple point, and for water that
+          is <latex>273.16</latex> K at a pressure about <latex>6 \times 10^{-3}</latex> of
+          atmospheric. It is a useful situation to think about precisely because it strips the
+          temperature out of the comparison and leaves nothing but the phases.
+
+          Count what is available to the molecules in each phase. In the solid every molecule
+          is held near a fixed site in a lattice and can only vibrate about it, so a small
+          number of arrangements produce the sample. In the liquid the molecules stay in
+          contact but slide freely past one another, so a molecule could be nearly anywhere in
+          the sample and the count is far larger. In the vapour they are separated by many
+          times their own size and fill more than a thousand times the volume, so the count is
+          larger again by an enormous factor. Entropy is the measure of that count, so the
+          ranking follows.
+
+          The first choice is the one worth spending time on, because it is the natural reading
+          of everything you have learned about equal temperatures. Two things at the same
+          temperature share an average kinetic energy per molecule, and they are in thermal
+          equilibrium, and no net energy is transferred between them. None of that fixes their
+          entropies. Entropy depends on the arrangements available as well as on the energy,
+          and here the three phases differ in the arrangements while agreeing on the energy per
+          molecule.
+
+          The choice that puts the solid first mistakes density for order. Packing molecules
+          closely is what restricts them, and a restricted molecule has fewer places it could
+          be. A crystal is the most constrained of the three and so carries the least entropy.
+
+          The last choice reaches the right ranking through a temperature difference that is
+          not there. The problem states plainly that all three are at the same temperature, and
+          the whole interest of this situation is that they are.
+        on_correct: |
+          Correct, and you ranked them without a temperature difference to lean on. That is the
+          hardest version of this idea.
+        on_incorrect: |
+          Equal temperatures tell you the molecules in all three phases carry the same average
+          kinetic energy. What is different about where those molecules are allowed to be, and
+          does entropy depend only on their energy?
