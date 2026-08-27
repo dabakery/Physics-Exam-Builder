@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Physics Exam Builder · Enhanced (web)</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Lexend:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
@@ -29,9 +29,17 @@
   --gold:#7a6534;--gold-rgb:122,101,52;
   --green:#0f7a4a;--green-rgb:15,122,74;
   --sidebar-w:300px;
-  --font-d:'Space Grotesk',Georgia,sans-serif;
+  /* Three voices, three jobs: mono is the machine (labels, ids, counts, and the
+     display role), Lexend is the human (everything actually read at length,
+     including the question text a student sees in quiz mode), and KaTeX's
+     Computer Modern is the physics. Display and utility share one family and are
+     told apart by weight and size, which is a deliberate distinction rather than
+     the accidental near-miss two different monospaces would give. Lexend stays
+     because it is built for reading proficiency, which matters most exactly where
+     it is used. */
+  --font-d:'IBM Plex Mono',ui-monospace,'Courier New',monospace;
   --font-b:'Lexend',system-ui,sans-serif;
-  --font-m:'JetBrains Mono','Courier New',monospace;
+  --font-m:'IBM Plex Mono',ui-monospace,'Courier New',monospace;
   --r:7px;--r2:11px;
   --sh:0 1px 3px rgba(var(--ink-rgb),.07),0 4px 12px rgba(var(--ink-rgb),.04);
   --sh2:0 2px 8px rgba(var(--ink-rgb),.1),0 8px 28px rgba(var(--ink-rgb),.07);
@@ -56,7 +64,7 @@ html,body{height:100%;font-family:var(--font-b);background:var(--bg);color:var(-
 /* ── Custom titlebar ── */
 #titlebar{display:flex;align-items:center;justify-content:space-between;height:36px;background:var(--bg2);border-bottom:1px solid var(--border);flex-shrink:0;padding:0 .6rem 0 1rem;user-select:none;-webkit-user-select:none;}
 #titlebar-drag{flex:1;height:100%;display:flex;align-items:center;gap:.55rem;cursor:default;}
-.tb-appname{font-family:var(--font-d);font-size:.92rem;color:var(--ink);letter-spacing:-.01em;}
+.tb-appname{font-family:var(--font-d);font-size:.86rem;font-weight:600;color:var(--ink);letter-spacing:-.02em;}
 .tb-appname em{font-style:normal;color:var(--accent);}
 #titlebar-controls{display:flex;gap:.28rem;align-items:center;}
 .wc{width:13px;height:13px;border-radius:50%;border:none;cursor:pointer;transition:filter .15s;padding:0;outline:none;flex-shrink:0;}
@@ -72,7 +80,7 @@ body:not(.tauri) #shell{height:100vh;}
 /* ── Sidebar ── */
 #sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
 #sb-top{padding:1rem 1.1rem .8rem;border-bottom:1px solid var(--border);flex-shrink:0;}
-.sb-wm{font-family:var(--font-d);font-size:1.3rem;font-weight:600;color:var(--ink);letter-spacing:-.02em;}
+.sb-wm{font-family:var(--font-d);font-size:1.1rem;font-weight:600;color:var(--ink);letter-spacing:-.02em;}
 .sb-wm em{font-style:normal;color:var(--accent);}
 .sb-sub{font-family:var(--font-m);font-size:.72rem;color:var(--ink4);letter-spacing:.1em;text-transform:uppercase;margin-top:.18rem;}
 #sb-scroll{flex:1;overflow-y:auto;padding:.75rem 1rem 1.2rem;}
@@ -162,7 +170,7 @@ body.tauri #home-link{display:none;}
    title's min-content width would keep the row wider than #content and scroll
    the page sideways on narrow screens. */
 .topic-rule{display:flex;align-items:center;gap:.6rem;margin:1.7rem 0 .6rem;flex-wrap:wrap;}
-.tr-c{font-family:var(--font-d);font-size:1.18rem;font-weight:600;color:var(--ink);white-space:nowrap;flex-shrink:0;}
+.tr-c{font-family:var(--font-d);font-size:1.02rem;font-weight:600;color:var(--ink);letter-spacing:-.02em;white-space:nowrap;flex-shrink:0;}
 .tr-t{font-family:var(--font-m);font-size:.78rem;color:var(--ink3);letter-spacing:.04em;flex:0 1 auto;min-width:0;overflow-wrap:anywhere;}
 .tr-l{flex:1 1 1.5rem;min-width:0;height:1px;background:var(--border);}
 .tr-n{font-family:var(--font-m);font-size:.76rem;color:var(--ink4);white-space:nowrap;flex-shrink:0;margin-left:auto;}
@@ -232,7 +240,7 @@ body.tauri #home-link{display:none;}
 #yaml-modal.open{display:flex;}
 .ym-panel{background:var(--bg);border:1px solid var(--border);border-radius:var(--r2);box-shadow:var(--sh2);width:min(980px,100%);max-height:90vh;display:flex;flex-direction:column;overflow:hidden;}
 .ym-head{display:flex;align-items:flex-start;justify-content:space-between;gap:.7rem;padding:.85rem 1.1rem .6rem;}
-.ym-title{font-family:var(--font-d);font-size:1.15rem;color:var(--ink);}
+.ym-title{font-family:var(--font-d);font-size:1rem;font-weight:600;color:var(--ink);letter-spacing:-.01em;}
 .ym-sub{font-family:var(--font-m);font-size:.85rem;color:var(--ink4);margin-top:.1rem;word-break:break-all;}
 .ym-tabs{display:flex;gap:.25rem;padding:.45rem 1.1rem 0;border-bottom:1px solid var(--border);background:var(--bg2);}
 .ym-tab{border:1px solid var(--border);border-bottom:none;background:var(--bg3);color:var(--ink3);font-family:var(--font-m);font-size:.85rem;padding:.3rem .7rem;border-radius:var(--r) var(--r) 0 0;cursor:pointer;}
@@ -247,7 +255,7 @@ body.tauri #home-link{display:none;}
 /* ── Empty ── */
 #empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:2rem;text-align:center;color:var(--ink4);}
 .e-icon{font-size:2.6rem;margin-bottom:.75rem;opacity:.4;}
-.e-h{font-family:var(--font-d);font-size:1.35rem;color:var(--ink);margin-bottom:.38rem;}
+.e-h{font-family:var(--font-d);font-size:1.12rem;font-weight:600;color:var(--ink);letter-spacing:-.02em;margin-bottom:.38rem;}
 .e-p{font-size:.83rem;color:var(--ink3);line-height:1.65;max-width:360px;}
 .e-code{font-family:var(--font-m);font-size:.9rem;color:var(--accent);margin-top:.55rem;}
 
