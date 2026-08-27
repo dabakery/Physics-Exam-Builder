@@ -154,8 +154,8 @@ questions:
           A gas in equilibrium has the same pressure throughout, regardless of
           the shape of the container or how narrow any part of it is. Narrowing
           a channel raises the speed of a flowing fluid, but this gas is not
-          flowing — it is a sealed container in equilibrium, so the pressure at
-          the neck wall equals the pressure at the bulb wall.
+          flowing. It is sealed in a container and sitting in equilibrium, so the
+          pressure at the neck wall equals the pressure at the bulb wall.
         on_correct: |
           Correct. Container shape does not affect the pressure of a gas in
           equilibrium.

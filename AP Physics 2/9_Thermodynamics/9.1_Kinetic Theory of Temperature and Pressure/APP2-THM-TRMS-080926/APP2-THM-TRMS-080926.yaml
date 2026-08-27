@@ -251,8 +251,9 @@ questions:
           Correct. A speed ratio of <latex>2</latex> read off the graph means a
           temperature ratio of <latex>4</latex>.
         on_incorrect: |
-          Start by reading the two peak speeds off the horizontal axis and forming their
-          ratio. What does a ratio of speeds let you say about a ratio of temperatures?
+          The figure gives you speeds and the question asks about temperatures, so
+          something has to connect the two. How is a molecular speed related to the
+          absolute temperature, and does a ratio carry across that relationship unchanged?
 
 - multiple_choice:
     id: q5

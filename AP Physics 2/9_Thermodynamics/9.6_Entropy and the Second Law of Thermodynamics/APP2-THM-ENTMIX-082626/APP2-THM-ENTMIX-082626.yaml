@@ -627,6 +627,6 @@ questions:
           Correct, and you found the difference in the starting states rather than the ending
           ones. Same energy, same final state, and a very different entropy change.
         on_incorrect: |
-          Work out the final state of each cup and compare them before you go any further.
-          If the two cups end in the same condition, where is the only place a difference
-          between them could be hiding?
+          Do these two cups actually end up in different conditions, or in the same one?
+          If they finish identically, where is the only place a difference between them
+          could still be hiding?

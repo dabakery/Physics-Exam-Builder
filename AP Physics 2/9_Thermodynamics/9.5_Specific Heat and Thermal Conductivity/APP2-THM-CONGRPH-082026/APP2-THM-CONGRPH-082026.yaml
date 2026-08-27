@@ -475,9 +475,9 @@ questions:
           Correct, and the slope of that plot is worth knowing too. It comes out as the
           conductivity multiplied by the area and the temperature difference.
         on_incorrect: |
-          Rearrange the relationship so that the length appears exactly once, then set it
-          beside the equation of a straight line through the origin. Which part of your
-          rearranged relationship is sitting where the horizontal axis variable sits?
+          These measurements curve because the quantity on the horizontal axis is not the
+          one the rate rises and falls in step with. Where does the length sit in the
+          relationship for a steady conduction rate?
 
 - multiple_choice:
     id: q7

@@ -413,9 +413,9 @@ questions:
           either path. That is the fastest route through any question about internal
           energy.
         on_incorrect: |
-          Work out the product of pressure and volume at state A and at state B. What
-          does comparing those two numbers tell you, and does anything that happens in
-          between change it?
+          Some quantities in thermodynamics are settled the moment you name the two
+          states, and others depend on the whole route between them. Which of those two
+          families does the internal energy of a gas belong to?
 
 - multiple_choice:
     id: q5
@@ -663,5 +663,6 @@ questions:
           Correct. With no heating available, the work the gas does and the internal
           energy it loses are the same quantity counted twice.
         on_incorrect: |
-          The word insulated tells you one term in the first law is zero. Write the law
-          out with that term removed and see what the equation says about the other two.
+          The word insulated rules one of the three quantities in the first law out
+          entirely. Which one is it, and once it is gone, what is left for the gas to draw
+          on while it does work?

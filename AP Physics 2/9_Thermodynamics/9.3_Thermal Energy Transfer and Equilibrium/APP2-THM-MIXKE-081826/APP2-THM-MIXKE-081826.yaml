@@ -531,9 +531,9 @@ questions:
           Correct. Gas B came out where it went in, and it did that by giving away exactly
           as much energy as it took in rather than by sitting the process out.
         on_incorrect: |
-          Work out the final temperature first and then compare it with each starting
-          value. Is a gas whose temperature does not change necessarily a gas that
-          exchanged nothing with its neighbors?
+          Not every gas in a mixture has to finish warmer or cooler than it started. Is a
+          gas whose temperature does not change necessarily a gas that exchanged nothing
+          with its neighbors?
 
 - multiple_answers:
     id: q6

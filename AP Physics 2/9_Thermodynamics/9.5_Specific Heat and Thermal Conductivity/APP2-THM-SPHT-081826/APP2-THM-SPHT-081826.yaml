@@ -477,6 +477,6 @@ questions:
           Correct, and the answer sitting so close to the water's starting temperature is
           the physically telling part.
         on_incorrect: |
-          Work out the product of mass and specific heat for each sample before solving
-          anything. Which of the two takes more energy to change by one kelvin, and what
-          should that do to where the final temperature lands?
+          Mass is not the only thing deciding how far a sample's temperature moves. Which
+          of these two takes more energy to change by one kelvin, and what should that do
+          to where the final temperature lands?

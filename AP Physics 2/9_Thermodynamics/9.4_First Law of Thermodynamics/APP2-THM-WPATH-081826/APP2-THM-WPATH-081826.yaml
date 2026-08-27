@@ -469,8 +469,9 @@ questions:
           Correct, including the tie. Two paths can carry the same work without being
           anything like the same process.
         on_incorrect: |
-          Work each of the three areas out as rectangles and a trapezoid before ranking
-          anything. Is a ranking question obliged to give you three different answers?
+          Two of these paths look quite different from each other on the diagram, and
+          looking different is not the same as doing different amounts of work. Is a
+          ranking question obliged to give you three different answers?
 
 - multiple_choice:
     id: q6
@@ -552,9 +553,9 @@ questions:
           Correct. With the internal energy change pinned at zero, heating and work are
           locked together and you can rank one by ranking the other.
         on_incorrect: |
-          Work out the product of pressure and volume at state A and at state B before
-          anything else. What does that comparison fix, and what does the first law then
-          leave the heating equal to?
+          Before comparing any areas, look again at what states A and B have in common.
+          What does that shared feature settle about the internal energy, and what does
+          the first law then leave to be decided?
 
 - multiple_choice:
     id: q7
@@ -634,6 +635,6 @@ questions:
           Correct, and the connection is worth keeping. The net work around a loop is the
           difference between the two paths that make it up.
         on_incorrect: |
-          Two of these four legs do no work at all. Take the other two with their
-          directions rather than their sizes, and ask what a gas being compressed at low
-          pressure and expanded at high pressure comes out with.
+          Not every leg of this cycle contributes to the work, and the ones that do are
+          not all pushing the same way. Which legs actually move the volume, and is the
+          gas being compressed or expanded along each of them?

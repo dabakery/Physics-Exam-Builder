@@ -358,10 +358,9 @@ questions:
           Correct, and your reason is the important half. Nothing in the steady rate
           refers to how much energy the rod itself can hold.
         on_incorrect: |
-          Write down the relationship for a steady conduction rate and read off the list
-          of quantities that appear in it. Is the specific heat one of them, and does the
-          phrase "steady state" change what the rod is doing with the energy that enters
-          it?
+          A steady state means the rod itself has stopped changing temperature. What is
+          the specific heat of a material a measure of, and does that have anything to do
+          with a rod whose temperature is no longer moving?
 
 - multiple_choice:
     id: q5
