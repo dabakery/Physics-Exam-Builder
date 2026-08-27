@@ -173,7 +173,7 @@ body.cart-open #cart-toggle{color:var(--accent);background:var(--bg3);border-col
    #cart-body reads "No banks selected" until then. Drawer-at-every-width also
    means there is no second responsive mode to keep in sync across these two
    files: mobile stops being a special case because it is the only case. */
-#cartbar{position:fixed;top:0;right:0;height:100%;width:min(92vw,400px);background:var(--bg2);border-left:1px solid var(--border);box-shadow:var(--sh2);display:flex;flex-direction:column;overflow:hidden;transform:translateX(100%);transition:transform .24s ease;z-index:1200;}
+#cartbar{position:fixed;top:0;right:0;height:100%;width:min(92vw,600px);background:var(--bg2);border-left:1px solid var(--border);box-shadow:var(--sh2);display:flex;flex-direction:column;overflow:hidden;transform:translateX(100%);transition:transform .24s ease;z-index:1200;}
 body.cart-open #cartbar{transform:none;}
 /* the desktop build's own titlebar sits in the top 36px; the drawer starts under it */
 body.tauri #cartbar{top:36px;height:calc(100% - 36px);}
@@ -1320,11 +1320,14 @@ function updateExportBtns() {
       : '') +
     `<span style="font-family:var(--font-m);font-size:.74rem;color:var(--ink4);display:block;margin-top:.3rem">Answer this exam in the browser and get feedback as you go.</span>
      </div>`;
+  // Preview sits with the exporters rather than with the quiz: both of them produce
+  // a document to look at, where the quiz is the interactive path.
+  const previewRows =
+    row('Preview Exam', vs.map(v=>`<button class="btn btn-xs" onclick="doPreview(${v},false)">👁 ${versionLabel(v)}</button>`).join('')) +
+    row('Preview Key',  vs.map(v=>`<button class="btn btn-xs" onclick="doPreview(${v},true)">👁 ${versionLabel(v)}</button>`).join(''));
   el.innerHTML =
     quizBlock +
-    row('Preview Exam', vs.map(v=>`<button class="btn btn-xs" onclick="doPreview(${v},false)">👁 ${versionLabel(v)}</button>`).join('')) +
-    row('Preview Key',  vs.map(v=>`<button class="btn btn-xs" onclick="doPreview(${v},true)">👁 ${versionLabel(v)}</button>`).join('')) +
-    `<details class="cb-exp"${expOpen ? ' open' : ''}><summary>Export</summary><div class="cb-exp-body">${exportRows}</div></details>`;
+    `<details class="cb-exp"${expOpen ? ' open' : ''}><summary>Export</summary><div class="cb-exp-body">${previewRows}${exportRows}</div></details>`;
 }
 
 function _cartBody() {

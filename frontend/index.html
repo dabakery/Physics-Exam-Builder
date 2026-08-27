@@ -173,7 +173,7 @@ body.cart-open #cart-toggle{color:var(--accent);background:var(--bg3);border-col
    #cart-body reads "No banks selected" until then. Drawer-at-every-width also
    means there is no second responsive mode to keep in sync across these two
    files: mobile stops being a special case because it is the only case. */
-#cartbar{position:fixed;top:0;right:0;height:100%;width:min(92vw,400px);background:var(--bg2);border-left:1px solid var(--border);box-shadow:var(--sh2);display:flex;flex-direction:column;overflow:hidden;transform:translateX(100%);transition:transform .24s ease;z-index:1200;}
+#cartbar{position:fixed;top:0;right:0;height:100%;width:min(92vw,600px);background:var(--bg2);border-left:1px solid var(--border);box-shadow:var(--sh2);display:flex;flex-direction:column;overflow:hidden;transform:translateX(100%);transition:transform .24s ease;z-index:1200;}
 body.cart-open #cartbar{transform:none;}
 /* the desktop build's own titlebar sits in the top 36px; the drawer starts under it */
 body.tauri #cartbar{top:36px;height:calc(100% - 36px);}
@@ -1285,7 +1285,10 @@ function updateExportBtns() {
   if (!S.cart.length) { el.innerHTML = ''; return; }
   // This reruns on every cart edit and every version bump, so the Export
   // disclosure has to be told to stay open or it snaps shut under the user.
-  const expOpen = !!el.querySelector('.cb-exp')?.open;
+  // Defaults open rather than closed here (the enhanced build defaults closed):
+  // with no quiz block above it, the disclosure is all this panel contains, and
+  // collapsing it would leave the drawer showing a single word.
+  const expOpen = el.querySelector('.cb-exp')?.open ?? true;
   const nv = Math.max(1, parseInt(document.getElementById('n-ver')?.value||'2'));
   const vs = Array.from({length:nv},(_,i)=>i+1);
   const row = (label, btns) =>
@@ -1302,12 +1305,17 @@ function updateExportBtns() {
       vs.map(v=>`<button class="btn btn-xs" onclick="doDocx(${v},${attr('exam')})">Exam ${versionLabel(v)}</button>`).join('') +
       vs.map(v=>`<button class="btn btn-xs" onclick="doDocx(${v},${attr('key')})">Key ${versionLabel(v)}</button>`).join(''))
   ) : row('Print / PDF', `<span style="font-family:var(--font-m);font-size:.82rem;color:var(--ink4)">Open a preview, then use the browser&#39;s Print → Save as PDF.</span>`);
-  // Preview, then export behind a disclosure — the same order the enhanced build
-  // uses, minus the quiz block, since exam-quiz.js is enhanced-only by design.
-  el.innerHTML =
+  // Preview sits with the exporters rather than with the quiz: both of them produce
+  // a document to look at, where the quiz is the interactive path.
+  const previewRows =
     row('Preview Exam', vs.map(v=>`<button class="btn btn-xs" onclick="doPreview(${v},false)">👁 ${versionLabel(v)}</button>`).join('')) +
-    row('Preview Key',  vs.map(v=>`<button class="btn btn-xs" onclick="doPreview(${v},true)">👁 ${versionLabel(v)}</button>`).join('')) +
-    `<details class="cb-exp"${expOpen ? ' open' : ''}><summary>Export</summary><div class="cb-exp-body">${tauriRows}</div></details>`;
+    row('Preview Key',  vs.map(v=>`<button class="btn btn-xs" onclick="doPreview(${v},true)">👁 ${versionLabel(v)}</button>`).join(''));
+  // Same disclosure as the enhanced build, minus the quiz block, since exam-quiz.js
+  // is enhanced-only by design — which leaves the disclosure as the panel's only
+  // content here, so it opens by default rather than collapsing the whole thing to
+  // a single line. See the ?? true in expOpen above.
+  el.innerHTML =
+    `<details class="cb-exp"${expOpen ? ' open' : ''}><summary>Export</summary><div class="cb-exp-body">${previewRows}${tauriRows}</div></details>`;
 }
 
 function _cartBody() {
