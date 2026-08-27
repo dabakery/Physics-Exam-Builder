@@ -536,7 +536,6 @@ body.nav-open #nav-overlay,body.cart-open #nav-overlay{display:block;}
       <span class="sb-lbl">Build Exam</span>
       <label class="cb-flbl" for="exam-title">Exam Title</label>
       <input id="exam-title" class="inp" type="text" value="Physics Exam" placeholder="Exam title…">
-      <div class="sb-hint">Heads each exam and key, and names each file you download.</div>
       <div style="display:flex;align-items:center;gap:.35rem;margin-top:.55rem;">
         <span style="font-family:var(--font-m);font-size:1.1rem;color:var(--ink4)">Versions:</span>
         <button class="ci-step" onclick="adjustVersions(-1)">−</button>
@@ -1315,7 +1314,7 @@ function updateExportBtns() {
     // Version A is already on the primary button, so chip only the rest rather
     // than repeating it — and drop the row entirely when there is just the one.
     (nv > 1
-      ? `<div class="cb-quiz-vs"><span class="cb-quiz-or">or</span>` +
+      ? `<div class="cb-quiz-vs"><span class="cb-quiz-or">or version</span>` +
         vs.slice(1).map(v=>`<button class="btn btn-xs" onclick="doQuiz(${v})">${versionLabel(v)}</button>`).join('') +
         `</div>`
       : '') +
