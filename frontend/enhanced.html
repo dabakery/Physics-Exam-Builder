@@ -173,7 +173,7 @@ body.cart-open #cart-toggle{color:var(--accent);background:var(--bg3);border-col
    #cart-body reads "No banks selected" until then. Drawer-at-every-width also
    means there is no second responsive mode to keep in sync across these two
    files: mobile stops being a special case because it is the only case. */
-#cartbar{position:fixed;top:0;right:0;height:100%;width:min(92vw,600px);background:var(--bg2);border-left:1px solid var(--border);box-shadow:var(--sh2);display:flex;flex-direction:column;overflow:hidden;transform:translateX(100%);transition:transform .24s ease;z-index:1200;}
+#cartbar{position:fixed;top:0;right:0;height:100%;width:min(92vw,525px);background:var(--bg2);border-left:1px solid var(--border);box-shadow:var(--sh2);display:flex;flex-direction:column;overflow:hidden;transform:translateX(100%);transition:transform .24s ease;z-index:1200;}
 body.cart-open #cartbar{transform:none;}
 /* the desktop build's own titlebar sits in the top 36px; the drawer starts under it */
 body.tauri #cartbar{top:36px;height:calc(100% - 36px);}
