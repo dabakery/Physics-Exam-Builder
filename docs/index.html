@@ -8,9 +8,13 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#fafaf8;--bg2:#f3f2ee;--bg3:#e8e6de;
-  --ink:#1a1916;--ink2:#3d3b35;--ink3:#6b6860;--ink4:#9b9890;
-  --accent:#c8391a;--border:#d8d6ce;
+  /* Kept in step with the builder's tokens in frontend/*.html. Cool ground,
+     spirit duplicator violet accent. Channel tokens so tints derive from one
+     place rather than being hardcoded alongside the hex. */
+  --bg:#f6f5f9;--bg2:#efeef4;--bg3:#e7e5ef;
+  --ink:#16151c;--ink2:#35333f;--ink3:#6e6b7a;--ink4:#7c7889;
+  --accent:#4a3a8c;--accent-rgb:74,58,140;--border:#d6d3e0;
+  --slate:#46506b;--slate-rgb:70,80,107;
   --font-d:'DM Serif Display',Georgia,serif;
   --font-b:'DM Sans',system-ui,sans-serif;
   --font-m:'DM Mono','Courier New',monospace;
@@ -33,11 +37,11 @@ nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:.7rem 2r
 .hero p{font-size:1.1rem;color:var(--ink3);max-width:540px;margin:0 auto 2.5rem;line-height:1.7}
 .hero-btns{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap}
 .btn{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1.3rem;border-radius:8px;font-family:var(--font-b);font-size:.95rem;font-weight:500;text-decoration:none;cursor:pointer;transition:all .15s}
-.btn-primary{background:var(--accent);color:#fff;border:1px solid var(--accent);box-shadow:0 2px 8px rgba(200,57,26,.25)}
+.btn-primary{background:var(--accent);color:#fff;border:1px solid var(--accent);box-shadow:0 2px 8px rgba(var(--accent-rgb),.25)}
 .btn-primary:hover{filter:brightness(1.08)}
 .btn-secondary{background:var(--bg2);color:var(--ink2);border:1px solid var(--border)}
 .btn-secondary:hover{background:var(--bg3)}
-.btn-alt{background:#1a4f8a;color:#fff;border:1px solid #1a4f8a;box-shadow:0 2px 8px rgba(26,79,138,.25)}
+.btn-alt{background:var(--slate);color:#fff;border:1px solid var(--slate);box-shadow:0 2px 8px rgba(var(--slate-rgb),.25)}
 .btn-alt:hover{filter:brightness(1.1)}
 
 /* Downloads */

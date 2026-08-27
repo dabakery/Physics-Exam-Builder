@@ -12,25 +12,41 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --bg:#fafaf8;--bg2:#f3f2ee;--bg3:#eeede8;--surface:#fff;
-  --border:#d8d6ce;--border2:#e8e6df;
-  --ink:#1a1916;--ink2:#3d3b35;--ink3:#6b6860;--ink4:#9b9890;
-  --accent:#c8391a;--accent-dim:rgba(200,57,26,.07);
-  --blue:#1a3cc8;--gold:#b8860b;--green:#1a7a35;
+  /* Ground and ink are cool rather than cream, and the accent is spirit
+     duplicator violet: the colour every worksheet in this subject was run off in
+     before about 1995. The --*-rgb channel tokens exist so that every translucent
+     tint derives from one place. Hardcoding them is what let the old terracotta
+     survive inside .btn-p's box-shadow after the accent itself had changed. */
+  --bg:#f6f5f9;--bg2:#efeef4;--bg3:#e7e5ef;--surface:#fff;
+  --border:#d6d3e0;--border2:#e6e3ee;
+  --ink:#16151c;--ink2:#35333f;--ink3:#6e6b7a;--ink4:#7c7889;
+  --ink-rgb:22,21,28;
+  --accent:#4a3a8c;--accent-rgb:74,58,140;--accent-dim:rgba(var(--accent-rgb),.07);
+  /* Question-type badges are decoration, so they are desaturated toward the
+     monochrome treatment they are heading for. --green stays saturated because it
+     marks a state (a correct answer) rather than a category. */
+  --blue:#46506b;--blue-rgb:70,80,107;
+  --gold:#7a6534;--gold-rgb:122,101,52;
+  --green:#0f7a4a;--green-rgb:15,122,74;
   --sidebar-w:300px;
   --font-d:'Space Grotesk',Georgia,sans-serif;
   --font-b:'Lexend',system-ui,sans-serif;
   --font-m:'JetBrains Mono','Courier New',monospace;
   --r:7px;--r2:11px;
-  --sh:0 1px 3px rgba(26,25,22,.07),0 4px 12px rgba(26,25,22,.04);
-  --sh2:0 2px 8px rgba(26,25,22,.1),0 8px 28px rgba(26,25,22,.07);
+  --sh:0 1px 3px rgba(var(--ink-rgb),.07),0 4px 12px rgba(var(--ink-rgb),.04);
+  --sh2:0 2px 8px rgba(var(--ink-rgb),.1),0 8px 28px rgba(var(--ink-rgb),.07);
 }
 [data-theme=dark]{
-  --bg:#141412;--bg2:#1c1c19;--bg3:#242420;--surface:#1c1c19;
-  --border:#38372f;--border2:#2e2e26;
-  --ink:#f0ede4;--ink2:#c8c4b8;--ink3:#8a8780;--ink4:#5a5850;
-  --accent:#e8522e;--accent-dim:rgba(232,82,46,.07);
-  --blue:#4d6fe8;--gold:#d4a017;--green:#6de89a;
+  --bg:#131218;--bg2:#1b1a22;--bg3:#24222d;--surface:#1b1a22;
+  --border:#383548;--border2:#2b2937;
+  --ink:#edebf2;--ink2:#c4c0d0;--ink3:#8b8798;--ink4:#6b6779;
+  /* black rather than the ink colour, so the modal and nav scrims read as real
+     shadow over a dark ground. --sh/--sh2 below set their own alphas. */
+  --ink-rgb:0,0,0;
+  --accent:#9a8ae0;--accent-rgb:154,138,224;
+  --blue:#8892ae;--blue-rgb:136,146,174;
+  --gold:#c0a468;--gold-rgb:192,164,104;
+  --green:#6de89a;--green-rgb:109,232,154;
   --sh:0 1px 3px rgba(0,0,0,.3),0 4px 12px rgba(0,0,0,.2);
   --sh2:0 2px 8px rgba(0,0,0,.4),0 8px 28px rgba(0,0,0,.3);
 }
@@ -65,7 +81,7 @@ body:not(.tauri) #shell{height:100vh;}
 
 /* ── Controls ── */
 .inp{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--ink);font-family:var(--font-m);font-size:.92rem;border-radius:var(--r);padding:.4rem .58rem;outline:none;transition:border-color .12s,box-shadow .12s;}
-.inp:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(200,57,26,.1);}
+.inp:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(var(--accent-rgb),.1);}
 .inp-row{display:flex;gap:.35rem;margin-top:.35rem;}
 /* The exam title is printed as the heading of every exam and key and is the stem
    of every export filename, but it was styled exactly like the search box two
@@ -79,7 +95,7 @@ body:not(.tauri) #shell{height:100vh;}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:.3rem;background:var(--surface);border:1px solid var(--border);color:var(--ink2);font-family:var(--font-b);font-size:.92rem;font-weight:500;border-radius:var(--r);padding:.36rem .8rem;cursor:pointer;transition:background .1s,border-color .1s,box-shadow .1s;white-space:nowrap;line-height:1.3;}
 .btn:hover{background:var(--bg3);border-color:var(--ink4);box-shadow:var(--sh);}
 .btn:active{transform:scale(.98);}
-.btn-p{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 1px 4px rgba(200,57,26,.28);}
+.btn-p{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 1px 4px rgba(var(--accent-rgb),.28);}
 .btn-p:hover{filter:brightness(1.07);background:var(--accent);border-color:var(--accent);}
 .btn-sm{font-size:1rem;padding:.28rem .62rem;}
 .btn-xs{font-size:.82rem;padding:.22rem .48rem;}
@@ -157,8 +173,8 @@ body.tauri #home-link{display:none;}
 .bank-card:hover{box-shadow:var(--sh2);transform:translateX(2px);}
 .bank-card:hover::before{background:var(--ink4);}
 .bank-card.incart::before{background:var(--accent);}
-.bank-card.incart{border-color:rgba(200,57,26,.18);}
-[data-theme=dark] .bank-card.incart{border-color:rgba(232,82,46,.26);}
+.bank-card.incart{border-color:rgba(var(--accent-rgb),.18);}
+[data-theme=dark] .bank-card.incart{border-color:rgba(var(--accent-rgb),.26);}
 .bc-title{font-weight:600;font-size:1.06rem;color:var(--ink);letter-spacing:-.01em;}
 /* The bank ID is a stable key, not a subtitle. It rides at the end of the badge
    row, where the question-type counts already sit, so the card's reading column
@@ -175,12 +191,12 @@ body.tauri #home-link{display:none;}
 
 /* ── Badges ── */
 .badge{display:inline-block;font-family:var(--font-m);font-size:.72rem;font-weight:500;padding:.09rem .36rem;border-radius:3px;margin:.12rem .08rem 0 0;letter-spacing:.03em;}
-.bd-num{background:rgba(26,60,200,.07);color:var(--blue);border:1px solid rgba(26,60,200,.17);}
-.bd-mc{background:rgba(184,134,11,.08);color:var(--gold);border:1px solid rgba(184,134,11,.19);}
-.bd-gen{background:rgba(26,25,22,.05);color:var(--ink3);border:1px solid var(--border);}
+.bd-num{background:rgba(var(--blue-rgb),.07);color:var(--blue);border:1px solid rgba(var(--blue-rgb),.17);}
+.bd-mc{background:rgba(var(--gold-rgb),.08);color:var(--gold);border:1px solid rgba(var(--gold-rgb),.19);}
+.bd-gen{background:rgba(var(--ink-rgb),.05);color:var(--ink3);border:1px solid var(--border);}
 .bd-ok{background:var(--accent);color:#fff;border:none;}
-[data-theme=dark] .bd-num{background:rgba(77,111,232,.11);color:var(--blue);border-color:rgba(77,111,232,.24);}
-[data-theme=dark] .bd-mc{background:rgba(212,160,23,.09);color:var(--gold);border-color:rgba(212,160,23,.22);}
+[data-theme=dark] .bd-num{background:rgba(var(--blue-rgb),.11);color:var(--blue);border-color:rgba(var(--blue-rgb),.24);}
+[data-theme=dark] .bd-mc{background:rgba(var(--gold-rgb),.09);color:var(--gold);border-color:rgba(var(--gold-rgb),.22);}
 [data-theme=dark] .bd-gen{background:rgba(255,255,255,.05);color:var(--ink3);}
 
 /* ── Questions ── */
@@ -199,7 +215,7 @@ body.tauri #home-link{display:none;}
 .q-text{font-size:1.1rem;line-height:1.72;color:var(--ink2);margin-bottom:.45rem;}
 .ans-list{display:flex;flex-direction:column;gap:.13rem;margin-bottom:.38rem;}
 .ans-opt{background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:.3rem .62rem;font-size:.96rem;color:var(--ink2);}
-.ans-ok{border-color:rgba(26,122,53,.35);background:rgba(26,122,53,.06);color:var(--green);}
+.ans-ok{border-color:rgba(var(--green-rgb),.35);background:rgba(var(--green-rgb),.06);color:var(--green);}
 .q-sol{border-left:3px solid var(--accent);padding:.48rem .72rem;background:var(--accent-dim);border-radius:0 5px 5px 0;font-size:.94rem;color:var(--ink2);line-height:1.65;margin-top:.38rem;}
 .sol-lbl{font-family:var(--font-m);font-size:.87rem;font-weight:500;color:var(--accent);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.2rem;}
 
@@ -212,7 +228,7 @@ body.tauri #home-link{display:none;}
 .cat-grp-dis .cat-grp-t{color:var(--ink3);font-style:italic;}
 
 /* ── YAML / prompts modal ── */
-#yaml-modal{position:fixed;inset:0;background:rgba(26,25,22,.45);display:none;align-items:center;justify-content:center;z-index:1000;padding:1.5rem;}
+#yaml-modal{position:fixed;inset:0;background:rgba(var(--ink-rgb),.45);display:none;align-items:center;justify-content:center;z-index:1000;padding:1.5rem;}
 #yaml-modal.open{display:flex;}
 .ym-panel{background:var(--bg);border:1px solid var(--border);border-radius:var(--r2);box-shadow:var(--sh2);width:min(980px,100%);max-height:90vh;display:flex;flex-direction:column;overflow:hidden;}
 .ym-head{display:flex;align-items:flex-start;justify-content:space-between;gap:.7rem;padding:.85rem 1.1rem .6rem;}
@@ -250,7 +266,7 @@ body.tauri #home-link{display:none;}
 
 /* ── Mobile / responsive ── */
 #nav-toggle{display:none;font-size:1.2rem;line-height:1;padding:.28rem .5rem;}
-#nav-overlay{display:none;position:fixed;inset:0;background:rgba(26,25,22,.45);z-index:1100;}
+#nav-overlay{display:none;position:fixed;inset:0;background:rgba(var(--ink-rgb),.45);z-index:1100;}
 body.nav-open #nav-overlay{display:block;}
 @media (max-width:820px){
   html,body{font-size:16px;}
