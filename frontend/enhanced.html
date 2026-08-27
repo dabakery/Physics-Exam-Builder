@@ -146,15 +146,14 @@ body.tauri #home-link{display:none;}
 [data-theme=dark] #theme-toggle .ico-sun{display:block;}
 [data-theme=dark] #theme-toggle .ico-moon{display:none;}
 #content{flex:1;overflow-y:auto;padding:1.3rem 1.8rem 3rem;}
-/* The problem here is line length, not layout width, so the cap belongs on the text
-   rather than on the container. Capping #banks-view fixed the measure by leaving a
-   band of dead space down the right of every wide window, which costs every user to
-   serve the widest ones. The cards stay fluid and the two text blocks stop at a
-   readable measure inside them; see .bc-preview and .bc-desc below.
-   A two column grid above about 1440px was tried and removed: it never reached a
-   1280px-tall Mac or a school Chromebook, which is the whole audience. bankCardHTML
-   still puts a .wide class on an expanded card, so bringing it back is a CSS-only
-   change. */
+/* Nothing constrains the width of the content column or of anything in it, and that
+   is deliberate. Two attempts at imposing a measure were both worse than the fluid
+   layout they replaced: capping #banks-view left a band of dead space down the right
+   of every wide window, and capping the card's text stopped the paragraph partway
+   across a card that still ran full width, which reads as unfinished. A two column
+   grid above 1440px went the same way, since it never reached a 1280px-tall Mac or a
+   school Chromebook. bankCardHTML still stamps .wide on an expanded card if a grid
+   is ever wanted again. Leave the width alone. */
 
 /* ── Stats ── */
 /* Library summary. These numbers describe the whole corpus and do not move while
@@ -226,8 +225,8 @@ body.tauri #home-link{display:none;}
    to look at. It now sits directly under the title at reading size. The
    description drops to secondary and clamps to two lines rather than three, so the
    card does not grow. */
-.bc-preview{font-size:.98rem;color:var(--ink2);margin-top:.4rem;line-height:1.6;max-width:72ch;}
-.bc-desc{font-size:.86rem;color:var(--ink3);margin-top:.4rem;line-height:1.5;max-width:72ch;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.bc-preview{font-size:.98rem;color:var(--ink2);margin-top:.4rem;line-height:1.6;}
+.bc-desc{font-size:.86rem;color:var(--ink3);margin-top:.4rem;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
 .bc-footer{display:flex;align-items:center;justify-content:space-between;margin-top:.55rem;}
 .bc-badges{display:flex;flex-wrap:wrap;align-items:center;gap:0;min-width:0;}
 .bc-actions{display:flex;gap:.3rem;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;}
