@@ -4,7 +4,8 @@ This repository is a modification of [https://github.com/Zhongzhou/ESTELA-physic
 
 It holds isomorphic problem banks for introductory Physics, created with the assistance of
 generative AI, and a web app that browses those banks, assembles an exam from them, and
-exports it. The live corpus is 50 ready banks holding 780 questions, counted on 2026-08-28.
+exports it. The corpus was 50 ready banks holding 780 questions on 2026-08-28, which is a
+snapshot rather than a maintained figure, since banks are being written most weeks.
 
 The bank structure supports conversion to QTI packages for use with Canvas. This fork does
 not use Canvas, so the QTI zips are **not embedded by default.** Pass `--include-qti` to
@@ -26,12 +27,19 @@ template, and is written to `docs/standalone-enhanced.html`.
 
 ### Using the page
 
-The left sidebar is for finding banks. The three filters narrow by course, then chapter, then
-topic, and the Topic filter appears only when the selected chapter has subtopic folders under
-it. Search matches bank titles, IDs, descriptions, learning objectives, and folder names, and
-the question type chips narrow to banks that contain that type. The summary line above the
-cards counts the banks, questions, and topics that are currently showing, so it moves as you
-filter rather than describing the whole library.
+The left sidebar is for finding banks. The three filter levels are checkbox lists, so you can
+tick several courses, several chapters, or several topics at once and build one exam across
+all of them. Each level appears once its parent has something ticked, which keeps the sidebar
+from opening with every chapter of every course, and a chapter with no subtopic folders never
+grows a Topics list. Ticking a chapter narrows only its own course, and ticking a topic
+narrows only its own chapter, so a tick never removes something else you ticked. The count
+beside each row is the size of that folder.
+
+Search matches bank titles, IDs, descriptions, learning objectives, and folder names, and the
+question type chips narrow to banks that contain that type. The summary line above the cards
+counts the banks, questions, and topics that are currently showing, so it moves as you filter
+rather than describing the whole library. **Clear** in the Filter heading resets the three
+levels and the type chips, and leaves the search box alone.
 
 Each card previews a question or two with the math rendered. **The card never shows an answer,
 a solution, or the raw YAML,** so the page can be put in front of a class. Answer keys come
@@ -122,9 +130,7 @@ answer options, as Exam *vN*, so it doubles as a self-check against a printed ve
 | `multiple_answers` | Graded, exact set match with no partial credit |
 | `categorization` | Graded. One dropdown per item asking which category it belongs to, with the full category descriptions listed above. All items must be placed correctly |
 
-That covers every question type the banks currently use. As of 2026-08-28 the 50 ready and
-deployed banks hold 356 numerical, 273 multiple choice, 82 categorization, and 69 multiple
-answer questions.
+That covers every question type the banks currently use.
 
 Scope and limits, by design:
 
@@ -184,12 +190,12 @@ The [Templates](./Templates/) folder contains templates for problem YAML files a
 
 ### Problem banks by course
 
-| Course | Bank prefix | Unit folders | Ready banks on 2026-08-28 |
+| Course | Bank prefix | Unit folders | State |
 |---|---|---|---|
-| [PHY I Mechanics](./PHY%20I%20Mechanics/) | `PHY1` | 0 to 12, upstream's university sequence | 27 |
-| [AP Physics 1](./AP%20Physics%201/) | `APP1` | 1 to 8 | 0, in progress |
-| [AP Physics 2](./AP%20Physics%202/) | `APP2` | 9 to 15 | 23, all in unit 9 |
-| [HS Physics](./HS%20Physics/) | `HSPHY` | 1 to 14, based on personal teaching sequence | 0, in progress |
+| [PHY I Mechanics](./PHY%20I%20Mechanics/) | `PHY1` | 0 to 12, upstream's university sequence | Upstream content, carried along unchanged |
+| [AP Physics 1](./AP%20Physics%201/) | `APP1` | 1 to 8 | Folders in place, banks not written yet |
+| [AP Physics 2](./AP%20Physics%202/) | `APP2` | 9 to 15 | Unit 9 is essentially complete, the rest is next |
+| [HS Physics](./HS%20Physics/) | `HSPHY` | 1 to 14, based on personal teaching sequence | Folders in place, banks not written yet |
 
 **The unit folder number is what students see.** The exam builder shows each chapter folder name verbatim, so the number in the folder name is the unit number on the site. The two AP courses use the College Board unit numbers directly, and together they form one unbroken 1 to 15 sequence (AP Unit 1 Kinematics → `1_Kinematics`; AP Unit 9 Thermodynamics → `9_Thermodynamics`, whose subtopic folders are numbered `9.1`, `9.2`, and so on). HS Physics follows its own order, numbered from 1. `PHY I Mechanics/` is the exception and starts at 0, because upstream's unit 0 is a math review that comes before the course proper. Check the course's own `README.md` before assuming a folder number means the same thing in two places.
 
