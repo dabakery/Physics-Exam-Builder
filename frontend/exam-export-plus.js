@@ -900,7 +900,7 @@ ${rows.join('\n')}
           const qdata = q[qtype] || {};
           if (!qdata.figure) continue;
           const bankRef = item.bankRef || { path: item.path, handle: { path: item.path } };
-          const key = `${bankRef.path || item.path || ''} ${qdata.figure}`;
+          const key = `${bankRef.path || item.path || ''}\u0000${qdata.figure}`;
           if (!resolved.has(key)) {
             let dataUrl = null;
             try { dataUrl = await bankSource.resolveFigure(bankRef, qdata, bankRef); }
