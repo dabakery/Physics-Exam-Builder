@@ -106,6 +106,34 @@ body:not(.tauri) #shell{height:100vh;}
 .sb-hint{font-family:var(--font-b);font-size:.76rem;color:var(--ink4);line-height:1.45;margin-top:.32rem;}
 .sel{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--ink);font-family:var(--font-m);font-size:.92rem;border-radius:var(--r);padding:.38rem .55rem;outline:none;cursor:pointer;margin-top:.28rem;color-scheme:inherit;}
 .sel:focus{border-color:var(--accent);}
+
+/* ── Filter checkbox lists ── */
+/* Course, chapter and topic are checkbox lists rather than the three single-select
+   dropdowns they used to be, so an exam can be drawn from several chapters at once.
+   Checkboxes rather than the chip treatment the question types get: the type row is
+   four three-letter abbreviations, where these are full folder names that have to
+   wrap, and a checkbox reads as "any number of these" without also reading as a
+   button. Level order is unchanged, so the sidebar still narrows Course → Chapter →
+   Topic. */
+.f-head{display:flex;align-items:baseline;justify-content:space-between;gap:.5rem;}
+.f-clear{background:none;border:none;padding:0;cursor:pointer;font-family:var(--font-m);font-size:.72rem;letter-spacing:.04em;color:var(--ink4);text-decoration:underline;text-underline-offset:2px;}
+.f-clear:hover{color:var(--accent);}
+.f-lvl{font-family:var(--font-m);font-size:.7rem;font-weight:500;letter-spacing:.09em;text-transform:uppercase;color:var(--ink4);margin:.55rem 0 .16rem;}
+.f-list{display:flex;flex-direction:column;max-height:13rem;overflow-y:auto;}
+/* Course caption above a chapter list (and chapter above a topic list), drawn only
+   when the list spans more than one parent. HS Physics and AP Physics 1 both have a
+   1_ folder, so without it two identical-looking rows would mean different things. */
+.f-grp{font-family:var(--font-m);font-size:.7rem;color:var(--ink4);margin:.4rem 0 .1rem;padding-left:.15rem;}
+.f-grp:first-child{margin-top:0;}
+.f-row{display:flex;align-items:flex-start;gap:.42rem;padding:.16rem .3rem;border-radius:var(--r);cursor:pointer;font-family:var(--font-m);font-size:.82rem;line-height:1.32;color:var(--ink3);}
+.f-row:hover{background:var(--bg3);color:var(--ink2);}
+.f-row.on{color:var(--ink);}
+.f-row input{margin:.2rem 0 0;accent-color:var(--accent);flex-shrink:0;cursor:pointer;}
+/* min-width:0 for the same reason .tr-t needs it: a flex item's default
+   min-width:auto floors it at min-content, and a chapter folder name is long
+   enough to push the count off the edge of the sidebar. */
+.f-nm{flex:1;min-width:0;overflow-wrap:anywhere;}
+.f-ct{flex-shrink:0;color:var(--ink4);font-size:.74rem;padding-top:.06rem;}
 [data-theme=dark] .sel{color-scheme:dark;}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:.3rem;background:var(--surface);border:1px solid var(--border);color:var(--ink2);font-family:var(--font-b);font-size:.92rem;font-weight:500;border-radius:var(--r);padding:.36rem .8rem;cursor:pointer;transition:background .1s,border-color .1s,box-shadow .1s;white-space:nowrap;line-height:1.3;}
 .btn:hover{background:var(--bg3);border-color:var(--ink4);box-shadow:var(--sh);}
@@ -462,16 +490,13 @@ body.nav-open #nav-overlay,body.cart-open #nav-overlay{display:block;}
     -->
 
       <div class="sb-sec" id="filter-sec" style="display:none">
-        <span class="sb-lbl">Filter</span>
-        <select id="fc" class="sel" onchange="onFilterChange()">
-          <option value="">All courses</option>
-        </select>
-        <select id="ft" class="sel" style="display:none" onchange="onTopicChange()">
-          <option value="">All chapters</option>
-        </select>
-        <select id="fs" class="sel" style="display:none" onchange="renderBanks()">
-          <option value="">All topics</option>
-        </select>
+        <div class="f-head">
+          <span class="sb-lbl">Filter</span>
+          <button type="button" class="f-clear" id="f-clear" style="display:none" onclick="clearFilters()">Clear</button>
+        </div>
+        <div id="f-courses"></div>
+        <div id="f-chapters"></div>
+        <div id="f-topics"></div>
         <div id="type-filter" style="margin-top:.4rem;display:flex;flex-wrap:wrap;gap:.22rem"></div>
       </div>
 
@@ -592,6 +617,12 @@ const S = {
   theme: localStorage.getItem('theme') || 'light',
   search: '',
   typeFilter: new Set(), // empty = show all types
+  // One Set per filter level, empty meaning no restriction. Chapter and topic keys
+  // are parent-qualified (see FSEP), because a folder name is only unique inside
+  // its parent.
+  fCourses: new Set(),
+  fChapters: new Set(),
+  fTopics: new Set(),
 };
 
 function indexRepoRefs(data) {
@@ -812,6 +843,7 @@ async function loadRepo() {
 
 function clearAll() {
   S.repo = {}; S.cart = []; S.expanded = new Set(); S.search = '';
+  S.fCourses.clear(); S.fChapters.clear(); S.fTopics.clear(); S.typeFilter.clear();
   localStorage.removeItem('estela_cart');
   localStorage.removeItem('estela_path');
   document.getElementById('path-inp').value = '';
@@ -825,14 +857,16 @@ function clearAll() {
 }
 
 // ── Filters ────────────────────────────────────────────────────────────────
+/* U+241F, the symbol for a unit separator. Joins a key to its parent, and cannot
+   occur in a folder name, so splitting on it is safe. */
+const FSEP = '\u241f';
+const chKey = (c, t) => c + FSEP + t;
+const tpKey = (c, t, s) => c + FSEP + t + FSEP + s;
+
 function populateFilters() {
-  const fc = document.getElementById('fc');
-  fc.innerHTML = '<option value="">All courses</option>';
-  Object.keys(S.repo).forEach(c => {
-    const o = document.createElement('option'); o.value = c; o.textContent = c; fc.appendChild(o);
-  });
   document.getElementById('filter-sec').style.display = 'block';
   document.getElementById('search-sec').style.display = 'block';
+  renderFilters();
   renderTypeFilter();
 }
 
@@ -869,50 +903,119 @@ function toggleTypeFilter(t) {
   if (S.typeFilter.has(t)) S.typeFilter.delete(t);
   else S.typeFilter.add(t);
   renderTypeFilter();
+  updateClearBtn();
   renderBanks();
 }
 
-function onFilterChange() {
-  const course = document.getElementById('fc').value;
-  const ft = document.getElementById('ft');
-  if (course && S.repo[course]) {
-    ft.style.display = 'block';
-    ft.innerHTML = '<option value="">All chapters</option>';
-    // Sorted here rather than trusted from the source: the Tauri backend hands
-    // back a serde_json::Map (a BTreeMap), so its chapter keys arrive in plain
-    // lexicographic order and would list 10_ before 2_.
-    Object.keys(S.repo[course]).sort(EstelaBankSource.natCmp).forEach(t => {
-      const o = document.createElement('option'); o.value = t; o.textContent = t; ft.appendChild(o);
-    });
-  } else {
-    ft.style.display = 'none';
-  }
-  onTopicChange();
+const fRow = (lvl, key, name, on, n) =>
+  `<label class="f-row${on ? ' on' : ''}">` +
+    `<input type="checkbox" data-lvl="${lvl}" data-key="${esc(key)}"${on ? ' checked' : ''} onchange="onFilterToggle(this)">` +
+    `<span class="f-nm">${esc(name)}</span><span class="f-ct">${n}</span></label>`;
+
+// Captions are only drawn for a list that spans more than one parent. One course's
+// chapters need no repeated course name above them.
+const fGroups = (groups) => groups.length > 1
+  ? groups.map(([cap, rows]) => `<div class="f-grp">${esc(cap)}</div>${rows}`).join('')
+  : groups.map(([, rows]) => rows).join('');
+
+/* Writes one level, or empties it when there is nothing to choose. The scroll
+   position is carried across the rewrite: the list is capped at 13rem, and
+   renderFilters() reruns on every tick, so without this a tick near the bottom of
+   a 15-chapter course would jump the list back to the top under the pointer. */
+function fLevel(id, label, rowsHtml) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const prev = el.querySelector('.f-list');
+  const top = prev ? prev.scrollTop : 0;
+  el.innerHTML = rowsHtml ? `<div class="f-lvl">${label}</div><div class="f-list">${rowsHtml}</div>` : '';
+  const now = el.querySelector('.f-list');
+  if (now) now.scrollTop = top;
 }
 
-// Third filter level. `subtopic` is optional — banks that sit directly under a
-// chapter folder report '' and are grouped under "(no topic)". The select stays
-// hidden unless the chosen chapter actually has subtopics, so flat courses like
-// PHY I Mechanics look exactly as they did before.
-function onTopicChange() {
-  const course = document.getElementById('fc').value;
-  const topic = document.getElementById('ft').value;
-  const fs = document.getElementById('fs');
-  const subs = new Set();
-  if (course && topic && S.repo[course] && S.repo[course][topic]) {
-    for (const b of S.repo[course][topic]) if (b.subtopic) subs.add(b.subtopic);
+/* Draws all three levels from S.repo and the three Sets. Sorted here rather than
+   trusted from the source: the Tauri backend hands back a serde_json::Map (a
+   BTreeMap), so its chapter keys arrive in plain lexicographic order and would list
+   10_ before 2_. Each row carries the number of banks under it, which is the size of
+   the folder and so deliberately ignores the search box and the type chips. The
+   caption above the cards is the live count of what those leave showing. */
+function renderFilters() {
+  const nat = EstelaBankSource.natCmp;
+  const courses = Object.keys(S.repo).sort(nat);
+
+  fLevel('f-courses', 'Courses', courses.map(c => {
+    let n = 0;
+    for (const banks of Object.values(S.repo[c])) n += banks.length;
+    return fRow('c', c, c, S.fCourses.has(c), n);
+  }).join(''));
+
+  // Chapters of the checked courses only. Listing every chapter of every course up
+  // front is a wall of rows rather than a filter, which is why the chapter select
+  // used to stay hidden until a course was picked.
+  const chGroups = [];
+  for (const c of courses) {
+    if (!S.fCourses.has(c)) continue;
+    const rows = Object.keys(S.repo[c]).sort(nat)
+      .map(t => fRow('h', chKey(c, t), t, S.fChapters.has(chKey(c, t)), S.repo[c][t].length)).join('');
+    if (rows) chGroups.push([c, rows]);
   }
-  if (subs.size) {
-    fs.style.display = 'block';
-    fs.innerHTML = '<option value="">All topics</option>';
-    [...subs].sort(EstelaBankSource.natCmp).forEach(t => {
-      const o = document.createElement('option'); o.value = t; o.textContent = t; fs.appendChild(o);
-    });
-  } else {
-    fs.style.display = 'none';
-    fs.value = '';
+  fLevel('f-chapters', 'Chapters', fGroups(chGroups));
+
+  // Third level. `subtopic` is optional, so a chapter whose banks sit directly under
+  // it contributes nothing here and a flat course like PHY I Mechanics never grows a
+  // Topics list at all.
+  const tpGroups = [];
+  for (const c of courses) {
+    if (!S.fCourses.has(c)) continue;
+    for (const t of Object.keys(S.repo[c]).sort(nat)) {
+      if (!S.fChapters.has(chKey(c, t))) continue;
+      const counts = new Map();
+      for (const b of S.repo[c][t]) if (b.subtopic) counts.set(b.subtopic, (counts.get(b.subtopic) || 0) + 1);
+      if (!counts.size) continue;
+      const rows = [...counts.keys()].sort(nat)
+        .map(s => fRow('t', tpKey(c, t, s), s, S.fTopics.has(tpKey(c, t, s)), counts.get(s))).join('');
+      tpGroups.push([t, rows]);
+    }
   }
+  fLevel('f-topics', 'Topics', fGroups(tpGroups));
+
+  updateClearBtn();
+}
+
+function onFilterToggle(el) {
+  const set = el.dataset.lvl === 'c' ? S.fCourses : el.dataset.lvl === 'h' ? S.fChapters : S.fTopics;
+  if (el.checked) set.add(el.dataset.key); else set.delete(el.dataset.key);
+  pruneFilters();
+  renderFilters();
   renderBanks();
+}
+
+/* A ticked box whose parent has just been unticked is a filter that is still
+   narrowing the page from a list that is no longer on screen, so it cannot be
+   turned off. Unticking a course therefore takes its chapters with it, and a
+   chapter takes its topics. */
+function pruneFilters() {
+  for (const k of [...S.fChapters]) {
+    if (!S.fCourses.has(k.split(FSEP)[0])) S.fChapters.delete(k);
+  }
+  for (const k of [...S.fTopics]) {
+    const p = k.split(FSEP);
+    if (!S.fChapters.has(chKey(p[0], p[1]))) S.fTopics.delete(k);
+  }
+}
+
+// Covers the type chips too, since they sit in this section. Search has its own.
+function clearFilters() {
+  S.fCourses.clear(); S.fChapters.clear(); S.fTopics.clear(); S.typeFilter.clear();
+  renderFilters();
+  renderTypeFilter();
+  renderBanks();
+}
+
+function updateClearBtn() {
+  const b = document.getElementById('f-clear');
+  if (!b) return;
+  const on = S.fCourses.size || S.fChapters.size || S.fTopics.size || S.typeFilter.size;
+  b.style.display = on ? 'inline' : 'none';
 }
 
 // ── Badge helpers ──────────────────────────────────────────────────────────
@@ -928,10 +1031,15 @@ function bcls(t) {
 
 // ── Render banks ───────────────────────────────────────────────────────────
 function renderBanks() {
-  const fc = document.getElementById('fc').value;
-  const ft = document.getElementById('ft').value;
-  const fs = document.getElementById('fs').value;
   const q = S.search.toLowerCase();
+  /* Chapter and topic ticks are scoped to their own parent: ticking a chapter in
+     one course does not empty another checked course, and ticking a topic narrows
+     only the chapter it belongs to. With one course checked, which is the ordinary
+     case, that is identical to a global filter. With several checked it is the rule
+     that keeps a tick from removing something else you ticked, which is the whole
+     point of allowing several. */
+  const chScoped = new Set([...S.fChapters].map(k => k.split(FSEP)[0]));
+  const tpScoped = new Set([...S.fTopics].map(k => { const p = k.split(FSEP); return chKey(p[0], p[1]); }));
   let html = '';
   // Tallied off the same `filtered` list the cards are built from, rather than
   // walked separately over S.repo, so the stats caption reports what is on screen
@@ -939,10 +1047,14 @@ function renderBanks() {
   const st = {banks:0, qs:0, courses:new Set(), chapters:new Set(), topics:new Set()};
 
   for (const [course, topics] of Object.entries(S.repo)) {
-    if (fc && course !== fc) continue;
+    if (S.fCourses.size && !S.fCourses.has(course)) continue;
     for (const [topic, banks] of Object.entries(topics).sort((a, b) => EstelaBankSource.natCmp(a[0], b[0]))) {
-      if (ft && topic !== ft) continue;
-      const subFiltered = fs ? banks.filter(b => (b.subtopic || '') === fs) : banks;
+      if (chScoped.has(course) && !S.fChapters.has(chKey(course, topic))) continue;
+      // A ticked topic also drops that chapter's banks that have no subtopic at all,
+      // which is what the Topic select did when it was one choice at a time.
+      const subFiltered = tpScoped.has(chKey(course, topic))
+        ? banks.filter(b => S.fTopics.has(tpKey(course, topic, b.subtopic || '')))
+        : banks;
       const textFiltered = q ? subFiltered.filter(b => {
         const m = b.meta;
         return (m.title||'').toLowerCase().includes(q) ||
@@ -958,11 +1070,11 @@ function renderBanks() {
 
       for (const b of filtered) {
         st.banks++; st.qs += b.meta.q_count || 0;
-        st.courses.add(course); st.chapters.add(course + '␟' + topic);
+        st.courses.add(course); st.chapters.add(chKey(course, topic));
         // Only a real subtopic folder counts as a topic. A bank sitting directly
         // under a chapter reports '', and counting that would report one topic per
         // chapter for a flat course like PHY I Mechanics.
-        if (b.subtopic) st.topics.add(course + '␟' + topic + '␟' + b.subtopic);
+        if (b.subtopic) st.topics.add(tpKey(course, topic, b.subtopic));
       }
 
       // Group by the optional third level. Banks with no subtopic keep the old
@@ -988,7 +1100,7 @@ function renderBanks() {
   }
 
   const v = document.getElementById('banks-view');
-  v.innerHTML = statsHTML(st, fc, ft, fs) + html; v.style.display = 'block';
+  v.innerHTML = statsHTML(st) + html; v.style.display = 'block';
   renderMath(v);
   document.getElementById('empty').style.display = 'none';
   S.expanded.forEach(p => loadQs(p));
@@ -998,19 +1110,20 @@ function renderBanks() {
    called anywhere else, because a count that ignored the filters would describe a
    page the user is not looking at.
 
-   The trailing segment climbs the filter ladder, naming the level being browsed:
-   no course pinned reads "chapters in courses", inside a course it drops to
-   chapters, and inside a chapter it names the subtopics — which is the level the
-   third select calls "topics". Pinning a topic drops the segment rather than
-   reading "1 topic", and a chapter with no subtopic folders drops it too. */
-function statsHTML(st, fc, ft, fs) {
+   The trailing segment names the deepest level the results still span more than one
+   of: several courses reads "chapters in courses", one course reads chapters, and
+   one chapter reads the subtopics, which is the level the third filter calls topics.
+   Read off the results rather than off which boxes are ticked, so it says the same
+   thing however the selection was arrived at, and a level the results have narrowed
+   to exactly one of is dropped rather than printed as "1 topic". */
+function statsHTML(st) {
   const n = (v) => `<span class="st-n">${v}</span>`;
   const pl = (v, w) => `${n(v)} ${w}${v === 1 ? '' : 's'}`;
   if (!st.banks) return `<div id="stats"><span>No banks match the current filters</span></div>`;
   const parts = [pl(st.banks, 'bank'), pl(st.qs, 'question')];
-  if (!fc) parts.push(`${pl(st.chapters.size, 'chapter')} in ${pl(st.courses.size, 'course')}`);
-  else if (!ft) parts.push(pl(st.chapters.size, 'chapter'));
-  else if (!fs && st.topics.size) parts.push(pl(st.topics.size, 'topic'));
+  if (st.courses.size > 1) parts.push(`${pl(st.chapters.size, 'chapter')} in ${pl(st.courses.size, 'course')}`);
+  else if (st.chapters.size > 1) parts.push(pl(st.chapters.size, 'chapter'));
+  else if (st.topics.size > 1) parts.push(pl(st.topics.size, 'topic'));
   return `<div id="stats">${parts.map(p => `<span>${p}</span>`).join('')}</div>`;
 }
 
