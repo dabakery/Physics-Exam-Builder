@@ -216,11 +216,13 @@ body.tauri #cartbar{top:36px;height:calc(100% - 36px);}
    is ever wanted again. Leave the width alone. */
 
 /* ── Stats ── */
-/* Library summary. These numbers describe the whole corpus and do not move while
-   you work, so they are a caption rather than the five display-size tiles they
-   used to be: the vertical space above the banks is worth more than the restatement.
-   "In cart" is gone from here entirely. It is working state, and the sidebar cart
-   already carries a live count right next to the cart it describes. */
+/* Caption for what is on screen right now: the numbers are tallied from the cards
+   renderBanks() actually emits, so they follow the course/chapter/topic selects,
+   the search box and the type chips. A caption rather than the five display-size
+   tiles they used to be — the vertical space above the banks is worth more than
+   the restatement. "In cart" is gone from here entirely. It is working state, and
+   the sidebar cart already carries a live count right next to the cart it
+   describes. */
 #stats{font-family:var(--font-m);font-size:.76rem;color:var(--ink4);letter-spacing:.03em;margin-bottom:1.15rem;display:flex;flex-wrap:wrap;gap:.15rem .95rem;}
 .st-n{color:var(--ink2);font-weight:500;}
 
@@ -930,7 +932,11 @@ function renderBanks() {
   const ft = document.getElementById('ft').value;
   const fs = document.getElementById('fs').value;
   const q = S.search.toLowerCase();
-  let html = statsHTML();
+  let html = '';
+  // Tallied off the same `filtered` list the cards are built from, rather than
+  // walked separately over S.repo, so the stats caption reports what is on screen
+  // — narrowed by the search box and the type chips too, not just the selects.
+  const st = {banks:0, qs:0, courses:new Set(), chapters:new Set(), topics:new Set()};
 
   for (const [course, topics] of Object.entries(S.repo)) {
     if (fc && course !== fc) continue;
@@ -949,6 +955,15 @@ function renderBanks() {
       const filtered = S.typeFilter.size === 0 ? textFiltered
         : textFiltered.filter(b => Object.keys(b.meta.q_types||{}).some(t => S.typeFilter.has(t)));
       if (!filtered.length) continue;
+
+      for (const b of filtered) {
+        st.banks++; st.qs += b.meta.q_count || 0;
+        st.courses.add(course); st.chapters.add(course + '␟' + topic);
+        // Only a real subtopic folder counts as a topic. A bank sitting directly
+        // under a chapter reports '', and counting that would report one topic per
+        // chapter for a flat course like PHY I Mechanics.
+        if (b.subtopic) st.topics.add(course + '␟' + topic + '␟' + b.subtopic);
+      }
 
       // Group by the optional third level. Banks with no subtopic keep the old
       // flat presentation — one rule for the chapter, then the cards.
@@ -973,24 +988,30 @@ function renderBanks() {
   }
 
   const v = document.getElementById('banks-view');
-  v.innerHTML = html; v.style.display = 'block';
+  v.innerHTML = statsHTML(st, fc, ft, fs) + html; v.style.display = 'block';
   renderMath(v);
   document.getElementById('empty').style.display = 'none';
   S.expanded.forEach(p => loadQs(p));
 }
 
-function statsHTML() {
-  let courses=0,topics=0,banks=0,qs=0;
-  for (const tv of Object.values(S.repo)) {
-    courses++;
-    for (const bl of Object.values(tv)) { topics++; for (const b of bl) { banks++; qs+=b.meta.q_count; } }
-  }
+/* Reads the tallies renderBanks() collected from the visible cards; it is never
+   called anywhere else, because a count that ignored the filters would describe a
+   page the user is not looking at.
+
+   The trailing segment climbs the filter ladder, naming the level being browsed:
+   no course pinned reads "chapters in courses", inside a course it drops to
+   chapters, and inside a chapter it names the subtopics — which is the level the
+   third select calls "topics". Pinning a topic drops the segment rather than
+   reading "1 topic", and a chapter with no subtopic folders drops it too. */
+function statsHTML(st, fc, ft, fs) {
   const n = (v) => `<span class="st-n">${v}</span>`;
-  return `<div id="stats">
-    <span>${n(banks)} banks</span>
-    <span>${n(qs)} questions</span>
-    <span>${n(topics)} topics in ${n(courses)} courses</span>
-  </div>`;
+  const pl = (v, w) => `${n(v)} ${w}${v === 1 ? '' : 's'}`;
+  if (!st.banks) return `<div id="stats"><span>No banks match the current filters</span></div>`;
+  const parts = [pl(st.banks, 'bank'), pl(st.qs, 'question')];
+  if (!fc) parts.push(`${pl(st.chapters.size, 'chapter')} in ${pl(st.courses.size, 'course')}`);
+  else if (!ft) parts.push(pl(st.chapters.size, 'chapter'));
+  else if (!fs && st.topics.size) parts.push(pl(st.topics.size, 'topic'));
+  return `<div id="stats">${parts.map(p => `<span>${p}</span>`).join('')}</div>`;
 }
 
 /* Bank descriptions in this fork open with a sentence that restates the course,
