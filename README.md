@@ -1,6 +1,6 @@
 # Physics Exam Builder
 
-This repository is a modification of [https://github.com/Zhongzhou/ESTELA-physics-problem-bank](https://github.com/Zhongzhou/ESTELA-physics-problem-bank) that is tuned for regular and AP level high school Physics using a foundation of exam questions that I have written over time.
+This repository is a modification of [https://github.com/Zhongzhou/ESTELA-physics-problem-bank](https://github.com/Zhongzhou/ESTELA-physics-problem-bank) that is tuned for regular and AP level high school Physics using a foundation of exam questions that I have written over time with generative AI used to add *isomorphic* versions of each question, forming comprehensive question banks that target common misconceptions and distractors.
 
 It holds isomorphic problem banks for introductory Physics, created with the assistance of
 generative AI, and a web app that browses those banks, assembles an exam from them, and
