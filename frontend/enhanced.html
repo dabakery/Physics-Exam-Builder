@@ -887,7 +887,7 @@ function renderTypeFilter() {
   const types = [...known, ...extra].map(t => [t, TS[t] || t.slice(0, 3).toUpperCase()]);
   el.innerHTML = types.map(([t, label]) => {
     const on = S.typeFilter.has(t);
-    return `<button class="badge ${on ? 'bd-ok' : 'bd-gen'}" style="cursor:pointer;padding:.18rem .45rem" onclick="toggleTypeFilter('${t}')">${label}</button>`;
+    return `<button class="badge ${on ? 'bd-ok' : 'bd-gen'}" style="cursor:pointer;padding:.18rem .45rem" onclick="toggleTypeFilter(${attr(t)})">${esc(label)}</button>`;
   }).join('');
 }
 
@@ -1242,14 +1242,14 @@ function qHTML(q, i, bankPath) {
         ${pool.map(t=>`<div class="ans-opt">${t}</div>`).join('')}
       </div>` : '';
   const fig = q.fig_url
-    ? `<img src="${q.fig_url}" style="max-width:360px;margin:.35rem 0;border-radius:5px;display:block;">` : '';
+    ? `<img src="${esc(q.fig_url)}" style="max-width:360px;margin:.35rem 0;border-radius:5px;display:block;">` : '';
   return `<div class="q-item">
     <button class="q-trigger" id="qt-${id}" onclick="toggleQ('${id}')">
       <span class="q-nbadge">Q${i+1}</span>
       <span style="flex:1;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
         ${esc(q.title||q.id)}
       </span>
-      <span class="q-type">${q.type_label}</span>
+      <span class="q-type">${esc(q.type_label)}</span>
       <span class="q-chev">›</span>
     </button>
     <div class="q-body" id="qb-${id}">
@@ -1928,8 +1928,14 @@ async function saveSelectedToFolder() {
 
 // ── Utilities ──────────────────────────────────────────────────────────────
 function versionLabel(v) { return EstelaExamExport.versionLabel(v); }
+/* Covers ' as well as ", because the page writes handler arguments into
+   double-quoted attributes as single-quoted JS strings (toggleQ('...')). Without
+   the apostrophe an escaped value is still safe in element text and in a
+   double-quoted attribute, but not in that third context. Prefer attr() for a
+   handler argument; esc() is the floor, not the idiom. */
 function esc(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 function json(v) { return JSON.stringify(v); }
 // safe for use inside double-quoted HTML attributes
