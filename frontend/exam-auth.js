@@ -19,6 +19,19 @@
 
   const $ = (id) => document.getElementById(id);
 
+  /* The page declares its state as `const S = {...}` in a classic script, which
+     creates a binding in the global LEXICAL environment - not a property on
+     window. So global.S is undefined and must never be tested. An unqualified
+     reference resolves across scripts; typeof throws while the binding is still
+     in its temporal dead zone, which is why this is wrapped. */
+  function pageState() {
+    try { return typeof S !== 'undefined' ? S : null; } catch { return null; }
+  }
+
+  // The DOM is the authoritative current theme: applyTheme() writes it there.
+  const currentTheme = () =>
+    document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+
   /* ── api ──────────────────────────────────────────────────────────────── */
 
   async function api(method, path, body) {
@@ -56,7 +69,7 @@
     ((u.first_name || '').trim().charAt(0) + (u.last_name || '').trim().charAt(0))
       .toUpperCase() || '?';
 
-  const fullName = (u) => [u.first_name, u.last_name].filter(Boolean).join(' ') || u.pin;
+  const fullName = (u) => [u.first_name, u.last_name].filter(Boolean).join(' ') || 'Account';
 
   /* ── local state that must not follow one student to the next ─────────────
      estela_cart and estela_path are global localStorage keys, so on a shared
@@ -79,8 +92,9 @@
      the source of truth across devices. So: paint local, then reconcile. */
   function applyServerTheme(dark) {
     const want = dark ? 'dark' : 'light';
-    if (!global.S || S.theme === want) return;
-    S.theme = want;
+    if (currentTheme() === want) return;
+    const st = pageState();
+    if (st) st.theme = want;
     try { localStorage.setItem('theme', want); } catch {}
     if (typeof global.applyTheme === 'function') global.applyTheme(want);
   }
@@ -92,10 +106,10 @@
     if (typeof pageToggle !== 'function') return;
     global.toggleTheme = function () {
       pageToggle.apply(this, arguments);
-      if (A.user && global.S) {
+      if (A.user) {
         // Fire and forget. A failed write costs the stored preference, not the
         // click the student just made.
-        api('PATCH', '/api/me', { site_mode_dark: S.theme === 'dark' });
+        api('PATCH', '/api/me', { site_mode_dark: currentTheme() === 'dark' });
       }
     };
   }
@@ -251,7 +265,8 @@
 
   function setUser(user) {
     A.user = user;
-    if (global.S) S.user = user;          // gate for page code
+    const st = pageState();
+    if (st) st.user = user;               // gate for page code
     const btn = $('auth-btn');
     if (!btn) return;
     if (user) {
@@ -274,7 +289,6 @@
     panel.innerHTML = `
       <div class="au-who">
         <div class="au-who-n">${esc(fullName(A.user))}</div>
-        <div class="au-who-p">${esc(A.user.pin)}</div>
       </div>
       <button class="au-item" onclick="EstelaAuth.openChange()">Change password</button>
       <button class="au-item" onclick="EstelaAuth.logout()">Log out</button>`;
@@ -324,11 +338,13 @@
 .au-msg-err{color:var(--accent);}
 .au-ini{font-family:var(--font-m);font-size:.78rem;font-weight:600;letter-spacing:.02em;}
 #auth-wrap{position:relative;display:inline-flex;}
+#auth-btn{flex-shrink:0;width:32px;height:32px;padding:0;border-radius:50%;color:var(--ink4);display:inline-flex;align-items:center;justify-content:center;}
+#auth-btn:hover{color:var(--accent);}
+#auth-btn svg{width:17px;height:17px;display:block;}
 #au-panel{position:absolute;top:calc(100% + .4rem);right:0;z-index:110;display:none;min-width:12rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--r);box-shadow:0 8px 26px rgba(0,0,0,.22);padding:.35rem;}
 #au-panel.open{display:block;}
 .au-who{padding:.45rem .55rem .5rem;border-bottom:1px solid var(--border);margin-bottom:.3rem;}
 .au-who-n{font-size:.92rem;color:var(--ink);}
-.au-who-p{font-family:var(--font-m);font-size:.76rem;color:var(--ink4);}
 .au-item{display:block;width:100%;text-align:left;padding:.45rem .55rem;border:0;border-radius:calc(var(--r) - 2px);background:transparent;color:var(--ink2);font:inherit;font-size:.9rem;cursor:pointer;}
 .au-item:hover{background:var(--bg3);color:var(--ink);}`;
     document.head.appendChild(style);
