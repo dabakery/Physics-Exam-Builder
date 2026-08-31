@@ -61,3 +61,10 @@ sample-exports/
 # Local planning notes that describe auth/security infrastructure. The repo is
 # public; these stay off it.
 userplan.md
+
+# Auth schema - same reasoning as userplan.md, kept off the public repo.
+schema.sql
+
+# Output of scripts/make_users.py - password hashes and class rosters. Never commit.
+seed*.sql
+roster*.csv
