@@ -57,3 +57,7 @@ Thumbs.db
 CLAUDE.md
 
 sample-exports/
+
+# Local planning notes that describe auth/security infrastructure. The repo is
+# public; these stay off it.
+userplan.md
