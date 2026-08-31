@@ -139,6 +139,14 @@ def build_standalone_html(
             (frontend_dir / "exam-quiz.js").read_text(encoding="utf-8"),
         )
 
+    # Fork-local student accounts, enhanced template only. Same rule again.
+    auth_tag = '<script src="exam-auth.js"></script>'
+    if auth_tag in html:
+        html = inline_script(
+            html, "exam-auth.js",
+            (frontend_dir / "exam-auth.js").read_text(encoding="utf-8"),
+        )
+
     zip_bytes = build_zip_bytes(repo_root, courses, include_qti)
     b64 = base64.b64encode(zip_bytes).decode("ascii")
     mb = len(zip_bytes) / (1024 * 1024)

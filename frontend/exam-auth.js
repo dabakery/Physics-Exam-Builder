@@ -312,11 +312,11 @@
     style.textContent = `
 #auth-modal{position:fixed;inset:0;z-index:120;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.45);padding:1rem;}
 #auth-modal.open{display:flex;}
-.au-panel-w{background:var(--bg);border:1px solid var(--bd);border-radius:var(--r);width:min(94vw,26rem);padding:1.15rem 1.25rem 1.25rem;box-shadow:0 10px 40px rgba(0,0,0,.28);}
+.au-panel-w{background:var(--bg);border:1px solid var(--border);border-radius:var(--r);width:min(94vw,26rem);padding:1.15rem 1.25rem 1.25rem;box-shadow:0 10px 40px rgba(0,0,0,.28);}
 .au-h{margin:0 0 .3rem;font-size:1.15rem;color:var(--ink);}
 .au-p{margin:0 0 .9rem;font-size:.92rem;line-height:1.5;color:var(--ink2);}
 .au-lbl{display:block;font-size:.8rem;color:var(--ink4);margin:.55rem 0 .2rem;font-family:var(--font-m);}
-.au-inp{width:100%;box-sizing:border-box;padding:.5rem .6rem;border:1px solid var(--bd);border-radius:var(--r);background:var(--bg2);color:var(--ink);font-size:.95rem;}
+.au-inp{width:100%;box-sizing:border-box;padding:.5rem .6rem;border:1px solid var(--border);border-radius:var(--r);background:var(--bg2);color:var(--ink);font-size:.95rem;}
 .au-inp:focus{outline:2px solid var(--accent);outline-offset:1px;}
 .au-btn{width:100%;margin-top:.85rem;}
 .au-quiet{margin-top:.4rem;background:transparent;}
@@ -324,9 +324,9 @@
 .au-msg-err{color:var(--accent);}
 .au-ini{font-family:var(--font-m);font-size:.78rem;font-weight:600;letter-spacing:.02em;}
 #auth-wrap{position:relative;display:inline-flex;}
-#au-panel{position:absolute;top:calc(100% + .4rem);right:0;z-index:110;display:none;min-width:12rem;background:var(--bg);border:1px solid var(--bd);border-radius:var(--r);box-shadow:0 8px 26px rgba(0,0,0,.22);padding:.35rem;}
+#au-panel{position:absolute;top:calc(100% + .4rem);right:0;z-index:110;display:none;min-width:12rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--r);box-shadow:0 8px 26px rgba(0,0,0,.22);padding:.35rem;}
 #au-panel.open{display:block;}
-.au-who{padding:.45rem .55rem .5rem;border-bottom:1px solid var(--bd);margin-bottom:.3rem;}
+.au-who{padding:.45rem .55rem .5rem;border-bottom:1px solid var(--border);margin-bottom:.3rem;}
 .au-who-n{font-size:.92rem;color:var(--ink);}
 .au-who-p{font-family:var(--font-m);font-size:.76rem;color:var(--ink4);}
 .au-item{display:block;width:100%;text-align:left;padding:.45rem .55rem;border:0;border-radius:calc(var(--r) - 2px);background:transparent;color:var(--ink2);font:inherit;font-size:.9rem;cursor:pointer;}
