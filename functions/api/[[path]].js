@@ -323,8 +323,16 @@ async function getAttempts(env, me) {
  * across every user - so the caps below are the real point of this function.
  *
  * The Worker has no copy of the corpus, so it cannot reject a question_id that
- * does not exist. Shape, batch size and a per-account row ceiling are what bound
- * the damage instead.
+ * does not exist. Shape, batch size and a per-account row ceiling bound the
+ * damage, and the read-before-write below does the rest.
+ *
+ * Cloudflare's WAF rate limiting is not available here: rules are created for a
+ * zone, and a *.pages.dev hostname is not one. Rather than depend on a custom
+ * domain that does not exist yet, this reads first and writes only rows that
+ * actually change. Replaying a batch then costs one indexed read of at most
+ * BATCH_MAX rows instead of BATCH_MAX writes - and reads are the plentiful
+ * budget (5M/day) while writes are the scarce one (100k/day). It also makes the
+ * common case free: re-running a quiz over banks already seen writes nothing.
  */
 async function postAttempts(env, request, me) {
   const body = await readJson(request);
@@ -342,14 +350,36 @@ async function postAttempts(env, request, me) {
   }
   if (!clean.size) return json({ written: 0 });
 
-  const row = await env.DB.prepare('SELECT COUNT(*) AS c FROM attempts WHERE pin = ?')
-    .bind(me.pin).first();
-  if ((row ? row.c : 0) + clean.size > ROWS_MAX) return fail(413, 'too_many');
+  // What is already stored? One indexed read over the primary key.
+  const ids = [...clean.keys()];
+  const existing = await env.DB.prepare(
+    `SELECT question_id, correct FROM attempts
+      WHERE pin = ? AND question_id IN (${ids.map(() => '?').join(',')})`)
+    .bind(me.pin, ...ids).all();
+
+  const stored = new Map((existing.results || []).map((r) => [r.question_id, r.correct ? 1 : 0]));
+
+  // A row is worth writing only if it is new, or if it is being promoted from
+  // seen to correct. Everything else is already what the client is asking for.
+  const writes = [];
+  for (const [qid, correct] of clean) {
+    if (!stored.has(qid)) writes.push([qid, correct, true]);
+    else if (correct === 1 && stored.get(qid) === 0) writes.push([qid, 1, false]);
+  }
+  if (!writes.length) return json({ written: 0 });
+
+  const fresh = writes.filter((w) => w[2]).length;
+  if (fresh) {
+    const row = await env.DB.prepare('SELECT COUNT(*) AS c FROM attempts WHERE pin = ?')
+      .bind(me.pin).first();
+    if ((row ? row.c : 0) + fresh > ROWS_MAX) return fail(413, 'too_many');
+  }
 
   const now = nowSec();
   // MAX() is the latch: seeing a question again after getting it right never
   // demotes it. COALESCE pins correct_at to the first success, not the latest.
-  await env.DB.batch([...clean].map(([qid, correct]) => env.DB.prepare(
+  // Both still matter - two devices can race the same question.
+  await env.DB.batch(writes.map(([qid, correct]) => env.DB.prepare(
     `INSERT INTO attempts (pin, question_id, correct, seen_at, correct_at)
      VALUES (?1, ?2, ?3, unixepoch(), ?4)
      ON CONFLICT(pin, question_id) DO UPDATE SET
@@ -357,7 +387,7 @@ async function postAttempts(env, request, me) {
        correct_at = COALESCE(correct_at, excluded.correct_at)`)
     .bind(me.pin, qid, correct, correct ? now : null)));
 
-  return json({ written: clean.size });
+  return json({ written: writes.length });
 }
 
 /* ── entry point ──────────────────────────────────────────────────────────── */
