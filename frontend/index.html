@@ -1075,8 +1075,8 @@ function renderBanks() {
         // Progress rides the same tally as everything else, so the readout
         // narrows with the filters, the search box and the type chips without
         // knowing they exist. Null when logged out, which is the whole gate.
-        const pr = (global.EstelaAuth && global.EstelaAuth.bankProgress)
-          ? global.EstelaAuth.bankProgress(b.path) : null;
+        const pr = (window.EstelaAuth && window.EstelaAuth.bankProgress)
+          ? window.EstelaAuth.bankProgress(b.path) : null;
         if (pr) {
           st.progress = true;
           // Clamped per bank: a question deleted after a student answered it
