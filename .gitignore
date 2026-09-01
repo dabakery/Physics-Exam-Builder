@@ -68,3 +68,7 @@ schema.sql
 # Output of scripts/make_users.py - password hashes and class rosters. Never commit.
 seed*.sql
 roster*.csv
+
+# Account management runbook. Same reasoning as userplan.md.
+useradmin.md
+reset*.sql
