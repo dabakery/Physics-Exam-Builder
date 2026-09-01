@@ -160,6 +160,144 @@
     }
   }
 
+
+  /* ── progress detail ───────────────────────────────────────────────────────
+     Opened from the stats pill. Shows the filtered set only, so the panel
+     explains exactly the numbers the pill is reporting.
+
+     Questions are not in S.repo - only bank metadata is - so a bank's question
+     titles are fetched on expand through a loader the page supplies, and cached.
+     Under BundleSource that is a local zip read, no network.
+
+     Only ATTEMPTED questions are listed. The unseen ones are not summarised and
+     not counted here; the bank row already carries "n of m". Listing them would
+     turn this into a table of contents for the corpus. */
+
+  const P = { rows: [], load: null, open: new Set(), cache: new Map() };
+
+  function openProgress(rows, loadQuestions) {
+    if (!A.attempts) return;
+    P.rows = Array.isArray(rows) ? rows : [];
+    P.load = typeof loadQuestions === 'function' ? loadQuestions : null;
+    P.open = new Set();
+    ensureDom();
+    renderProgress();
+    $('prog-modal').classList.add('open');
+  }
+
+  function closeProgress() {
+    const m = $('prog-modal');
+    if (m) m.classList.remove('open');
+  }
+
+  async function toggleBank(path) {
+    if (P.open.has(path)) { P.open.delete(path); renderProgress(); return; }
+    P.open.add(path);
+    renderProgress();                       // show it open before the load lands
+    if (!P.cache.has(path) && P.load) {
+      let qs = null;
+      try { qs = await P.load(path); } catch (_e) { qs = null; }
+      P.cache.set(path, qs);                // null records a failed load
+      if (P.open.has(path)) renderProgress();
+    }
+  }
+
+  // course -> chapter -> topic -> [row]. Map keeps insertion order, and the
+  // page hands rows over in card order, so the panel matches the page.
+  function groupRows(rows) {
+    const out = new Map();
+    for (const r of rows) {
+      if (!out.has(r.course)) out.set(r.course, new Map());
+      const chs = out.get(r.course);
+      if (!chs.has(r.chapter)) chs.set(r.chapter, new Map());
+      const tps = chs.get(r.chapter);
+      const key = r.subtopic || '';
+      if (!tps.has(key)) tps.set(key, []);
+      tps.get(key).push(r);
+    }
+    return out;
+  }
+
+  function detailHTML(r) {
+    const qs = P.cache.get(r.path);
+    if (qs === undefined) return '<div class="pg-note">Loading…</div>';
+    if (qs === null) return '<div class="pg-note">Could not load this bank.</div>';
+
+    const items = [];
+    for (const q of qs) {
+      const key = questionId(r.path, q.id);
+      if (!A.attempts.has(key)) continue;             // attempted only
+      const ok = A.attempts.get(key) === 1;
+      items.push(
+        '<li class="pg-q">' +
+          '<span class="pg-mark ' + (ok ? 'pg-ok' : 'pg-not') + '" aria-hidden="true">' +
+            (ok ? '✓' : '○') + '</span>' +
+          '<span class="pg-qt">' + esc(q.title || q.id) + '</span>' +
+          '<span class="pg-sr">' + (ok ? 'correct' : 'not yet correct') + '</span>' +
+        '</li>');
+    }
+    if (!items.length) return '<div class="pg-note">Nothing recorded for this bank yet.</div>';
+    return '<ul class="pg-qs">' + items.join('') + '</ul>';
+  }
+
+  function bankRowHTML(r) {
+    const pr = bankProgress(r.path) || { seen: 0, correct: 0 };
+    const seen = Math.min(pr.seen, r.qn);
+    const correct = Math.min(pr.correct, r.qn);
+    const open = P.open.has(r.path);
+    const started = seen > 0;
+
+    const counts = started
+      ? seen + ' of ' + r.qn + ' attempted, ' + correct + ' correct'
+      : 'not started';
+
+    // Only a started bank expands: there is nothing to list otherwise, and a
+    // disclosure that opens onto an empty box is worse than no disclosure.
+    const head = started
+      ? '<button class="pg-bank pg-can" aria-expanded="' + (open ? 'true' : 'false') +
+          '" onclick="EstelaAuth.toggleBank(' + attr(r.path) + ')">' +
+          '<span class="pg-chev" aria-hidden="true">' + (open ? '▾' : '▸') + '</span>' +
+          '<span class="pg-bt">' + esc(r.title) + '</span>' +
+          '<span class="pg-bc">' + esc(counts) + '</span>' +
+        '</button>'
+      : '<div class="pg-bank">' +
+          '<span class="pg-chev" aria-hidden="true"></span>' +
+          '<span class="pg-bt">' + esc(r.title) + '</span>' +
+          '<span class="pg-bc pg-none">' + esc(counts) + '</span>' +
+        '</div>';
+
+    return '<div class="pg-row">' + head +
+      (open ? '<div class="pg-detail">' + detailHTML(r) + '</div>' : '') + '</div>';
+  }
+
+  function renderProgress() {
+    let seen = 0, correct = 0, qs = 0;
+    for (const r of P.rows) {
+      const pr = bankProgress(r.path) || { seen: 0, correct: 0 };
+      qs += r.qn;
+      seen += Math.min(pr.seen, r.qn);
+      correct += Math.min(pr.correct, r.qn);
+    }
+
+    let body = '';
+    for (const [course, chapters] of groupRows(P.rows)) {
+      body += '<div class="pg-course">' + esc(course) + '</div>';
+      for (const [chapter, topics] of chapters) {
+        body += '<div class="pg-chapter">' + esc(chapter) + '</div>';
+        for (const [topic, rows] of topics) {
+          // The topic level is optional in the tree: a bank sitting directly
+          // under a chapter reports '', and gets no header rather than a blank one.
+          if (topic) body += '<div class="pg-topic">' + esc(topic) + '</div>';
+          for (const r of rows) body += bankRowHTML(r);
+        }
+      }
+    }
+    if (!P.rows.length) body = '<div class="pg-note">No banks match the current filters.</div>';
+
+    $('pg-sum').textContent = seen + ' of ' + qs + ' attempted, ' + correct + ' correct';
+    $('pg-body').innerHTML = body;
+  }
+
   /* ── escaping ─────────────────────────────────────────────────────────────
      Names are user-supplied and reach the topbar and the profile panel. The
      page has its own esc(); this module carries one so it does not depend on
@@ -168,6 +306,14 @@
     return String(s == null ? '' : s)
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  // Safe inside a double-quoted HTML attribute, including as a handler argument.
+  // The page defines its own; this module carries one so it never reaches across
+  // scopes for a helper.
+  function attr(v) {
+    return JSON.stringify(String(v == null ? '' : v))
+      .replace(/&/g, '&amp;').replace(/"/g, '&quot;');
   }
 
   const initials = (u) =>
@@ -455,7 +601,45 @@
 .au-who{padding:.45rem .55rem .5rem;border-bottom:1px solid var(--border);margin-bottom:.3rem;}
 .au-who-n{font-size:.92rem;color:var(--ink);}
 .au-item{display:block;width:100%;text-align:left;padding:.45rem .55rem;border:0;border-radius:calc(var(--r) - 2px);background:transparent;color:var(--ink2);font:inherit;font-size:.9rem;cursor:pointer;}
-.au-item:hover{background:var(--bg3);color:var(--ink);}`;
+.au-item:hover{background:var(--bg3);color:var(--ink);}
+#prog-modal{position:fixed;inset:0;z-index:118;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.45);padding:1rem;}
+#prog-modal.open{display:flex;}
+.pg-panel{background:var(--bg);border:1px solid var(--border);border-radius:var(--r);width:min(96vw,40rem);max-height:min(84vh,44rem);display:flex;flex-direction:column;box-shadow:0 10px 40px rgba(0,0,0,.28);}
+.pg-top{display:flex;align-items:flex-start;justify-content:space-between;gap:.75rem;padding:.9rem 1rem .7rem;border-bottom:1px solid var(--border);}
+.pg-h{font-size:1.05rem;color:var(--ink);}
+.pg-sub{font-family:var(--font-m);font-size:.78rem;color:var(--ink4);margin-top:.15rem;}
+.pg-x{font-size:1.1rem;line-height:1;color:var(--ink4);}
+.pg-scroll{overflow-y:auto;padding:.5rem 1rem .9rem;}
+.pg-foot{border-top:1px solid var(--border);padding:.55rem 1rem;font-family:var(--font-m);font-size:.72rem;color:var(--ink4);line-height:1.5;}
+.pg-course{font-size:.94rem;color:var(--ink);margin:.9rem 0 .1rem;}
+.pg-course:first-child{margin-top:.35rem;}
+.pg-chapter{font-family:var(--font-m);font-size:.76rem;color:var(--ink4);letter-spacing:.03em;margin:.5rem 0 .15rem;}
+.pg-topic{font-family:var(--font-m);font-size:.74rem;color:var(--ink4);margin:.3rem 0 .1rem .7rem;opacity:.85;}
+.pg-row{border-top:1px solid var(--border);}
+.pg-bank{display:flex;align-items:baseline;gap:.5rem;width:100%;text-align:left;background:transparent;border:0;padding:.45rem .2rem;color:var(--ink2);font:inherit;font-size:.9rem;}
+.pg-can{cursor:pointer;}
+.pg-can:hover{background:var(--bg3);}
+.pg-chev{flex:0 0 .9rem;color:var(--ink4);font-size:.7rem;}
+.pg-bt{flex:1 1 auto;min-width:0;}
+.pg-bc{flex:0 0 auto;font-family:var(--font-m);font-size:.74rem;color:var(--ink4);}
+.pg-none{opacity:.7;}
+.pg-detail{padding:.1rem 0 .5rem 1.4rem;}
+.pg-qs{list-style:none;margin:0;padding:0;}
+.pg-q{display:flex;align-items:baseline;gap:.45rem;padding:.2rem 0;font-size:.88rem;color:var(--ink2);}
+.pg-mark{flex:0 0 .9rem;font-size:.8rem;}
+.pg-ok{color:var(--green);}
+.pg-not{color:var(--ink4);}
+.pg-qt{flex:1 1 auto;min-width:0;}
+.pg-note{font-family:var(--font-m);font-size:.78rem;color:var(--ink4);padding:.4rem 0;}
+/* Screen-reader wording for the tick, which is decorative to everyone else. */
+.pg-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
+@media (max-width:620px){
+  #prog-modal{padding:0;}
+  .pg-panel{width:100%;height:100%;max-height:100%;border-radius:0;}
+  /* Title above its counts: side by side leaves the title a few characters. */
+  .pg-bank{flex-wrap:wrap;}
+  .pg-bc{margin-left:1.4rem;}
+}`;
     document.head.appendChild(style);
 
     const modal = document.createElement('div');
@@ -465,8 +649,29 @@
     modal.innerHTML = '<div class="au-panel-w"><div id="au-body"></div></div>';
     document.body.appendChild(modal);
 
+    const prog = document.createElement('div');
+    prog.id = 'prog-modal';
+    prog.addEventListener('click', (e) => { if (e.target === prog) closeProgress(); });
+    prog.innerHTML =
+      '<div class="pg-panel">' +
+        '<div class="pg-top">' +
+          '<div><div class="pg-h">Your progress</div>' +
+          '<div class="pg-sub" id="pg-sum"></div></div>' +
+          '<button class="btn btn-icon pg-x" aria-label="Close"' +
+            ' onclick="EstelaAuth.closeProgress()">\u00d7</button>' +
+        '</div>' +
+        '<div class="pg-scroll"><div id="pg-body"></div></div>' +
+        '<div class="pg-foot">Matches the filters currently applied to the bank list. ' +
+          '\u2713 correct \u00b7 \u25cb attempted, not yet correct. ' +
+          'Questions you have not seen are not listed.</div>' +
+      '</div>';
+    document.body.appendChild(prog);
+
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') close();
+      if (e.key !== 'Escape') return;
+      const m = $('prog-modal');
+      if (m && m.classList.contains('open')) { closeProgress(); return; }
+      close();
     });
     document.addEventListener('click', (e) => {
       const wrap = $('auth-wrap');
@@ -505,6 +710,7 @@
   global.EstelaAuth = {
     onAuthBtn, openChange, submitLogin, submitChange, logout, close, refresh,
     questionId, bankProgress, recordAttempts, loadAttempts,
+    openProgress, closeProgress, toggleBank,
     get user() { return A.user; },
     get attempts() { return A.attempts; },
   };
