@@ -37,10 +37,15 @@ for p in $PAGES; do
   f="$ROOT/frontend/$p.html"
   [ -f "$f" ] || continue
   awk '/^<script>$/{on=1;next} /^<\/script>$/{on=0} on' "$f" > "$TMP/$p.js"
+  # Line numbers in the extract are offset from the file by wherever <script>
+  # opens. Record it so findings can be reported against the real file.
+  grep -n '^<script>$' "$f" | head -1 | cut -d: -f1 > "$TMP/$p.off"
   if node --check "$TMP/$p.js" 2>"$TMP/err"; then
     printf '  ok    frontend/%s.html inline (%s lines)\n' "$p" "$(wc -l < "$TMP/$p.js" | tr -d ' ')"
   else
-    printf '  FAIL  frontend/%s.html inline\n' "$p"; sed 's/^/        /' "$TMP/err"; fail=1
+    printf '  FAIL  frontend/%s.html inline (line numbers +%s to reach the file)\n' \
+      "$p" "$(cat "$TMP/$p.off")"
+    sed 's/^/        /' "$TMP/err"; fail=1
   fi
 done
 
@@ -50,8 +55,10 @@ echo "environment"
 for p in $PAGES; do
   [ -f "$TMP/$p.js" ] || continue
   if grep -nE '\bglobal\.' "$TMP/$p.js" > "$TMP/hit" 2>/dev/null; then
-    printf '  FAIL  frontend/%s.html inline uses `global.` - use `window.`\n' "$p"
-    sed 's/^/        /' "$TMP/hit"; fail=1
+    printf '  FAIL  frontend/%s.html:%s uses `global.` - use `window.`\n' \
+      "$p" "$(awk -F: -v o="$(cat "$TMP/$p.off")" 'NR==1{print $1+o}' "$TMP/hit")"
+    awk -F: -v o="$(cat "$TMP/$p.off")" '{$1=$1+o; print}' OFS=: "$TMP/hit" | sed 's/^/        /'
+    fail=1
   else
     printf '  ok    frontend/%s.html inline has no `global.`\n' "$p"
   fi
@@ -79,7 +86,9 @@ done
 for p in $PAGES; do
   [ -f "$TMP/$p.js" ] || continue
   if grep -nE "$NODEISM" "$TMP/$p.js" > "$TMP/hit" 2>/dev/null; then
-    printf '  FAIL  frontend/%s.html inline\n' "$p"; sed 's/^/        /' "$TMP/hit"; fail=1; found=1
+    printf '  FAIL  frontend/%s.html inline\n' "$p"
+    awk -F: -v o="$(cat "$TMP/$p.off")" '{$1=$1+o; print}' OFS=: "$TMP/hit" | sed 's/^/        /'
+    fail=1; found=1
   fi
 done
 [ "$found" -eq 0 ] && echo "  ok    none found"
