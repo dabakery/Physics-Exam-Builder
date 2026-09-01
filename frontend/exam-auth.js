@@ -18,6 +18,7 @@
   const A = {
     user: null, mustChange: false, locked: false, booted: false,
     attempts: null,     // Map(question_id -> 0|1), or null when logged out
+    byBank: new Map(),  // folder -> {seen, correct}, memoized, cleared on change
   };
 
   const BATCH_MAX = 100;      // must not exceed BATCH_MAX in the router
@@ -75,11 +76,53 @@
      and bank folder names are unique across all four courses (audited
      2026-08-31 - 50 distinct, 0 collisions). Deriving from the folder rather
      than the YAML bank_id field is deliberate; 6 upstream banks disagree. */
-  function questionId(bankPath, qid) {
+  function bankFolder(bankPath) {
     const parts = String(bankPath || '').split('/').filter(Boolean);
     if (parts.length && /\.ya?ml$/i.test(parts[parts.length - 1])) parts.pop();
-    const folder = parts.length ? parts[parts.length - 1] : '';
+    return parts.length ? parts[parts.length - 1] : '';
+  }
+
+  function questionId(bankPath, qid) {
+    const folder = bankFolder(bankPath);
     return folder && qid ? folder + '_' + qid : '';
+  }
+
+  /**
+   * {seen, correct} for one bank, or null when logged out.
+   *
+   * Buckets by folder PREFIX rather than splitting the key. "<folder>_<id>"
+   * cannot be parsed apart - both halves contain underscores, so neither
+   * indexOf nor lastIndexOf finds the join. Matching on `folder + "_"` is exact
+   * regardless, because a longer folder name cannot produce that prefix.
+   *
+   * Memoized per folder and cleared whenever attempts change: the first call
+   * for a bank walks the whole set, every later one is a map hit. renderBanks()
+   * runs on each filter tick, so an unmemoized scan would be banks x attempts
+   * on every keystroke in the search box.
+   */
+  function bankProgress(bankPath) {
+    if (!A.attempts) return null;
+    const folder = bankFolder(bankPath);
+    if (!folder) return null;
+    if (A.byBank.has(folder)) return A.byBank.get(folder);
+
+    const prefix = folder + '_';
+    let seen = 0, correct = 0;
+    for (const [key, ok] of A.attempts) {
+      if (key.indexOf(prefix) === 0) { seen++; if (ok) correct++; }
+    }
+    const v = { seen, correct };
+    A.byBank.set(folder, v);
+    return v;
+  }
+
+  // The attempt set arrives after first paint, so the cards have to be redrawn
+  // once it lands. Cheap enough to call outright rather than diff.
+  function refreshProgressUi() {
+    A.byBank = new Map();
+    if (typeof global.renderBanks === 'function') {
+      try { global.renderBanks(); } catch (_e) { /* page not ready */ }
+    }
   }
 
   /* ── attempts ─────────────────────────────────────────────────────────────
@@ -91,6 +134,7 @@
     const r = await api('GET', '/api/attempts');
     if (!r.ok || !r.data || !Array.isArray(r.data.attempts)) return A.attempts;
     A.attempts = new Map(r.data.attempts);
+    refreshProgressUi();
     return A.attempts;
   }
 
@@ -110,6 +154,7 @@
         A.attempts.set(r.question_id, Math.max(prev, r.correct ? 1 : 0));
       }
     }
+    refreshProgressUi();
     for (let i = 0; i < clean.length; i += BATCH_MAX) {
       await api('POST', '/api/attempts', { records: clean.slice(i, i + BATCH_MAX) });
     }
@@ -325,7 +370,7 @@
 
   function setUser(user) {
     A.user = user;
-    if (!user) A.attempts = null;
+    if (!user) { A.attempts = null; A.byBank = new Map(); }
     const st = pageState();
     if (st) st.user = user;               // gate for page code
     const btn = $('auth-btn');
@@ -459,7 +504,7 @@
 
   global.EstelaAuth = {
     onAuthBtn, openChange, submitLogin, submitChange, logout, close, refresh,
-    questionId, recordAttempts, loadAttempts,
+    questionId, bankProgress, recordAttempts, loadAttempts,
     get user() { return A.user; },
     get attempts() { return A.attempts; },
   };

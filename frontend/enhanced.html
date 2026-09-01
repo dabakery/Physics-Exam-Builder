@@ -1037,7 +1037,8 @@ function renderBanks() {
   // Tallied off the same `filtered` list the cards are built from, rather than
   // walked separately over S.repo, so the stats caption reports what is on screen
   // — narrowed by the search box and the type chips too, not just the selects.
-  const st = {banks:0, qs:0, courses:new Set(), chapters:new Set(), topics:new Set()};
+  const st = {banks:0, qs:0, courses:new Set(), chapters:new Set(), topics:new Set(),
+              seen:0, correct:0, progress:false};
 
   for (const [course, topics] of Object.entries(S.repo)) {
     if (S.fCourses.size && !S.fCourses.has(course)) continue;
@@ -1062,7 +1063,20 @@ function renderBanks() {
       if (!filtered.length) continue;
 
       for (const b of filtered) {
-        st.banks++; st.qs += b.meta.q_count || 0;
+        const qn = b.meta.q_count || 0;
+        st.banks++; st.qs += qn;
+        // Progress rides the same tally as everything else, so the readout
+        // narrows with the filters, the search box and the type chips without
+        // knowing they exist. Null when logged out, which is the whole gate.
+        const pr = (global.EstelaAuth && global.EstelaAuth.bankProgress)
+          ? global.EstelaAuth.bankProgress(b.path) : null;
+        if (pr) {
+          st.progress = true;
+          // Clamped per bank: a question deleted after a student answered it
+          // leaves an orphan row, and "160 of 154 attempted" reads as a bug.
+          st.seen += Math.min(pr.seen, qn);
+          st.correct += Math.min(pr.correct, qn);
+        }
         st.courses.add(course); st.chapters.add(chKey(course, topic));
         // Only a real subtopic folder counts as a topic. A bank sitting directly
         // under a chapter reports '', and counting that would report one topic per
@@ -1117,6 +1131,11 @@ function statsHTML(st) {
   if (st.courses.size > 1) parts.push(`${pl(st.chapters.size, 'chapter')} in ${pl(st.courses.size, 'course')}`);
   else if (st.chapters.size > 1) parts.push(pl(st.chapters.size, 'chapter'));
   else if (st.topics.size > 1) parts.push(pl(st.topics.size, 'topic'));
+  // A count, never a list of which questions were missed. That is a different
+  // feature with different privacy consequences (userplan.md section 6).
+  if (st.progress) {
+    parts.push(`${n(st.seen)} of ${n(st.qs)} attempted, ${n(st.correct)} correct`);
+  }
   return `<div id="stats">${parts.map(p => `<span>${p}</span>`).join('')}</div>`;
 }
 
