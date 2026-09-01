@@ -251,8 +251,12 @@ body.tauri #cartbar{top:36px;height:calc(100% - 36px);}
    the restatement. "In cart" is gone from here entirely. It is working state, and
    the sidebar cart already carries a live count right next to the cart it
    describes. */
-#stats{font-family:var(--font-m);font-size:.76rem;color:var(--ink4);letter-spacing:.03em;margin-bottom:1.15rem;display:flex;flex-wrap:wrap;gap:.15rem .95rem;}
+#stats{font-family:var(--font-m);font-size:.76rem;color:var(--ink4);letter-spacing:.03em;margin-bottom:1.15rem;display:flex;flex-wrap:wrap;align-items:center;gap:.15rem .95rem;}
 .st-n{color:var(--ink2);font-weight:500;}
+/* Bank counts describe the corpus; this describes the student. A pill rather
+   than a separator because #stats wraps, and a divider stranded at the start
+   of a wrapped line reads as a typo. */
+.st-prog{padding:.1rem .45rem;border-radius:calc(var(--r) - 2px);background:var(--bg3);color:var(--ink2);}
 
 /* ── Export panel ── */
 #export-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:.9rem 1rem;margin-bottom:1.2rem;box-shadow:var(--sh);}
@@ -1141,7 +1145,8 @@ function statsHTML(st) {
   // A count, never a list of which questions were missed. That is a different
   // feature with different privacy consequences (userplan.md section 6).
   if (st.progress) {
-    parts.push(`${n(st.seen)} of ${n(st.qs)} attempted, ${n(st.correct)} correct`);
+    parts.push(`<span class="st-prog">${n(st.seen)} of ${n(st.qs)} attempted, `
+             + `${n(st.correct)} correct</span>`);
   }
   return `<div id="stats">${parts.map(p => `<span>${p}</span>`).join('')}</div>`;
 }
