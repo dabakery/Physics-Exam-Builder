@@ -22,6 +22,14 @@ const COOKIE      = 'sid';
 const PBKDF2_ITER = 20000;              // ~6-7 ms CPU, measured on Workers Free
 const LOCK_AFTER  = 3;                  // failures tolerated before locking
 const NAME_MAX    = 60;
+const BATCH_MAX   = 100;      // records accepted in one POST /api/attempts
+const QID_MAX     = 200;      // characters in one question_id
+const ROWS_MAX    = 10000;    // attempt rows one account may hold
+
+// "<bank folder>_<question id>". Both halves are author-controlled strings from
+// folder names and YAML ids, so this is a shape check, not a grammar: printable,
+// bounded, no control characters, no path separators.
+const QID_RE = /^[A-Za-z0-9][A-Za-z0-9 ._+-]{0,198}$/;
 
 // The only routes reachable while credentials.must_change is set.
 const MUST_CHANGE_OK = new Set(['GET /api/me', 'POST /api/auth/password']);
@@ -292,6 +300,66 @@ async function changePassword(env, request, me) {
   return json({ ok: true }, { headers: { 'Set-Cookie': setCookie(sid) } });
 }
 
+/**
+ * The student's whole attempt set, fetched once at login and held in memory.
+ * A few thousand [id, 0|1] tuples even for the projected complete corpus, which
+ * is what makes the filter-responsive progress readout a set intersection rather
+ * than a query per filter change.
+ */
+async function getAttempts(env, me) {
+  const rs = await env.DB.prepare(
+    'SELECT question_id, correct FROM attempts WHERE pin = ? ORDER BY question_id')
+    .bind(me.pin).all();
+  return json({ attempts: (rs.results || []).map((r) => [r.question_id, r.correct ? 1 : 0]) });
+}
+
+/**
+ * Batched on quiz submit, never per question render.
+ *
+ * These records are client-asserted and cannot be otherwise: grading happens in
+ * the browser because the banks are embedded in the page. That is fine for a
+ * progress tracker and unacceptable for a grade (userplan.md section 7). What
+ * does need defending is the write budget - D1 free allows 100k row writes a day
+ * across every user - so the caps below are the real point of this function.
+ *
+ * The Worker has no copy of the corpus, so it cannot reject a question_id that
+ * does not exist. Shape, batch size and a per-account row ceiling are what bound
+ * the damage instead.
+ */
+async function postAttempts(env, request, me) {
+  const body = await readJson(request);
+  const records = body && Array.isArray(body.records) ? body.records : null;
+  if (!records) return fail(400, 'invalid');
+  if (records.length > BATCH_MAX) return fail(413, 'too_many');
+
+  // Collapse duplicates in the batch. The primary key would merge them anyway,
+  // but each one would still cost a write.
+  const clean = new Map();
+  for (const r of records) {
+    const qid = r && typeof r.question_id === 'string' ? r.question_id.trim() : '';
+    if (!qid || qid.length > QID_MAX || !QID_RE.test(qid)) continue;
+    clean.set(qid, Math.max(clean.get(qid) || 0, r.correct ? 1 : 0));
+  }
+  if (!clean.size) return json({ written: 0 });
+
+  const row = await env.DB.prepare('SELECT COUNT(*) AS c FROM attempts WHERE pin = ?')
+    .bind(me.pin).first();
+  if ((row ? row.c : 0) + clean.size > ROWS_MAX) return fail(413, 'too_many');
+
+  const now = nowSec();
+  // MAX() is the latch: seeing a question again after getting it right never
+  // demotes it. COALESCE pins correct_at to the first success, not the latest.
+  await env.DB.batch([...clean].map(([qid, correct]) => env.DB.prepare(
+    `INSERT INTO attempts (pin, question_id, correct, seen_at, correct_at)
+     VALUES (?1, ?2, ?3, unixepoch(), ?4)
+     ON CONFLICT(pin, question_id) DO UPDATE SET
+       correct    = MAX(correct, excluded.correct),
+       correct_at = COALESCE(correct_at, excluded.correct_at)`)
+    .bind(me.pin, qid, correct, correct ? now : null)));
+
+  return json({ written: clean.size });
+}
+
 /* ── entry point ──────────────────────────────────────────────────────────── */
 
 export async function onRequest(context) {
@@ -321,6 +389,8 @@ export async function onRequest(context) {
     }
     if (route === 'PATCH /api/me')           return await patchMe(env, request, me);
     if (route === 'POST /api/auth/password') return await changePassword(env, request, me);
+    if (route === 'GET /api/attempts')       return await getAttempts(env, me);
+    if (route === 'POST /api/attempts')      return await postAttempts(env, request, me);
 
     return fail(404, 'not_found');
   } catch (err) {

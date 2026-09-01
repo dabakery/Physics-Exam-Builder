@@ -129,6 +129,12 @@
         const entry = {
           num: qNum + 1,
           key: keyOf(item, slot.idx),
+          // Persistent across sessions and stable under reordering, unlike
+          // `key`, which is path#index and session-local. Empty when the bank
+          // declares no id, which the validator makes an error, or when the
+          // auth module is absent (the index.html build).
+          progressId: (global.EstelaAuth && global.EstelaAuth.questionId)
+            ? global.EstelaAuth.questionId(item.path, qdata.id) : '',
           type: qtype,
           typeLabel: BS.typeLabel(qtype),
           bankId: (item.meta || {}).bank_id || '',
@@ -564,9 +570,40 @@
 
   /* ── lifecycle ─────────────────────────────────────────────────────────── */
 
+  /* ── progress recording ─────────────────────────────────────────────────
+     Inert when logged out: EstelaAuth.recordAttempts() no-ops without a user,
+     so nothing here needs to know whether anyone is signed in, and the quiz
+     behaves exactly as it did before accounts existed.
+
+     Two moments, matching the schema's latch. A question is recorded as seen
+     (correct = 0) the moment it is put on screen, and as correct (correct = 1)
+     when it grades correct. MAX() in the upsert means the second can never be
+     undone by a later sighting, so ordering does not matter.
+
+     Only the correct ones are sent at grading time. The incorrect ones were
+     already written as seen, and re-sending a 0 would spend a row write to
+     store what is already there. */
+  function progressRecords(items, onlyCorrect) {
+    const out = [];
+    for (const i of items) {
+      if (!i.progressId) continue;
+      if (onlyCorrect && gradeItem(i).state !== 'correct') continue;
+      out.push({ question_id: i.progressId, correct: onlyCorrect ? 1 : 0 });
+    }
+    return out;
+  }
+
+  function record(items, onlyCorrect) {
+    const auth = global.EstelaAuth;
+    if (!auth || !auth.recordAttempts) return;
+    const records = progressRecords(items, onlyCorrect);
+    if (records.length) auth.recordAttempts(records);
+  }
+
   function submit() {
     if (!Q) return;
     Q.graded = true;
+    record(Q.items, true);
     render();
     document.getElementById('qz-scroll').scrollTop = 0;
   }
@@ -647,6 +684,7 @@
     Q.version = next;
     Q.graded = false;
     items.forEach(i => Q.seen.add(i.key));
+    record(items, false);
     setTitle();
     render();
     document.getElementById('qz-scroll').scrollTop = 0;
@@ -683,6 +721,7 @@
       cart, bankSource,
       seen: new Set(items.map(i => i.key)),
     };
+    record(items, false);
     setTitle();
     document.getElementById('quiz-modal').classList.add('open');
     document.getElementById('qz-scroll').scrollTop = 0;

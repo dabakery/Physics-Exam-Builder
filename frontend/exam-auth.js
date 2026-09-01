@@ -15,7 +15,12 @@
 (function (global) {
   'use strict';
 
-  const A = { user: null, mustChange: false, locked: false, booted: false };
+  const A = {
+    user: null, mustChange: false, locked: false, booted: false,
+    attempts: null,     // Map(question_id -> 0|1), or null when logged out
+  };
+
+  const BATCH_MAX = 100;      // must not exceed BATCH_MAX in the router
 
   const $ = (id) => document.getElementById(id);
 
@@ -53,6 +58,61 @@
     // it centrally so no caller has to remember to.
     if (res.status === 403 && data && data.error === 'must_change') forceChange();
     return { ok: res.ok, status: res.status, data };
+  }
+
+  /* ── progress keys ─────────────────────────────────────────────────────────
+     "<bank folder>_<question id>". The single definition of the persistent
+     progress key; the quiz and the progress readout both call this.
+
+     BundleSource - what the published page uses - sets a bank's `path` to the
+     YAML file, not its directory (bank-source.js:856 recovers bankDir by
+     trimming the filename). So the filename has to come off before the last
+     segment is the folder, and the two genuinely differ: vector_problem_bank.yml
+     lives in folder PHY1-LEO-08122026. FileSystemSource already reports the
+     directory, hence the conditional trim.
+
+     Chapter and topic subfolders are irrelevant: only the final segment is used,
+     and bank folder names are unique across all four courses (audited
+     2026-08-31 - 50 distinct, 0 collisions). Deriving from the folder rather
+     than the YAML bank_id field is deliberate; 6 upstream banks disagree. */
+  function questionId(bankPath, qid) {
+    const parts = String(bankPath || '').split('/').filter(Boolean);
+    if (parts.length && /\.ya?ml$/i.test(parts[parts.length - 1])) parts.pop();
+    const folder = parts.length ? parts[parts.length - 1] : '';
+    return folder && qid ? folder + '_' + qid : '';
+  }
+
+  /* ── attempts ─────────────────────────────────────────────────────────────
+     Logged out these are no-ops, so nothing in the quiz has to know whether a
+     student is signed in. */
+
+  async function loadAttempts() {
+    if (!A.user) { A.attempts = null; return null; }
+    const r = await api('GET', '/api/attempts');
+    if (!r.ok || !r.data || !Array.isArray(r.data.attempts)) return A.attempts;
+    A.attempts = new Map(r.data.attempts);
+    return A.attempts;
+  }
+
+  /**
+   * records: [{question_id, correct}]. Applied to the local map immediately so
+   * a progress readout updates without waiting on the round trip, then sent in
+   * chunks the router will accept.
+   */
+  async function recordAttempts(records) {
+    if (!A.user || !Array.isArray(records) || !records.length) return;
+    const clean = records.filter((r) => r && r.question_id);
+    if (!clean.length) return;
+
+    if (A.attempts) {
+      for (const r of clean) {
+        const prev = A.attempts.get(r.question_id) || 0;
+        A.attempts.set(r.question_id, Math.max(prev, r.correct ? 1 : 0));
+      }
+    }
+    for (let i = 0; i < clean.length; i += BATCH_MAX) {
+      await api('POST', '/api/attempts', { records: clean.slice(i, i + BATCH_MAX) });
+    }
   }
 
   /* ── escaping ─────────────────────────────────────────────────────────────
@@ -265,6 +325,7 @@
 
   function setUser(user) {
     A.user = user;
+    if (!user) A.attempts = null;
     const st = pageState();
     if (st) st.user = user;               // gate for page code
     const btn = $('auth-btn');
@@ -307,7 +368,10 @@
     const r = await api('GET', '/api/me');
     if (r.ok && r.data && r.data.user) {
       setUser(r.data.user);
+      // Nothing is reachable but /api/me and the password change while the
+      // temporary password stands, so there is no point asking for attempts.
       if (r.data.must_change) forceChange();
+      else loadAttempts();
     } else {
       setUser(null);
     }
@@ -395,6 +459,8 @@
 
   global.EstelaAuth = {
     onAuthBtn, openChange, submitLogin, submitChange, logout, close, refresh,
+    questionId, recordAttempts, loadAttempts,
     get user() { return A.user; },
+    get attempts() { return A.attempts; },
   };
 })(typeof window !== 'undefined' ? window : globalThis);
