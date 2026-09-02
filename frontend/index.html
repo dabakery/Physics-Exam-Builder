@@ -157,6 +157,14 @@ body:not(.tauri) #shell{height:100vh;}
 /* Per-question picks. Reuses the .badge chip idiom of the question-type filter
    rather than inventing a control, so the two read as the same kind of toggle. */
 .ci-qchips{display:flex;flex-wrap:wrap;gap:.22rem;margin-top:.3rem;}
+/* A control is tapped, never double-tapped to zoom, but the browser cannot know
+   that until its double-tap window expires - so two quick taps on adjacent Q
+   chips, or a repeated tap on the stepper, arrive as a zoom instead of as two
+   clicks. `manipulation` drops double-tap zoom on controls and nothing else:
+   pinch zoom and scrolling still work everywhere, which matters more than the
+   gesture on a tool students read maths in. Not scoped to a breakpoint because
+   a mouse never triggers it anyway. */
+button,[onclick],.btn,.ci-step{touch-action:manipulation;}
 .ci-step{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;border:1px solid var(--border);background:var(--bg3);color:var(--ink2);font-size:.8rem;cursor:pointer;line-height:1;padding:0;transition:background .1s,border-color .1s;}
 .ci-step:hover{background:var(--accent);border-color:var(--accent);color:#fff;}
 .ci-qval{font-family:var(--font-m);font-size:1rem;font-weight:600;color:var(--ink);min-width:1.1rem;text-align:center;}
@@ -432,7 +440,6 @@ body.nav-open #nav-overlay,body.cart-open #nav-overlay{display:block;}
   .bc-actions{gap:.35rem;}
   .bc-footer{flex-wrap:wrap;row-gap:.5rem;}
   .ci-step{width:28px;height:28px;font-size:1.05rem;}
-  .ci-qchips .badge{padding:.3rem .5rem;}
   /* wide display math shouldn't blow out the card width */
   .q-text{overflow-x:auto;}
   /* full-screen modal on phones */
@@ -440,6 +447,17 @@ body.nav-open #nav-overlay,body.cart-open #nav-overlay{display:block;}
   .ym-panel{width:100%;height:100%;max-height:100%;border-radius:0;}
   .ym-head{flex-wrap:wrap;}
   #toast{left:1rem;right:1rem;bottom:1rem;text-align:center;}
+}
+/* Touch input, at any screen width. Mobile browsers zoom the viewport when a
+   field whose computed font-size is under 16px takes focus, and .inp is .92rem
+   - so tapping the exam title in the cart drawer zooms the page and leaves it
+   zoomed. 16px is the threshold, not a preference. The chips grow here for the
+   same reason the zoom happens: a small target is mis-tapped, and a mis-tap
+   retried quickly is the double-tap that (2) above is already guarding. */
+@media (pointer:coarse){
+  .inp,.sel{font-size:16px;}
+  .ci-qchips .badge{font-size:.82rem;padding:.32rem .55rem;}
+  .ci-step{width:30px;height:30px;}
 }
 </style>
 </head>
