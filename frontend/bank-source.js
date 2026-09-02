@@ -252,10 +252,18 @@
     const info = data?.bank_info || {};
     const qs = Array.isArray(data?.questions) ? data.questions : [];
     const typeCounts = {};
+    // q_ids rides along on the walk that was already counting types, so the card
+    // can colour a tick per question without loading the bank. POSITIONAL: index i
+    // is question i, so a malformed or id-less question still takes its slot and
+    // simply reads as unattempted. Do not filter this list.
+    const qIds = [];
     for (const q of qs) {
       if (q && typeof q === 'object') {
         const t = getQtype(q);
         typeCounts[t] = (typeCounts[t] || 0) + 1;
+        qIds.push((q[t] || {}).id || '');
+      } else {
+        qIds.push('');
       }
     }
     let preview = '', preview_html = '';
@@ -275,6 +283,7 @@
       lo: info['learning objectives'] || info.learning_objectives || [],
       q_count: qs.length,
       q_types: typeCounts,
+      q_ids: qIds,
       preview,
       preview_html,
     };

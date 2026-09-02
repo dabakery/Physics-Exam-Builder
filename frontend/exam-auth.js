@@ -116,6 +116,31 @@
     return v;
   }
 
+  /**
+   * One tier per question, in bank order: 0 unattempted, 1 attempted and not
+   * correct, 2 correct. This is what lets a tick stand for a question rather
+   * than for a share of one.
+   *
+   * Null when logged out, or when the bank source supplied no question ids -
+   * TauriSource builds its meta in Rust and has none, the same fallback
+   * preview_html needs - so the caller drops back to the plain rail rather than
+   * drawing a confidently wrong one.
+   *
+   * Positional and unfiltered, matching meta.q_ids: an id-less question holds
+   * its slot and reads as unattempted, because a shifted rail would label every
+   * later question wrongly.
+   */
+  function bankTiers(bankPath, qIds) {
+    if (!A.attempts || !Array.isArray(qIds) || !qIds.length) return null;
+    const folder = bankFolder(bankPath);
+    if (!folder) return null;
+    return qIds.map((qid) => {
+      if (!qid) return 0;
+      const v = A.attempts.get(folder + '_' + qid);
+      return v === undefined ? 0 : (v ? 2 : 1);
+    });
+  }
+
   // The attempt set arrives after first paint, so the cards have to be redrawn
   // once it lands. Cheap enough to call outright rather than diff.
   function refreshProgressUi() {
@@ -781,7 +806,7 @@
 
   global.EstelaAuth = {
     onAuthBtn, openChange, submitLogin, submitChange, logout, close, refresh,
-    questionId, bankProgress, recordAttempts, loadAttempts,
+    questionId, bankProgress, bankTiers, recordAttempts, loadAttempts,
     openProgress, closeProgress, toggleBank, toggleGroup,
     get user() { return A.user; },
     get attempts() { return A.attempts; },
