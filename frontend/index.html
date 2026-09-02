@@ -1161,10 +1161,13 @@ async function loadBankQuestions(path) {
   if (res && res.bankRef) S.bankRefs.set(path, res.bankRef);
   const list = (res && res.rawData && Array.isArray(res.rawData.questions))
     ? res.rawData.questions : [];
-  return list.map(q => {
+  return list.map((q, i) => {
     const t = EstelaBankSource.getQtype(q);
     const d = (t && q[t]) || {};
-    return { id: d.id || '', title: d.title || '' };
+    // `n` is the position in the bank, which is the same Q-number the bank-card
+    // preview shows. Assigned before the filter so dropping an id-less question
+    // cannot shift the numbering.
+    return { n: i + 1, id: d.id || '', title: d.title || '' };
   }).filter(x => x.id);
 }
 

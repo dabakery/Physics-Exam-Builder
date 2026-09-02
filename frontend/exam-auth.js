@@ -232,6 +232,7 @@
         '<li class="pg-q">' +
           '<span class="pg-mark ' + (ok ? 'pg-ok' : 'pg-not') + '" aria-hidden="true">' +
             (ok ? '✓' : '○') + '</span>' +
+          '<span class="pg-nb">Q' + (q.n || '?') + '</span>' +
           '<span class="pg-qt">' + esc(q.title || q.id) + '</span>' +
           '<span class="pg-sr">' + (ok ? 'correct' : 'not yet correct') + '</span>' +
         '</li>');
@@ -604,41 +605,46 @@
 .au-item:hover{background:var(--bg3);color:var(--ink);}
 #prog-modal{position:fixed;inset:0;z-index:118;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.45);padding:1rem;}
 #prog-modal.open{display:flex;}
-.pg-panel{background:var(--bg);border:1px solid var(--border);border-radius:var(--r);width:min(96vw,40rem);max-height:min(84vh,44rem);display:flex;flex-direction:column;box-shadow:0 10px 40px rgba(0,0,0,.28);}
+.pg-panel{background:var(--bg);border:1px solid var(--border);border-radius:var(--r2);box-shadow:var(--sh2);width:min(880px,100%);max-height:90vh;display:flex;flex-direction:column;overflow:hidden;}
 .pg-top{display:flex;align-items:flex-start;justify-content:space-between;gap:.75rem;padding:.9rem 1rem .7rem;border-bottom:1px solid var(--border);}
 .pg-h{font-size:1.05rem;color:var(--ink);}
 .pg-sub{font-family:var(--font-m);font-size:.78rem;color:var(--ink4);margin-top:.15rem;}
 .pg-x{font-size:1.1rem;line-height:1;color:var(--ink4);}
 .pg-scroll{overflow-y:auto;padding:.5rem 1rem .9rem;}
 .pg-foot{border-top:1px solid var(--border);padding:.55rem 1rem;font-family:var(--font-m);font-size:.72rem;color:var(--ink4);line-height:1.5;}
-.pg-course{font-size:.94rem;color:var(--ink);margin:.9rem 0 .1rem;}
-.pg-course:first-child{margin-top:.35rem;}
-.pg-chapter{font-family:var(--font-m);font-size:.76rem;color:var(--ink4);letter-spacing:.03em;margin:.5rem 0 .15rem;}
-.pg-topic{font-family:var(--font-m);font-size:.74rem;color:var(--ink4);margin:.3rem 0 .1rem .7rem;opacity:.85;}
+.pg-course{font-family:var(--font-m);font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;color:var(--ink4);margin:1.35rem 0 .1rem;}
+.pg-course:first-child{margin-top:.3rem;}
+.pg-chapter{font-size:1.08rem;font-weight:600;color:var(--ink);margin:.15rem 0 .2rem;line-height:1.25;}
+.pg-topic{font-size:.92rem;font-weight:500;color:var(--ink2);margin:.65rem 0 .1rem .5rem;line-height:1.3;}
 .pg-row{border-top:1px solid var(--border);}
-.pg-bank{display:flex;align-items:baseline;gap:.5rem;width:100%;text-align:left;background:transparent;border:0;padding:.45rem .2rem;color:var(--ink2);font:inherit;font-size:.9rem;}
+.pg-row:first-of-type{border-top:0;}
+.pg-bank{display:flex;align-items:baseline;gap:.5rem;width:100%;text-align:left;background:transparent;border:0;padding:.4rem .2rem .4rem 1rem;color:var(--ink2);font:inherit;font-size:.82rem;line-height:1.4;}
 .pg-can{cursor:pointer;}
 .pg-can:hover{background:var(--bg3);}
 .pg-chev{flex:0 0 .9rem;color:var(--ink4);font-size:.7rem;}
 .pg-bt{flex:1 1 auto;min-width:0;}
 .pg-bc{flex:0 0 auto;font-family:var(--font-m);font-size:.74rem;color:var(--ink4);}
 .pg-none{opacity:.7;}
-.pg-detail{padding:.1rem 0 .5rem 1.4rem;}
+.pg-detail{padding:.1rem 0 .5rem 2.2rem;}
 .pg-qs{list-style:none;margin:0;padding:0;}
-.pg-q{display:flex;align-items:baseline;gap:.45rem;padding:.2rem 0;font-size:.88rem;color:var(--ink2);}
-.pg-mark{flex:0 0 .9rem;font-size:.8rem;}
+.pg-q{display:flex;align-items:baseline;gap:.45rem;padding:.2rem 0;font-size:.8rem;color:var(--ink2);line-height:1.45;}
+.pg-mark{flex:0 0 .85rem;font-size:.8rem;}
+/* Same badge as the bank-card preview (.q-nbadge), sized for inline use. */
+.pg-nb{flex:0 0 auto;font-family:var(--font-m);font-size:.68rem;color:var(--ink4);background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:0 .25rem;line-height:1.45;}
 .pg-ok{color:var(--green);}
 .pg-not{color:var(--ink4);}
 .pg-qt{flex:1 1 auto;min-width:0;}
 .pg-note{font-family:var(--font-m);font-size:.78rem;color:var(--ink4);padding:.4rem 0;}
 /* Screen-reader wording for the tick, which is decorative to everyone else. */
 .pg-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
-@media (max-width:620px){
+@media (max-width:820px){
   #prog-modal{padding:0;}
   .pg-panel{width:100%;height:100%;max-height:100%;border-radius:0;}
+}
+@media (max-width:620px){
   /* Title above its counts: side by side leaves the title a few characters. */
   .pg-bank{flex-wrap:wrap;}
-  .pg-bc{margin-left:1.4rem;}
+  .pg-bc{margin-left:1.85rem;}
 }`;
     document.head.appendChild(style);
 
