@@ -527,6 +527,9 @@
     if (r.data.must_change) { forceChange(); say(''); return; }
     A.locked = false;
     close();
+    // Only refresh() fetched attempts, and that runs at boot - so logging in
+    // without a reload left A.attempts null and the progress pill absent.
+    loadAttempts();
   }
 
   async function submitChange() {

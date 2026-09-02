@@ -72,3 +72,6 @@ roster*.csv
 # Account management runbook. Same reasoning as userplan.md.
 useradmin.md
 reset*.sql
+
+# Unfinished UI working note; nothing sensitive, just not repo clutter.
+colorprogress.md
