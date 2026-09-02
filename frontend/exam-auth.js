@@ -622,7 +622,7 @@
 .pg-can{cursor:pointer;}
 .pg-can:hover{background:var(--bg3);}
 .pg-chev{flex:0 0 .9rem;color:var(--ink4);font-size:.7rem;}
-.pg-bt{flex:1 1 auto;min-width:0;}
+.pg-bt{flex:1 1 0;min-width:0;}
 .pg-bc{flex:0 0 auto;font-family:var(--font-m);font-size:.74rem;color:var(--ink4);}
 .pg-none{opacity:.7;}
 .pg-detail{padding:.1rem 0 .5rem 2.2rem;}
@@ -644,7 +644,7 @@
 @media (max-width:620px){
   /* Title above its counts: side by side leaves the title a few characters. */
   .pg-bank{flex-wrap:wrap;}
-  .pg-bc{margin-left:1.85rem;}
+  .pg-bc{flex:0 0 100%;margin-left:1.4rem;}
 }`;
     document.head.appendChild(style);
 
