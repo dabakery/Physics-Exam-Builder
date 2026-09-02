@@ -362,17 +362,11 @@
     return out.join('\n');
   }
 
-  /** Pick this version's questions from a cart item (shared start-offset logic). */
+  /** Pick this version's questions from a cart item.
+   *  Fork-local: the count-window vs explicit-picks resolution lives in
+   *  exam-select.js, shared with exam-export.js and exam-quiz.js. */
   function pickItemQuestions(item, version) {
-    const raw = item.rawData || {};
-    const questions = raw.questions || [];
-    if (!questions.length) return [];
-    const qn = Math.max(1, Number(item.qn) || 1);
-    const n = questions.length;
-    const start = (((Number(version) - 1) * qn) % n + n) % n;
-    const picked = [];
-    for (let i = 0; i < qn; i++) picked.push(questions[(start + i) % n]);
-    return picked;
+    return global.EstelaExamSelect.slotsFor(item, version).map((s) => s.q);
   }
 
   /**

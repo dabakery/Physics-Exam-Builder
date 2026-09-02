@@ -118,6 +118,10 @@ def build_standalone_html(
         )
 
     html = inline_script(html, "bank-source.js", (frontend_dir / "bank-source.js").read_text(encoding="utf-8"))
+    # Fork-local: resolves count-window vs hand-picked selection for the quiz and
+    # both exporters. Referenced by both templates, so it is inlined unconditionally
+    # like bank-source.js rather than gated the way exam-quiz.js is.
+    html = inline_script(html, "exam-select.js", (frontend_dir / "exam-select.js").read_text(encoding="utf-8"))
     html = inline_script(html, "exam-export.js", (frontend_dir / "exam-export.js").read_text(encoding="utf-8"))
 
     # Enhanced template (frontend/enhanced.html) adds the desktop-parity exporters.

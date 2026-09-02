@@ -76,31 +76,94 @@
   }
 
   /* Which questions a cart item contributes at a given version, and where each
-     came from. Single source of truth for the windowing, so the "new set"
-     preview count cannot drift from what the new set actually contains. */
+     came from. Still the single source of truth for this module, so the "new
+     set" preview count cannot drift from what the new set actually contains -
+     but the resolution itself now lives in exam-select.js, shared with both
+     exporters, because explicit selection gave it a second mode. */
   function windowFor(item, version) {
-    const questions = (item.rawData || {}).questions || [];
-    if (!questions.length) return [];
-    const qn = Math.max(1, Number(item.qn) || 1);
-    const n = questions.length;
-    const start = (((Number(version) - 1) * qn) % n);
-    const out = [];
-    for (let i = 0; i < qn; i++) {
-      const idx = (start + i) % n;
-      out.push({ q: questions[idx], idx });
-    }
-    return out;
+    return global.EstelaExamSelect.slotsFor(item, version);
   }
 
   /* Stable identity for "the student has already seen this one". */
   function keyOf(item, idx) { return `${item.path}#${idx}`; }
 
-  function selectionKeys(cart, version) {
-    const keys = [];
+  /* Tier of one question for the "new set" draw: unseen, attempted-and-wrong,
+     or correct. See exam-select.js for why the middle tier has to exist.
+
+     Reads the PERSISTED attempt map, not Q.seen. The two are different facts:
+     Q.seen is this quiz session and resets on reload, while EstelaAuth.attempts
+     survives across sessions and devices, and a student who worked q1-q4 last
+     week should get q5-q7 today. Logged out there is no persisted map, so the
+     session set stands in - it cannot tell right from wrong, so everything it
+     knows about lands in the middle tier, which is enough to push it below the
+     questions never shown. */
+  function rankFor(item) {
+    const SEL = global.EstelaExamSelect;
+    const auth = global.EstelaAuth;
+    const attempts = (auth && auth.attempts) || null;
+    const questions = (item.rawData || {}).questions || [];
+    const BS = global.EstelaBankSource;
+
+    return function (idx) {
+      const q = questions[idx];
+      if (!q) return SEL.TIER_UNSEEN;
+      if (attempts && auth.questionId) {
+        const qd = q[BS.getQtype(q)] || {};
+        const key = auth.questionId(item.path, qd.id);
+        if (key && attempts.has(key)) {
+          return attempts.get(key) ? SEL.TIER_RIGHT : SEL.TIER_WRONG;
+        }
+        return SEL.TIER_UNSEEN;
+      }
+      return (Q && Q.seen.has(keyOf(item, idx))) ? SEL.TIER_WRONG : SEL.TIER_UNSEEN;
+    };
+  }
+
+  /* What a new set would contain, WITHOUT drawing it.
+
+     The draw is random in which questions it picks but deterministic in how
+     many come from each tier, because it fills unseen first, then wrong, then
+     correct. So the prompt can promise exact counts while the actual choice is
+     still made later, in retryNew(). Drawing here instead and stashing the
+     result would work too, but it would mean a student who opens the prompt and
+     cancels has silently consumed a draw. */
+  function newSetOutlook(cart) {
+    const SEL = global.EstelaExamSelect;
+    let total = 0, fresh = 0, wrong = 0, stuck = 0, items = 0;
+
     for (const item of cart || []) {
-      for (const w of windowFor(item, version)) keys.push(keyOf(item, w.idx));
+      const n = ((item.rawData || {}).questions || []).length;
+      if (!n) continue;
+      items++;
+      const size = SEL.sizeOf(item);
+      total += size;
+
+      if (SEL.isExplicit(item)) {
+        const sel = SEL.selOf(item) || [];
+        // Same exclusion rule the draw uses, so the counts match what it does.
+        const roomy = (n - sel.length) >= size;
+        const skip = roomy ? new Set(sel) : new Set();
+        const rank = rankFor(item);
+        let u = 0, w = 0;
+        for (let i = 0; i < n; i++) {
+          if (skip.has(i)) continue;
+          const t = rank(i);
+          if (t === SEL.TIER_UNSEEN) u++;
+          else if (t === SEL.TIER_WRONG) w++;
+        }
+        const takeU = Math.min(size, u);
+        fresh += takeU;
+        wrong += Math.min(size - takeU, w);
+        if (n <= sel.length) stuck++;
+      } else {
+        const keys = [];
+        for (const s of windowFor(item, (Q ? Q.version : 1) + 1)) keys.push(keyOf(item, s.idx));
+        fresh += keys.filter((k) => !Q.seen.has(k)).length;
+        if (Math.max(1, Number(item.qn) || 1) >= n) stuck++;
+      }
     }
-    return keys;
+    // Blocked only when EVERY bank would hand back exactly what is on screen.
+    return { total, fresh, wrong, identical: items > 0 && stuck === items };
   }
 
   async function collectQuestions(cart, version, bankSource) {
@@ -616,28 +679,30 @@
      session rather than assumed. */
   function retry() {
     if (!Q) return;
-    const keys = selectionKeys(Q.cart, Q.version + 1);
-    const total = keys.length;
-    const fresh = keys.filter(k => !Q.seen.has(k)).length;
+    const { total, fresh, wrong, identical } = newSetOutlook(Q.cart);
 
     /* Only block "New set" when it would hand back exactly what is on screen,
-       which happens when every bank is taking its whole supply (qn === n).
-       Once the banks have merely been exhausted, cycling back to the start is
-       still worth offering, as long as the message says so. */
-    const current = Q.items.map(i => i.key).join('|');
-    const identical = keys.join('|') === current;
-
+       which happens when every bank is taking its whole supply - qn === n for a
+       counted bank, or a hand-picked set already as large as its bank. Once the
+       banks have merely been exhausted, cycling back is still worth offering,
+       as long as the message says so. */
     let msg;
     if (fresh === total) {
-      msg = `All ${total} question${total === 1 ? '' : 's'} have a different version available.`;
+      msg = `All ${total} question${total === 1 ? '' : 's'} would be ones you have not seen.`;
+    } else if (fresh > 0 && wrong > 0) {
+      msg = `${fresh} of ${total} questions would be new to you, and ${wrong} `
+          + `${wrong === 1 ? 'is one' : 'are ones'} you have not got right yet.`;
     } else if (fresh > 0) {
-      msg = `${fresh} of ${total} questions have a different version available. `
+      msg = `${fresh} of ${total} questions would be new to you. `
           + `The other ${total - fresh} would repeat.`;
+    } else if (wrong > 0) {
+      msg = `You have seen all of these before. A new set would favour the `
+          + `${wrong} you have not got right yet.`;
     } else if (identical) {
-      msg = `These banks have no other versions to draw from, so a new set would be `
+      msg = `These banks have nothing else to draw from, so a new set would be `
           + `identical to this one.`;
     } else {
-      msg = `Every version in these banks has been used. A new set would cycle back to `
+      msg = `Every question in these banks has been used. A new set would cycle back to `
           + `questions you have already seen.`;
     }
     document.getElementById('qz-retry-msg').innerHTML =
@@ -669,6 +734,22 @@
     closeRetry();
     if (!Q) return;
     const next = Q.version + 1;
+
+    /* Explicit banks have no window to slide, so their "new set" is a fresh
+       draw written back into item.sel BEFORE anything reads it. Materialising
+       it here is what keeps collectQuestions() and the exporters agreeing on
+       what version N contains. Counted banks are untouched: the version bump
+       below still slides their window. */
+    const SEL = global.EstelaExamSelect;
+    let drew = false;
+    for (const item of Q.cart) {
+      if (!SEL.isExplicit(item)) continue;
+      const current = SEL.selOf(item) || [];
+      const sel = SEL.drawSet(item, current.length, rankFor(item), current);
+      if (sel.length) { item.sel = sel; drew = true; }
+    }
+    if (drew && typeof opts.onCartChange === 'function') opts.onCartChange(Q.cart);
+
     let items;
     try {
       items = await collectQuestions(Q.cart, next, Q.bankSource);
@@ -703,7 +784,8 @@
 
   async function open(config) {
     const { cart, version, title, bankSource } = config;
-    opts = { renderMath: config.renderMath, toast: config.toast };
+    opts = { renderMath: config.renderMath, toast: config.toast,
+             onCartChange: config.onCartChange };
     if (!cart || !cart.length) {
       if (opts.toast) opts.toast('Add banks to the cart first');
       return;

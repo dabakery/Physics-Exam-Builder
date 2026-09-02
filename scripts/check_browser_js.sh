@@ -14,7 +14,7 @@ TMP=$(mktemp -d)
 trap 'rm -rf "$TMP"' EXIT
 fail=0
 
-MODULES="bank-source.js exam-export.js exam-export-plus.js exam-quiz.js exam-auth.js"
+MODULES="bank-source.js exam-select.js exam-export.js exam-export-plus.js exam-quiz.js exam-auth.js"
 PAGES="enhanced index"
 
 # Node-isms that are wrong in a browser no matter where they appear.

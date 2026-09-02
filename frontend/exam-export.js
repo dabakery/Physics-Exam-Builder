@@ -66,14 +66,14 @@
       const questions = raw.questions || [];
       if (!questions.length) continue;
 
-      const qn = Math.max(1, Number(item.qn) || 1);
-      const n = questions.length;
-      const start = (((Number(version) - 1) * qn) % n);
+      // Fork-local: count-window vs explicit picks is resolved in exam-select.js
+      // so this exporter, exam-export-plus.js and exam-quiz.js cannot drift.
+      const slots = global.EstelaExamSelect.slotsFor(item, version);
 
       const bankRef = item.bankRef || { path: item.path, handle: { path: item.path } };
 
-      for (let i = 0; i < qn; i++) {
-        const q = questions[(start + i) % n];
+      for (const slot of slots) {
+        const q = slot.q;
         const qtype = getQtype(q);
         const qdata = q[qtype] || {};
         const body = latexToHtml(qdata.text || '');
