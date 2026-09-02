@@ -302,12 +302,12 @@ body.tauri #cartbar{top:36px;height:calc(100% - 36px);}
    Ticks are real elements rather than a repeating gradient because the count
    differs per card, so gradient stops would have to be computed per bank anyway.
    Capped at 12 so an unusually large bank does not draw a hairline comb. */
-.bc-rail{position:absolute;left:0;top:14%;bottom:14%;width:3px;display:flex;flex-direction:column;gap:3px;}
+.bc-rail{position:absolute;left:0;top:12px;bottom:12px;width:8px;display:flex;flex-direction:column;gap:3px;}
 /* Tick colours are ink at low alpha rather than the border tokens: --border2 on a
    white card is around a 1.1:1 contrast, so the first cut of the rail was invisible
    at arm's length and the depth it encodes went unread. Unfilled ticks recede
    further once a bank is in the cart, so the filled ones carry the eye. */
-.bc-rail i{flex:1 1 0;min-height:3px;background:rgba(var(--ink-rgb),.45);border-radius:0 2px 2px 0;transition:background .15s;}
+.bc-rail i{flex:1 1 0;min-height:4px;background:rgba(var(--ink-rgb),.45);border-radius:0 3px 3px 0;transition:background .15s;}
 .bank-card:hover .bc-rail i{background:rgba(var(--ink-rgb),.62);}
 .bank-card.incart .bc-rail i{background:rgba(var(--ink-rgb),.22);}
 .bank-card.incart .bc-rail i.on{background:var(--accent);}
@@ -331,7 +331,7 @@ body.tauri #cartbar{top:36px;height:calc(100% - 36px);}
    tool, and a 3px tick has no room for a glyph - width is the only channel left.
    The fixed order (correct, then attempted, then untouched) also puts state in
    position, which is what carries the bar mode in greyscale. */
-.bc-rail i.rk-try{background:var(--gold);margin-left:1px;}
+.bc-rail i.rk-try{background:var(--gold);margin-left:2px;}
 /* :hover and .incart each repaint every tick, and each out-specifies a bare
    .rk-ok, so without these the rail goes grey under the pointer and washes out
    in the cart. That reads as a rendering bug rather than a specificity one. */
@@ -346,13 +346,15 @@ body.tauri #cartbar{top:36px;height:calc(100% - 36px);}
 /* Selection on an identity rail is a stripe down the tick's right edge, not a
    fill: colour is already saying something else about the same tick, and the
    two facts are about the same question so neither has to give way. */
-.bc-rail i.rk-sel{width:6px;box-shadow:inset -2px 0 0 var(--accent);}
+.bc-rail i.rk-sel{width:12px;box-shadow:inset -3px 0 0 var(--accent);}
 /* Over 12 questions a tick cannot be a question - the largest bank here is 48 -
    so the rail becomes a proportion. Drawn gapless so the two rails cannot be
    mistaken for each other: separated ticks mean questions, a solid bar means a
    share of the bank. */
 .bc-rail.rail-bar{gap:0;}
-.bc-rail.rail-bar i{border-radius:0;min-height:2px;}
+.bc-rail.rail-bar i{border-radius:0;min-height:3px;}
+.bc-rail.rail-bar i:first-child{border-radius:0 3px 0 0;}
+.bc-rail.rail-bar i:last-child{border-radius:0 0 3px 0;}
 .bc-rail.rail-bar i.rk-try{margin-left:0;}
 .bank-card.incart{border-color:rgba(var(--accent-rgb),.18);}
 [data-theme=dark] .bank-card.incart{border-color:rgba(var(--accent-rgb),.26);}
