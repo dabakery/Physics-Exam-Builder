@@ -173,13 +173,15 @@
      not counted here; the bank row already carries "n of m". Listing them would
      turn this into a table of contents for the corpus. */
 
-  const P = { rows: [], load: null, open: new Set(), cache: new Map() };
+  const P = { rows: [], load: null, open: new Set(), cache: new Map(),
+              groups: new Map() };   // group key -> expanded?
 
   function openProgress(rows, loadQuestions) {
     if (!A.attempts) return;
     P.rows = Array.isArray(rows) ? rows : [];
     P.load = typeof loadQuestions === 'function' ? loadQuestions : null;
     P.open = new Set();
+    P.groups = new Map();   // recomputed per opening, from current attempts
     ensureDom();
     renderProgress();
     $('prog-modal').classList.add('open');
@@ -216,6 +218,50 @@
       tps.get(key).push(r);
     }
     return out;
+  }
+
+  function agg(rows) {
+    let seen = 0, correct = 0, qs = 0;
+    for (const r of rows) {
+      const pr = bankProgress(r.path) || { seen: 0, correct: 0 };
+      qs += r.qn;
+      seen += Math.min(pr.seen, r.qn);
+      correct += Math.min(pr.correct, r.qn);
+    }
+    return { seen, correct, qs };
+  }
+
+  const countText = (a) => a.seen
+    ? a.seen + ' of ' + a.qs + ' attempted, ' + a.correct + ' correct'
+    : 'not started';
+
+  /* A group starts expanded only if something under it has been recorded.
+     A student who has just started would otherwise open this onto every chapter
+     of every course, all of them empty. The default is resolved once per group
+     and then stored, so a later toggle is remembered for the rest of the
+     session; the map is cleared each time the panel opens, which is what lets
+     the default follow new progress. */
+  function groupOpen(key, a) {
+    if (!P.groups.has(key)) P.groups.set(key, a.seen > 0);
+    return P.groups.get(key);
+  }
+
+  function toggleGroup(key) {
+    P.groups.set(key, !P.groups.get(key));
+    renderProgress();
+  }
+
+  // U+001F, a separator that cannot occur in a folder name. Course and chapter
+  // names are user-facing strings, so anything printable could collide.
+  const gkey = (...parts) => parts.join('\u001f');
+
+  function headerHTML(cls, key, label, a, open) {
+    return '<button class="' + cls + '" aria-expanded="' + (open ? 'true' : 'false') +
+      '" onclick="EstelaAuth.toggleGroup(' + attr(key) + ')">' +
+      '<span class="pg-chev" aria-hidden="true">' + (open ? '\u25be' : '\u25b8') + '</span>' +
+      '<span class="pg-ct">' + esc(label) + '</span>' +
+      '<span class="pg-cc' + (a.seen ? '' : ' pg-none') + '">' + esc(countText(a)) + '</span>' +
+      '</button>';
   }
 
   function detailHTML(r) {
@@ -284,11 +330,25 @@
     for (const [course, chapters] of groupRows(P.rows)) {
       body += '<div class="pg-course">' + esc(course) + '</div>';
       for (const [chapter, topics] of chapters) {
-        body += '<div class="pg-chapter">' + esc(chapter) + '</div>';
+        const chRows = [];
+        for (const rows of topics.values()) for (const r of rows) chRows.push(r);
+        const chA = agg(chRows);
+        const chK = gkey(course, chapter);
+        const chOpen = groupOpen(chK, chA);
+        body += headerHTML('pg-chapter', chK, chapter, chA, chOpen);
+        if (!chOpen) continue;
+
         for (const [topic, rows] of topics) {
-          // The topic level is optional in the tree: a bank sitting directly
-          // under a chapter reports '', and gets no header rather than a blank one.
-          if (topic) body += '<div class="pg-topic">' + esc(topic) + '</div>';
+          // The topic level is optional: a bank sitting directly under a chapter
+          // reports '', and gets no header rather than a blank one. Those banks
+          // are governed by the chapter's own state.
+          if (topic) {
+            const tA = agg(rows);
+            const tK = gkey(course, chapter, topic);
+            const tOpen = groupOpen(tK, tA);
+            body += headerHTML('pg-topic', tK, topic, tA, tOpen);
+            if (!tOpen) continue;
+          }
           for (const r of rows) body += bankRowHTML(r);
         }
       }
@@ -614,8 +674,11 @@
 .pg-foot{border-top:1px solid var(--border);padding:.55rem 1rem;font-family:var(--font-m);font-size:.72rem;color:var(--ink4);line-height:1.5;}
 .pg-course{font-family:var(--font-m);font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;color:var(--ink4);margin:1.35rem 0 .1rem;}
 .pg-course:first-child{margin-top:.3rem;}
-.pg-chapter{font-size:1.08rem;font-weight:600;color:var(--ink);margin:.15rem 0 .2rem;line-height:1.25;}
-.pg-topic{font-size:.92rem;font-weight:500;color:var(--ink2);margin:.65rem 0 .1rem .5rem;line-height:1.3;}
+.pg-chapter{display:flex;align-items:baseline;gap:.5rem;width:100%;text-align:left;background:transparent;border:0;cursor:pointer;font:inherit;font-size:1.08rem;font-weight:600;color:var(--ink);line-height:1.25;padding:.3rem .2rem;margin:.1rem 0 .05rem;}
+.pg-topic{display:flex;align-items:baseline;gap:.5rem;width:100%;text-align:left;background:transparent;border:0;cursor:pointer;font:inherit;font-size:.92rem;font-weight:500;color:var(--ink2);line-height:1.3;padding:.28rem .2rem .28rem .55rem;margin:.35rem 0 .05rem;}
+.pg-chapter:hover,.pg-topic:hover{background:var(--bg3);}
+.pg-ct{flex:1 1 0;min-width:0;}
+.pg-cc{flex:0 0 auto;font-family:var(--font-m);font-size:.72rem;font-weight:400;color:var(--ink4);letter-spacing:.02em;}
 .pg-row{border-top:1px solid var(--border);}
 .pg-row:first-of-type{border-top:0;}
 .pg-bank{display:flex;align-items:baseline;gap:.5rem;width:100%;text-align:left;background:transparent;border:0;padding:.4rem .2rem .4rem 1rem;color:var(--ink2);font:inherit;font-size:.82rem;line-height:1.4;}
@@ -643,8 +706,8 @@
 }
 @media (max-width:620px){
   /* Title above its counts: side by side leaves the title a few characters. */
-  .pg-bank{flex-wrap:wrap;}
-  .pg-bc{flex:0 0 100%;margin-left:1.4rem;}
+  .pg-bank,.pg-chapter,.pg-topic{flex-wrap:wrap;}
+  .pg-bc,.pg-cc{flex:0 0 100%;margin-left:1.4rem;}
 }`;
     document.head.appendChild(style);
 
@@ -716,7 +779,7 @@
   global.EstelaAuth = {
     onAuthBtn, openChange, submitLogin, submitChange, logout, close, refresh,
     questionId, bankProgress, recordAttempts, loadAttempts,
-    openProgress, closeProgress, toggleBank,
+    openProgress, closeProgress, toggleBank, toggleGroup,
     get user() { return A.user; },
     get attempts() { return A.attempts; },
   };
