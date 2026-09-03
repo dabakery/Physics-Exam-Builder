@@ -302,7 +302,7 @@ body.tauri #cartbar{top:36px;height:calc(100% - 36px);}
    Ticks are real elements rather than a repeating gradient because the count
    differs per card, so gradient stops would have to be computed per bank anyway.
    Capped at 12 so an unusually large bank does not draw a hairline comb. */
-.bc-rail{position:absolute;left:0;top:12px;bottom:12px;width:8px;display:flex;flex-direction:column;gap:3px;}
+.bc-rail{position:absolute;left:0;top:12px;bottom:12px;width:7px;display:flex;flex-direction:column;gap:3px;}
 /* Tick colours are ink at low alpha rather than the border tokens: --border2 on a
    white card is around a 1.1:1 contrast, so the first cut of the rail was invisible
    at arm's length and the depth it encodes went unread. Unfilled ticks recede
@@ -346,7 +346,14 @@ body.tauri #cartbar{top:36px;height:calc(100% - 36px);}
 /* Selection on an identity rail is a stripe down the tick's right edge, not a
    fill: colour is already saying something else about the same tick, and the
    two facts are about the same question so neither has to give way. */
-.bc-rail i.rk-sel{width:12px;box-shadow:inset -3px 0 0 var(--accent);}
+.bc-rail i.rk-sel{width:12px;box-shadow:inset -4px 0 0 var(--accent);}
+/* An attempted tick is inset from the left. On an idle tick that is a stretched
+   width, so the margin simply eats into it and the right edge does not move. On
+   a SELECTED tick the width is explicit, so the same margin shifts the whole
+   tick right instead - which made a selected attempted tick reach 2px further
+   right than every other selected tick. Take the inset out of the width when
+   both apply, so every selected tick keeps the same right edge. */
+.bc-rail i.rk-try.rk-sel{width:10px;}
 /* Over 12 questions a tick cannot be a question - the largest bank here is 48 -
    so the rail becomes a proportion. Drawn gapless so the two rails cannot be
    mistaken for each other: separated ticks mean questions, a solid bar means a
