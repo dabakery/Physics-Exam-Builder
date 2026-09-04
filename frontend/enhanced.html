@@ -1606,6 +1606,23 @@ function qstepHTML(item) {
         </div>`;
 }
 
+/* The cart item stores `topic`, which is the CHAPTER folder, and never the
+   optional subtopic below it - and a cart restored from an older estela_cart
+   payload could not carry one anyway. So the label is resolved from S.repo at
+   render time rather than written into the item: additive, no migration, the
+   same rule `sel` follows. Both halves are folder names shown verbatim, as they
+   are in the sidebar filter and the topic rule, because their leading numbers
+   are what a student reads as the unit and section. */
+function cartWhere(item) {
+  const chapter = item.topic || '';
+  for (const tv of Object.values(S.repo || {}))
+    for (const bl of Object.values(tv))
+      for (const b of bl)
+        if (b.path === item.path)
+          return b.subtopic ? `${chapter} - ${b.subtopic}` : chapter;
+  return chapter;
+}
+
 /* Attempt state under a question chip: correct, attempted and not correct,
    untouched - the three the bank rail paints, in the same two colours, but with
    a distinct SHAPE each so colour is never the only channel.
@@ -1650,7 +1667,7 @@ function qchipsHTML(item) {
   const out = [chip(auto, 'Auto', `setAutoQ(${attr(item.path)})`,
     'Draw automatically, and let each version walk the bank')];
   for (let i = 0; i < n; i++) {
-    const b = chip(sel.has(i), `Q${i+1}`, `toggleQ(${attr(item.path)},${i})`);
+    const b = chip(sel.has(i), `Q${i+1}`, `toggleCartQ(${attr(item.path)},${i})`);
     // Auto stays a bare button: it is not a question and has no state to report,
     // and flex-start keeps its top edge level with the buttons beside it.
     out.push(tiers ? `<span class="ci-qcell">${b}${qStatusHTML(tiers[i])}</span>` : b);
@@ -1660,8 +1677,16 @@ function qchipsHTML(item) {
 
 /* Clicking a question switches the bank to hand-picked. Clearing the last one
    drops it back to Auto rather than leaving an empty set, which would silently
-   mean "counted" with nothing on screen saying so. */
-function toggleQ(path, idx) {
+   mean "counted" with nothing on screen saying so.
+
+   Named toggleCartQ, not toggleQ: the question accordion in the expanded bank
+   card already owns that name, and a second `function toggleQ` does not error -
+   it silently wins the hoist by source order. This one did, from 2026-09-02
+   until 2026-09-04, so every question header in a bank preview called the cart
+   handler with an element id for a path, found no cart item and returned. The
+   accordion simply stopped opening. Same trap, and the same fix, as
+   toggleCartBar() against toggleCart(). */
+function toggleCartQ(path, idx) {
   const item = S.cart.find(c => c.path === path);
   if (!item) return;
   const sel = new Set(Array.isArray(item.sel) ? item.sel : []);
@@ -1723,7 +1748,7 @@ function renderCart() {
       </div>
       <div class="ci-info">
         <div class="ci-title" onclick="jumpToBank(${attr(item.path)})" style="cursor:pointer;text-decoration:underline dotted;text-underline-offset:2px" title="View in main panel">${esc(item.meta.title)}</div>
-        <div style="font-family:var(--font-m);font-size:.82rem;color:var(--ink4);margin-bottom:.1rem">${esc(item.topic||'')}</div>
+        <div style="font-family:var(--font-m);font-size:.82rem;color:var(--ink4);margin-bottom:.1rem">${esc(cartWhere(item))}</div>
         ${qstepHTML(item)}${qchipsHTML(item)}
       </div>
       <button class="btn btn-xs btn-icon" onclick="removeFromCart(${attr(item.path)})" title="Remove">✕</button>
