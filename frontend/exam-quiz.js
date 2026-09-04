@@ -703,7 +703,7 @@
     return done;
   }
 
-  const FW_MS = 3000;   // how long the splash holds before it fades itself out
+  const FW_MS = 5000;   // how long the splash holds before it fades itself out
   let fwQueue = [];
   let fwBusy = false;
 
@@ -761,10 +761,14 @@
     const ctx = cv.getContext && cv.getContext('2d');
     if (reduce || !ctx) return () => {};
 
-    const G = 0.00028;                                  // px/ms^2, so a burst falls within the splash
+    /* Low gravity on purpose: it is what gives a burst its hang time, and hang
+       time is most of what makes a firework read as one. The 3s cut of this had
+       it at 0.00028 and the whole display was over in about a second and a
+       half - the shells were spent before the splash was. */
+    const G = 0.00022;                                  // px/ms^2
     const HUES = [8, 42, 96, 150, 200, 268, 320];
     let w = 0, h = 0, raf = 0, last = 0, elapsed = 0, nextShell = 0;
-    const shells = [], parts = [];
+    const shells = [], parts = [], flashes = [];
 
     function size() {
       const dpr = Math.min(global.devicePixelRatio || 1, 2);
@@ -781,17 +785,23 @@
         y: h + 6,
         vx: (Math.random() - 0.5) * 0.05,
         /* Both scale with the viewport, so the display fills a Chromebook and a
-           27" display alike. Tuned together: rise is vy*fuse - G*fuse^2/2, which
-           puts a burst between roughly 40% and 60% of the way up. */
-        vy: -(h * 0.00075 + Math.random() * h * 0.00025),
-        fuse: 520 + Math.random() * 260,
+           27" display alike. Tuned together, since rise is vy*fuse - G*fuse^2/2:
+           simulated at 700, 900 and 1280px tall, bursts land between 53% and 86%
+           of the way up, median 71%. High enough to clear the message, and short
+           of the top edge on every one of those heights - a shell that bursts
+           off-screen is a shell the student paid for and did not see. */
+        vy: -(h * 0.00092 + Math.random() * h * 0.00025),
+        fuse: 620 + Math.random() * 240,
         hue: HUES[(Math.random() * HUES.length) | 0],
       });
     }
 
     function burst(s) {
-      const n = 44 + ((Math.random() * 30) | 0);
-      const speed = 0.12 + Math.random() * 0.1;
+      const n = 70 + ((Math.random() * 34) | 0);
+      const speed = 0.15 + Math.random() * 0.12;
+      // The flash is the bang. Without it a burst arrives as particles that were
+      // always there, and the moment of detonation goes missing.
+      flashes.push({ x: s.x, y: s.y, hue: s.hue, life: 0, max: 260 });
       for (let i = 0; i < n; i++) {
         // Ring plus jitter, so the burst reads as a sphere rather than a spray.
         const a = (i / n) * Math.PI * 2 + Math.random() * 0.14;
@@ -799,7 +809,7 @@
         parts.push({
           x: s.x, y: s.y, vx: Math.cos(a) * v, vy: Math.sin(a) * v,
           hue: s.hue + (Math.random() * 26 - 13), life: 0,
-          max: 650 + Math.random() * 520,
+          max: 900 + Math.random() * 700,
         });
       }
     }
@@ -817,20 +827,33 @@
       ctx.fillRect(0, 0, w, h);
       ctx.globalCompositeOperation = 'lighter';
 
-      // Stop launching before the end so the last burst has time to fall.
+      /* Stop launching before the end so the last burst has time to fall - but
+         only just before it, or the display finishes while the splash is still
+         up. About 20 shells across the five seconds. */
       nextShell -= dt;
-      if (elapsed < FW_MS - 1100 && nextShell <= 0) {
+      if (elapsed < FW_MS - 1200 && nextShell <= 0) {
         launch();
-        if (elapsed < 120) launch();     // two at once, so it opens rather than starts
-        nextShell = 170 + Math.random() * 170;
+        if (elapsed < 140) launch();     // two at once, so it opens rather than starts
+        nextShell = 130 + Math.random() * 130;
       }
 
       for (let i = shells.length - 1; i >= 0; i--) {
         const s = shells[i];
         s.vy += G * dt; s.x += s.vx * dt; s.y += s.vy * dt; s.fuse -= dt;
         if (s.fuse <= 0 || s.vy >= 0) { burst(s); shells.splice(i, 1); continue; }
-        ctx.fillStyle = `hsla(${s.hue},95%,72%,.95)`;
-        ctx.beginPath(); ctx.arc(s.x, s.y, 2, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = `hsla(${s.hue},95%,76%,.95)`;
+        ctx.beginPath(); ctx.arc(s.x, s.y, 2.6, 0, Math.PI * 2); ctx.fill();
+      }
+
+      /* Drawn under the particles and in composite 'lighter', so it reads as a
+         bloom of light rather than a disc laid over them. */
+      for (let i = flashes.length - 1; i >= 0; i--) {
+        const f = flashes[i];
+        f.life += dt;
+        if (f.life >= f.max) { flashes.splice(i, 1); continue; }
+        const k = 1 - f.life / f.max;
+        ctx.fillStyle = `hsla(${f.hue},95%,78%,${k * 0.45})`;
+        ctx.beginPath(); ctx.arc(f.x, f.y, 10 + (1 - k) * 62, 0, Math.PI * 2); ctx.fill();
       }
 
       for (let i = parts.length - 1; i >= 0; i--) {
@@ -839,8 +862,8 @@
         if (pt.life >= pt.max) { parts.splice(i, 1); continue; }
         pt.vy += G * dt; pt.x += pt.vx * dt; pt.y += pt.vy * dt;
         const k = 1 - pt.life / pt.max;
-        ctx.fillStyle = `hsla(${pt.hue},92%,${58 + k * 22}%,${k})`;
-        ctx.beginPath(); ctx.arc(pt.x, pt.y, 1.6 + k * 1.1, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = `hsla(${pt.hue},92%,${58 + k * 24}%,${k})`;
+        ctx.beginPath(); ctx.arc(pt.x, pt.y, 2 + k * 1.6, 0, Math.PI * 2); ctx.fill();
       }
 
       raf = global.requestAnimationFrame(frame);
