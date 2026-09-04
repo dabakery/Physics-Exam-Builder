@@ -74,6 +74,7 @@ bank_info:
         - formatting prompt: "../../../../Templates/YAML_formatting_prompt.md"
     updates:
         - update 1: (08-26-2026) Bank created with q1-q7 and figures for q1, q2 and q7. Fourth bank in Topic 9.6.
+        - update 2: (09-04-2026) Balanced the multiple choice option lengths in q1, q2 and q7. No claim changed.
     generation details:
             model: Claude Opus 5
             version: claude-opus-5
@@ -105,13 +106,13 @@ questions:
         correct: false
     - answer:
         text: |
-          All three produce the same change, because the entropy of the gas depends only on
-          the state it is in, and all three routes end at the same state.
+          All three produce the same change, because entropy depends only on the
+          state the gas is in, and all three routes end at the same state.
         correct: true
     - answer:
         text: |
-          Route II, because it is the only route along which the temperature of the gas
-          never changes.
+          Route II, because it is the only route along which the temperature of
+          the gas never changes, and entropy is set by temperature.
         correct: false
     - answer:
         text: |
@@ -185,8 +186,9 @@ questions:
         correct: false
     - answer:
         text: |
-          Nothing at all. The change is the same along both, because it is fixed by the two
-          states while the energy transferred by heating depends on the route between them.
+          Nothing at all. The change is the same along both, because the two
+          states fix it, while the energy transferred by heating depends on the
+          route.
         correct: true
     - answer:
         text: |
@@ -587,8 +589,9 @@ questions:
         correct: false
     - answer:
         text: |
-          Process III, because the gas spreads into the same larger volume as in process II
-          and gets hotter as well, and both of those raise its entropy.
+          Process III, because the gas spreads into the same larger volume as in
+          process II and gets hotter as well, and both of those raise the
+          entropy.
         correct: true
     - answer:
         text: |
@@ -597,8 +600,8 @@ questions:
         correct: false
     - answer:
         text: |
-          All four produce the same change, because entropy is a state function and all four
-          processes begin at the same state.
+          All four produce the same change, because entropy is a state function
+          and all four processes begin at the same state on the figure shown.
         correct: false
     feedback:
         general: |

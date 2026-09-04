@@ -49,6 +49,7 @@ bank_info:
     updates:
         - update 1: (08-14-2026) Bank created with q1-q7 and Scripts/make_figures.py.
         - update 2: (08-14-2026) Relabeled the curves in q1-q4 away from A/B/C, which collided with the shuffled answer letters. Samples and gases are now X/Y/Z and q3's process states are numbered. Figures regenerated.
+        - update 3: (09-04-2026) Balanced the multiple choice option lengths in q3, q4 and q6. The correct option was the longest in all three, by 30 to 59 characters, which let a student pick it without reading the Physics. Reasoning trimmed on the key and the short distractors given a stated reason. No claim changed.
     generation details:
             model: Claude Opus 5
             version: claude-opus-5
@@ -189,8 +190,7 @@ questions:
     - answer:
         text: |
           The temperature increased, because the distribution shifted toward
-          higher speeds and so the average translational kinetic energy of the
-          molecules increased.
+          higher speeds, so the average translational kinetic energy increased.
         correct: true
     - answer:
         text: |
@@ -199,13 +199,13 @@ questions:
         correct: false
     - answer:
         text: |
-          The temperature decreased, because the curve for state 2 is lower
-          than the curve for state 1.
+          The temperature decreased, because the curve for state 2 is lower than
+          the curve for state 1 at its peak.
         correct: false
     - answer:
         text: |
           The temperature stayed the same, because the number of molecules did
-          not change, so the area under the curve is unchanged.
+          not change, so the area under the curve is unchanged either way.
         correct: false
     feedback:
         general: |
@@ -254,24 +254,23 @@ questions:
     answers:
     - answer:
         text: |
-          The two curves enclose the same area, because the sample still
-          contains the same molecules, so a distribution spread over a wider
-          range of speeds has to be lower.
+          The two curves enclose the same area, because the sample has the same
+          molecules, so a wider spread has to be lower.
         correct: true
     - answer:
         text: |
           Some of the molecules escaped from the sample while it was being
-          heated.
+          heated, so there are fewer of them left in it.
         correct: false
     - answer:
         text: |
-          The hotter sample contains fewer fast-moving molecules than the
-          colder one.
+          The hotter sample contains fewer fast-moving molecules than the colder
+          sample contains at the same speed.
         correct: false
     - answer:
         text: |
           The container expanded as the gas was heated, so the same molecules
-          are spread through a larger volume.
+          are now spread through a larger volume.
         correct: false
     feedback:
         general: |
@@ -371,23 +370,23 @@ questions:
     - answer:
         text: |
           The average speed is greater than <latex>400</latex> m/s, because the
-          curve has a long tail reaching toward high speeds and no matching
-          tail on the low-speed side.
+          curve has a long high-speed tail and no matching tail on the low-speed
+          side.
         correct: true
     - answer:
         text: |
           The average speed is exactly <latex>400</latex> m/s, because the peak
-          of the curve is where the average always lies.
+          of the curve is always where the average of a distribution lies.
         correct: false
     - answer:
         text: |
-          The average speed is less than <latex>400</latex> m/s, because most
-          of the molecules in the sample are slower than the peak.
+          The average speed is less than <latex>400</latex> m/s, because most of
+          the molecules in the sample are slower than the peak speed.
         correct: false
     - answer:
         text: |
-          The average speed cannot be determined without knowing the
-          temperature of the gas and the molar mass of the molecules.
+          The average speed cannot be determined without knowing the temperature
+          of the gas and the molar mass of its molecules.
         correct: false
     feedback:
         general: |

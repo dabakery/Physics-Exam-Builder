@@ -68,6 +68,7 @@ bank_info:
     updates:
         - update 1: (08-26-2026) Bank created with q1-q7. Third bank in Topic 9.6.
         - update 2: (08-26-2026) Added figures for q2, q3 and q4, and Scripts/make_figures.py that generates them. The three share one drawing function so the q3 and q4 apparatus cannot drift apart.
+        - update 3: (09-04-2026) Balanced the multiple choice option lengths in q3 and q6. No claim changed.
     generation details:
             model: Claude Opus 5
             version: claude-opus-5
@@ -252,8 +253,8 @@ questions:
     answers:
     - answer:
         text: |
-          It is greater, because each half of the gas now has the whole container available
-          to it instead of only half.
+          It is greater, because each half of the gas now has the whole
+          container available to it instead of only half of it to move in.
         correct: false
     - answer:
         text: |
@@ -262,8 +263,8 @@ questions:
         correct: false
     - answer:
         text: |
-          It is the same, because the gas is in exactly the condition it was in before and
-          the barrier could be replaced with nothing else altered.
+          It is the same, because the gas is in the condition it was in before
+          and the barrier could be put back with nothing else altered.
         correct: true
     - answer:
         text: |
@@ -489,16 +490,18 @@ questions:
         correct: true
     - answer:
         text: |
-          It rises throughout, because the entropy of a system is never allowed to decrease.
+          It rises throughout, because the entropy of a system is never allowed
+          to decrease as time passes.
         correct: false
     - answer:
         text: |
-          It falls throughout, because the drink ends up cooler than the coffee was at the
-          start.
+          It falls throughout, because the drink ends up cooler than the coffee
+          was at the start, and cooler means less entropy.
         correct: false
     - answer:
         text: |
-          It rises while the milk mixes in and then holds steady once the drink is uniform.
+          It rises while the milk mixes in and then holds steady once the drink
+          has become uniform throughout.
         correct: false
     feedback:
         general: |

@@ -55,6 +55,7 @@ bank_info:
         - formatting prompt: "../../../../Templates/YAML_formatting_prompt.md"
     updates:
         - update 1: (08-26-2026) Bank created with q1-q7. Second bank in Topic 9.6.
+        - update 2: (09-04-2026) Balanced the multiple choice option lengths in q2. No claim changed.
     generation details:
             model: Claude Opus 5
             version: claude-opus-5
@@ -171,8 +172,8 @@ questions:
         correct: false
     - answer:
         text: |
-          It is smaller, because energy leaves the lead and its molecules become locked into
-          a lattice, so far fewer arrangements produce the sample.
+          It is smaller, because energy leaves the lead and its molecules lock
+          into a lattice, so fewer arrangements produce it.
         correct: true
     - answer:
         text: |
@@ -181,8 +182,8 @@ questions:
         correct: false
     - answer:
         text: |
-          It is smaller, because the lead is cooling and a cooler sample always has less
-          entropy.
+          It is smaller, because the lead is cooling and a cooler sample always
+          has less entropy than a warmer one.
         correct: false
     feedback:
         general: |

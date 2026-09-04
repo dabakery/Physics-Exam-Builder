@@ -64,6 +64,7 @@ bank_info:
     updates:
         - update 1: (08-18-2026) Bank created with q1. Second bank in Topic 9.4.
         - update 2: (08-18-2026) Added isomorphs q2-q7 (work comparison, mirrored pair of compressions, two paths between the same states, heating comparison, isobaric against adiabatic, the adiabatic first law on its own).
+        - update 3: (09-04-2026) Balanced the multiple choice option lengths in q1, q3, q5, q6 and q7. The correct option carried a reason the distractors did not, which made it the longest every time, so the reasoning is trimmed to one clause and the short distractors state the misconception that makes them tempting. No claim changed.
     generation details:
             model: Claude Opus 5
             version: claude-opus-5
@@ -98,9 +99,9 @@ questions:
         correct: false
     - answer:
         text: |
-          The adiabatic expansion, because the gas does work on its surroundings with no
-          energy transferred in by heating to replace it, so its internal energy has to
-          fall, while the isothermal expansion has no change in internal energy at all.
+          The adiabatic expansion, because the gas does work on its surroundings
+          with no energy transferred in by heating to replace it, so its
+          internal energy has to fall.
         correct: true
     - answer:
         text: |
@@ -109,8 +110,9 @@ questions:
         correct: false
     - answer:
         text: |
-          Neither, because both processes start at the same state and end at the same
-          volume.
+          Neither, because both processes start at the same state and end at the
+          same volume, so the change in internal energy has to be the same for
+          both.
         correct: false
     feedback:
         general: |
@@ -266,9 +268,9 @@ questions:
         correct: false
     - answer:
         text: |
-          The adiabatic compression, because the surroundings do work on the gas and none
-          of that energy can leave by heating, so the internal energy rises, while the
-          isothermal compression has no change in internal energy at all.
+          The adiabatic compression, because the surroundings do work on the gas
+          and none of that energy can leave by heating, so its internal energy
+          rises.
         correct: true
     - answer:
         text: |
@@ -277,8 +279,9 @@ questions:
         correct: false
     - answer:
         text: |
-          Neither, because both processes start at the same state and end at the same
-          volume.
+          Neither, because both processes start at the same state and end at the
+          same volume, so the change in internal energy has to be the same for
+          both.
         correct: false
     feedback:
         general: |
@@ -434,24 +437,24 @@ questions:
     answers:
     - answer:
         text: |
-          The adiabatic expansion, because the gas ends up colder, and a gas can only get
-          colder by transferring energy out of itself by heating.
+          The adiabatic expansion, because the gas ends up colder, and a gas can
+          only get colder by transferring energy out of itself by heating.
         correct: false
     - answer:
         text: |
-          The isothermal expansion, because no energy at all is transferred by heating
-          during an adiabatic process, while the isothermal gas must be supplied with as
-          much energy as it spends doing work.
+          The isothermal expansion, because an adiabatic process transfers no
+          energy by heating, while the isothermal gas is supplied with energy
+          throughout.
         correct: true
     - answer:
         text: |
-          The isothermal expansion, because its constant temperature means the gas holds
-          on to all of the energy transferred into it.
+          The isothermal expansion, because its constant temperature means the
+          gas holds on to all of the energy transferred into it as it expands.
         correct: false
     - answer:
         text: |
-          They transfer the same amount, because the same total energy is involved in
-          both, only in different forms.
+          They transfer the same amount, because the same total energy is
+          involved in both expansions, only in different forms along the way.
         correct: false
     feedback:
         general: |
@@ -521,9 +524,9 @@ questions:
         correct: false
     - answer:
         text: |
-          The isobaric expansion, because the gas is heated as it expands, so its
-          temperature rises, while the adiabatic gas only loses the energy it spends as
-          work, and it spends less of it.
+          The isobaric expansion, because the gas is heated as it expands, so
+          its temperature rises, while the insulated gas only loses what it
+          spends as work.
         correct: true
     - answer:
         text: |
@@ -532,8 +535,8 @@ questions:
         correct: false
     - answer:
         text: |
-          Neither, because both processes start at state A and expand to the same final
-          volume.
+          Neither, because both processes start at state A and expand to the
+          same final volume, so both gases end at the same temperature.
         correct: false
     feedback:
         general: |
@@ -605,13 +608,14 @@ questions:
     answers:
     - answer:
         text: |
-          The internal energy does not change, because no energy is transferred by
-          heating.
+          The internal energy does not change, because no energy is transferred
+          by heating, and it is heating that changes the internal energy of a
+          gas.
         correct: false
     - answer:
         text: |
-          The internal energy falls by exactly the amount of work the gas does on its
-          surroundings, because there is no other supply of energy available to it.
+          The internal energy falls by exactly the amount of work the gas does,
+          because there is no other supply of energy available to it.
         correct: true
     - answer:
         text: |

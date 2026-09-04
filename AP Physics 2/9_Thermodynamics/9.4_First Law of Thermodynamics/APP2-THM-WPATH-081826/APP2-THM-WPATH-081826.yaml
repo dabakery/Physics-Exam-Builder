@@ -62,6 +62,7 @@ bank_info:
     updates:
         - update 1: (08-18-2026) Bank created with q1. Third bank in Topic 9.4.
         - update 2: (08-18-2026) Added isomorphs q2-q7 (two cornered paths, straight line against an isotherm, three way ranking, ranking with a tie, heating along two paths, the two paths closed into a cycle).
+        - update 3: (09-04-2026) Balanced the multiple choice option lengths in q1, q3 and q6, where the correct option ran 21 to 67 characters longer than any distractor. Reasoning trimmed on the key, the bare distractors given a stated reason. No claim changed.
     generation details:
             model: Claude Opus 5
             version: claude-opus-5
@@ -92,9 +93,9 @@ questions:
     answers:
     - answer:
         text: |
-          More work is done on the gas in Process 1, because its curve lies above the
-          constant pressure leg of Process 2 across the whole range of volumes, so the
-          area beneath it is greater.
+          More work is done on the gas in Process 1, because its curve lies
+          above the constant pressure leg of Process 2, so the area beneath it
+          is greater.
         correct: true
     - answer:
         text: |
@@ -103,8 +104,8 @@ questions:
         correct: false
     - answer:
         text: |
-          The same work is done in both, because both processes start at state A and end
-          at state B.
+          The same work is done in both, because both processes start at state A
+          and end at state B, and the work depends only on those two states.
         correct: false
     - answer:
         text: |
@@ -264,8 +265,8 @@ questions:
         correct: false
     - answer:
         text: |
-          More work is done by the gas in Process 1, because the straight line lies above
-          the curve between the two states, so the area beneath it is greater.
+          More work is done by the gas in Process 1, because the straight line
+          lies above the curve, so the area beneath it is greater.
         correct: true
     - answer:
         text: |
@@ -494,19 +495,19 @@ questions:
     answers:
     - answer:
         text: |
-          Neither transfers any energy by heating overall, because the gas ends at the
-          temperature it started at.
+          Neither transfers any energy by heating overall, because the gas ends
+          at the temperature it started at in both of these processes.
         correct: false
     - answer:
         text: |
-          They transfer the same amount, because the energy transferred by heating
-          depends only on the initial and the final state.
+          They transfer the same amount, because the energy transferred by
+          heating depends only on the initial and the final state of the gas.
         correct: false
     - answer:
         text: |
-          Process 1, because the two states are at the same temperature, so the change in
-          internal energy is zero along either path and the energy transferred by heating
-          has to match the work in size.
+          Process 1, because the two states are at the same temperature, so the
+          internal energy change is zero and heating must match the work in
+          size.
         correct: true
     - answer:
         text: |

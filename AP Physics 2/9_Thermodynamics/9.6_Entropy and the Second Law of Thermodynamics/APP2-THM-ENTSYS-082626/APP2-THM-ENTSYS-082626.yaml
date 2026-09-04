@@ -66,6 +66,7 @@ bank_info:
     updates:
         - update 1: (08-26-2026) Bank created with q1-q7. First bank in Topic 9.6.
         - update 2: (08-26-2026) Added figures for q2, q4 and q5, and Scripts/make_figures.py that generates them. Reworded the q5 setup so the electrical energy crossing the boundary in the figure is stated in the question rather than idealised away, and extended its solution to say why work crossing a boundary does not lift the second law's floor.
+        - update 3: (09-04-2026) Balanced the multiple choice option lengths in q3 and q5. No claim changed.
     generation details:
             model: Claude Opus 5
             version: claude-opus-5
@@ -256,13 +257,13 @@ questions:
     answers:
     - answer:
         text: |
-          It increases, because the entropy of an isolated system always increases as time
-          passes.
+          It increases, because the entropy of an isolated system always
+          increases as time passes, whatever is inside it.
         correct: false
     - answer:
         text: |
-          It stays essentially the same, because the blocks are already in thermal
-          equilibrium and no net transfer of energy takes place between them.
+          It stays essentially the same, because the blocks are already in
+          thermal equilibrium and no net energy transfer takes place.
         correct: true
     - answer:
         text: |
@@ -420,8 +421,8 @@ questions:
         correct: false
     - answer:
         text: |
-          It increases, because the freezer releases energy into the kitchen and raises the
-          kitchen's entropy by more than the water's entropy falls.
+          It increases, because the freezer releases energy into the kitchen and
+          raises its entropy by more than the water's falls.
         correct: true
     - answer:
         text: |
@@ -430,8 +431,8 @@ questions:
         correct: false
     - answer:
         text: |
-          It decreases, because ice is a more ordered arrangement of molecules than liquid
-          water.
+          It decreases, because ice is a more ordered arrangement of molecules
+          than the liquid water it came from.
         correct: false
     feedback:
         general: |

@@ -61,6 +61,7 @@ bank_info:
         - formatting prompt: "../../../../Templates/YAML_formatting_prompt.md"
     updates:
         - update 1: (08-20-2026) Bank created with q1-q7. First conduction bank in Topic 9.5.
+        - update 2: (09-04-2026) Balanced the multiple choice option lengths in q4, where the correct option ran 204 characters against 138 for the next longest. The list of quantities that set a conduction rate now lives in the feedback rather than in the option. No claim changed.
     generation details:
             model: Claude Opus 5
             version: claude-opus-5
@@ -306,19 +307,19 @@ questions:
     answers:
     - answer:
         text: |
-          Rod 1 transfers energy at twice the rate, because each kilogram of it can hold
-          twice as much energy per kelvin.
+          Rod 1 transfers energy at twice the rate, because each kilogram of it
+          can hold twice as much energy per kelvin of temperature change.
         correct: false
     - answer:
         text: |
-          Rod 2 transfers energy at twice the rate, because it takes less energy to warm
-          it and so more of the energy passes through.
+          Rod 2 transfers energy at twice the rate, because it takes less energy
+          to warm it up, so more of the energy passes straight through.
         correct: false
     - answer:
         text: |
-          The two rods transfer energy at the same rate, because a steady conduction rate
-          depends on the conductivity, the cross section, the length and the temperature
-          difference, and those are the same for both.
+          The two rods transfer energy at the same rate, because none of the
+          quantities that set a steady conduction rate is different between
+          them.
         correct: true
     - answer:
         text: |
