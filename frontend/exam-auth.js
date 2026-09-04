@@ -143,10 +143,16 @@
 
   // The attempt set arrives after first paint, so the cards have to be redrawn
   // once it lands. Cheap enough to call outright rather than diff.
+  // The cart redraws for the same reason: since 2026-09-04 its question chips
+  // carry attempt state, so a quiz that just recorded an answer has to move the
+  // glyph under the chip as well as the tick on the rail.
   function refreshProgressUi() {
     A.byBank = new Map();
     if (typeof global.renderBanks === 'function') {
       try { global.renderBanks(); } catch (_e) { /* page not ready */ }
+    }
+    if (typeof global.renderCart === 'function') {
+      try { global.renderCart(); } catch (_e) { /* page not ready */ }
     }
   }
 

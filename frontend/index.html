@@ -156,7 +156,25 @@ body:not(.tauri) #shell{height:100vh;}
 .ci-stepper{display:flex;align-items:center;gap:.2rem;margin-top:.18rem;}
 /* Per-question picks. Reuses the .badge chip idiom of the question-type filter
    rather than inventing a control, so the two read as the same kind of toggle. */
-.ci-qchips{display:flex;flex-wrap:wrap;gap:.22rem;margin-top:.3rem;}
+.ci-qchips{display:flex;flex-wrap:wrap;gap:.22rem;margin-top:.3rem;align-items:flex-start;}
+/* The badge carries its own margin for the type row on a bank card; here the
+   flex gap does that job, and the leftover right margin would push each glyph
+   off centre under its button. */
+.ci-qchips .badge{margin:0;}
+/* Attempt state, under each question chip. The bank rail says the same three
+   things, but the card is behind the drawer overlay whenever the cart is open -
+   so the cart has to carry it itself, which is the whole reason the rail
+   stopped marking cart membership. The glyph sits BELOW the button rather than
+   inside it because a picked chip is filled with the accent, and neither the
+   green nor the gold reads on that. Shape is the primary channel and colour the
+   reinforcement, for the same reason the rail insets its attempted ticks:
+   green against amber is the deuteranopia pair and this is a classroom tool. */
+.ci-qcell{display:flex;flex-direction:column;align-items:center;gap:.06rem;}
+.ci-qst{font-size:.78rem;line-height:1;font-weight:700;}
+.qs-ok{color:var(--rail-ok);}
+.qs-try{color:var(--gold);}
+.qs-none{color:rgba(var(--ink-rgb),.32);font-weight:400;}
+[data-theme=dark] .qs-none{color:rgba(255,255,255,.30);}
 /* A control is tapped, never double-tapped to zoom, but the browser cannot know
    that until its double-tap window expires - so two quick taps on adjacent Q
    chips, or a repeated tap on the stepper, arrive as a zoom instead of as two
@@ -309,12 +327,12 @@ body.tauri #cartbar{top:36px;height:calc(100% - 36px);}
    further once a bank is in the cart, so the filled ones carry the eye. */
 .bc-rail i{flex:1 1 0;min-height:4px;background:rgba(var(--ink-rgb),.45);border-radius:0 3px 3px 0;transition:background .15s;}
 .bank-card:hover .bc-rail i{background:rgba(var(--ink-rgb),.62);}
-.bank-card.incart .bc-rail i{background:rgba(var(--ink-rgb),.22);}
-.bank-card.incart .bc-rail i.on{background:var(--accent);}
+.bank-card.incart .bc-rail:not(.rail-prog) i{background:rgba(var(--ink-rgb),.22);}
+.bank-card.incart .bc-rail:not(.rail-prog) i.on{background:var(--accent);}
 [data-theme=dark] .bc-rail i{background:rgba(255,255,255,.30);}
 [data-theme=dark] .bank-card:hover .bc-rail i{background:rgba(255,255,255,.46);}
-[data-theme=dark] .bank-card.incart .bc-rail i{background:rgba(255,255,255,.16);}
-[data-theme=dark] .bank-card.incart .bc-rail i.on{background:var(--accent);}
+[data-theme=dark] .bank-card.incart .bc-rail:not(.rail-prog) i{background:rgba(255,255,255,.16);}
+[data-theme=dark] .bank-card.incart .bc-rail:not(.rail-prog) i.on{background:var(--accent);}
 /* Progress on the rail. --rail-ok is a NEW token, deliberately not a
    redefinition of --green: --green's only consumer is .ans-ok, kept as dead CSS
    to hold the upstream diff down, and it is far too loud here anyway (0.78
@@ -332,28 +350,15 @@ body.tauri #cartbar{top:36px;height:calc(100% - 36px);}
    The fixed order (correct, then attempted, then untouched) also puts state in
    position, which is what carries the bar mode in greyscale. */
 .bc-rail i.rk-try{background:var(--gold);margin-left:2px;}
-/* :hover and .incart each repaint every tick, and each out-specifies a bare
-   .rk-ok, so without these the rail goes grey under the pointer and washes out
-   in the cart. That reads as a rendering bug rather than a specificity one. */
-.bank-card:hover .bc-rail i.rk-ok,
-.bank-card.incart .bc-rail i.rk-ok{background:var(--rail-ok);}
-.bank-card:hover .bc-rail i.rk-try,
-.bank-card.incart .bc-rail i.rk-try{background:var(--gold);}
-[data-theme=dark] .bank-card:hover .bc-rail i.rk-ok,
-[data-theme=dark] .bank-card.incart .bc-rail i.rk-ok{background:var(--rail-ok);}
-[data-theme=dark] .bank-card:hover .bc-rail i.rk-try,
-[data-theme=dark] .bank-card.incart .bc-rail i.rk-try{background:var(--gold);}
-/* Selection on an identity rail is a stripe down the tick's right edge, not a
-   fill: colour is already saying something else about the same tick, and the
-   two facts are about the same question so neither has to give way. */
-.bc-rail i.rk-sel{width:12px;box-shadow:inset -4px 0 0 var(--accent);}
-/* An attempted tick is inset from the left. On an idle tick that is a stretched
-   width, so the margin simply eats into it and the right edge does not move. On
-   a SELECTED tick the width is explicit, so the same margin shifts the whole
-   tick right instead - which made a selected attempted tick reach 2px further
-   right than every other selected tick. Take the inset out of the width when
-   both apply, so every selected tick keeps the same right edge. */
-.bc-rail i.rk-try.rk-sel{width:10px;}
+/* :hover repaints every tick and out-specifies a bare .rk-ok, so without these
+   the rail goes grey under the pointer, which reads as a rendering bug rather
+   than a specificity one. The cart needs no such restatement any more: its dim
+   is scoped to :not(.rail-prog), and a coloured tick only ever exists ON a
+   .rail-prog rail, so those two selectors can no longer meet. */
+.bank-card:hover .bc-rail i.rk-ok{background:var(--rail-ok);}
+.bank-card:hover .bc-rail i.rk-try{background:var(--gold);}
+[data-theme=dark] .bank-card:hover .bc-rail i.rk-ok{background:var(--rail-ok);}
+[data-theme=dark] .bank-card:hover .bc-rail i.rk-try{background:var(--gold);}
 /* Over 12 questions a tick cannot be a question - the largest bank here is 48 -
    so the rail becomes a proportion. Drawn gapless so the two rails cannot be
    mistaken for each other: separated ticks mean questions, a solid bar means a
@@ -505,6 +510,7 @@ body.nav-open #nav-overlay,body.cart-open #nav-overlay{display:block;}
 @media (pointer:coarse){
   .inp,.sel{font-size:16px;}
   .ci-qchips .badge{font-size:.82rem;padding:.32rem .55rem;}
+  .ci-qst{font-size:.92rem;}
   .ci-step{width:30px;height:30px;}
 }
 </style>
@@ -1311,17 +1317,24 @@ function railBar(pr, n, ticks) {
 
 /* The rail, in whichever of its two modes this bank's size allows.
 
-   At or under 12 questions the tick IS the question, the same cap that decides
-   whether the cart offers per-question chips, so the two always agree. Colour
-   reports that question's own state and a stripe marks the ones the exam takes;
-   they do not compete, because both are facts about the same question.
+   At or under 12 questions the tick IS the question: colour reports that
+   question's own state. Over 12 a tick cannot be a question, so the rail is a
+   proportion instead.
 
-   Over 12 the rail is a proportion, and there colour and cart DO compete for one
-   channel - so the cart wins while the bank is in it and progress shows the rest
-   of the time, which is the whole browsing phase.
+   THE RAIL NO LONGER REPORTS THE CART (2026-09-04). It used to mark the picked
+   questions too - an accent fill, later a stripe - and that was one fact too
+   many on a 7px column: the marks are loudest exactly when the cart drawer is
+   open and dimming the cards behind it, so the reading was worst when it
+   mattered. The cart states which questions it holds far better than a rail can,
+   because it can spell them out, and it now carries the attempt state under each
+   chip as well (see qchipsHTML). So the rail keeps progress and gives up the
+   cart, and the two views no longer say the same thing in two places.
 
    With no progress to show - logged out, or index.html where EstelaAuth never
-   exists - both branches fall through to exactly the rail that shipped before. */
+   exists - both branches fall through to exactly the rail that shipped before,
+   accent fill included. That fallback is the only path that still draws it: on
+   a page with no attempt data the alternative is a rail that says nothing at
+   all, and the desktop build has no cart chips to move the information to. */
 function railHTML(meta, path, inCart, cartItem) {
   const n = meta.q_count || 0;
   if (!n) return '';
@@ -1330,7 +1343,9 @@ function railHTML(meta, path, inCart, cartItem) {
   const identity = n <= 12;
 
   const tiers = (identity && auth && auth.bankTiers) ? auth.bankTiers(path, meta.q_ids) : null;
-  const pr = (!identity && !inCart && auth && auth.bankProgress) ? auth.bankProgress(path) : null;
+  // No longer skipped while the bank is in the cart: the cart used to take the
+  // rail over at this size and no longer does, so progress can hold it always.
+  const pr = (!identity && auth && auth.bankProgress) ? auth.bankProgress(path) : null;
 
   let band = null, cls = () => '';
   if (tiers) {
@@ -1340,22 +1355,22 @@ function railHTML(meta, path, inCart, cartItem) {
     cls = (i) => (i < band.ok ? 'rk-ok' : i < band.ok + band.att ? 'rk-try' : '');
   }
 
-  // The stripe is only correct where colour has already been claimed by
-  // progress. Everywhere else the historical fill still reads right, which is
-  // what keeps the logged-out and desktop rails unchanged.
-  const sel = inCart && Array.isArray(cartItem.sel) && cartItem.sel.length
+  // The accent fill is the fallback rail, drawn only where there is no progress
+  // to draw instead - which is the logged-out page and the desktop build. Where
+  // progress exists the cart is reported by the cart, not here.
+  const prog = !!(tiers || band);
+  const sel = !prog && inCart && Array.isArray(cartItem.sel) && cartItem.sel.length
     ? new Set(cartItem.sel) : null;
-  const on = inCart ? (cartItem.qn || 1) : 0;
-  const mark = tiers ? 'rk-sel' : 'on';
+  const on = (!prog && inCart) ? (cartItem.qn || 1) : 0;
 
   const body = Array.from({length: ticks}, (_, i) => {
     const c = [cls(i)];
-    if (inCart && (sel ? sel.has(i) : i < on)) c.push(mark);
+    if (!prog && inCart && (sel ? sel.has(i) : i < on)) c.push('on');
     const s = c.filter(Boolean).join(' ');
     return s ? `<i class="${s}"></i>` : '<i></i>';
   }).join('');
 
-  return `<div class="bc-rail${band ? ' rail-bar' : ''}" aria-hidden="true">${body}</div>`;
+  return `<div class="bc-rail${band ? ' rail-bar' : ''}${prog ? ' rail-prog' : ''}" aria-hidden="true">${body}</div>`;
 }
 
 function bankCardHTML(b, topic) {
@@ -1598,6 +1613,23 @@ function qstepHTML(item) {
         </div>`;
 }
 
+/* Attempt state under a question chip: correct, attempted and not correct,
+   untouched - the three the bank rail paints, in the same two colours, but with
+   a distinct SHAPE each so colour is never the only channel.
+
+   Glyphs, not coloured dots, and they read the same in greyscale. The hollow
+   circle is deliberately the quietest of the three: "not attempted yet" is the
+   default state of most of the corpus and should not look like a warning. */
+const Q_ST = [
+  ['qs-none', '\u25CB', 'Not attempted'],
+  ['qs-try',  '\u2715', 'Attempted, not correct'],
+  ['qs-ok',   '\u2713', 'Correct'],
+];
+function qStatusHTML(tier) {
+  const [cls, glyph, tip] = Q_ST[tier] || Q_ST[0];
+  return `<span class="ci-qst ${cls}" role="img" aria-label="${tip}" title="${tip}">${glyph}</span>`;
+}
+
 /* Auto sits at the front rather than being an absent state, because "no
    questions picked" and "picking automatically" look identical otherwise and
    only one of them is a mode you can return to. */
@@ -1613,13 +1645,22 @@ function qchipsHTML(item) {
   if (!n || n > SEL_CHIP_MAX) return '';
   const sel = new Set(Array.isArray(item.sel) ? item.sel : []);
   const auto = sel.size === 0;
+  /* Positional and unfiltered, exactly as the rail reads it, so chip i and tick
+     i are the same question. Null whenever there is nothing to say - logged out,
+     the desktop build, or a cart restored from a localStorage payload written
+     before meta carried q_ids - and then the chips render as they always did. */
+  const auth = window.EstelaAuth;
+  const tiers = (auth && auth.bankTiers) ? auth.bankTiers(item.path, item.meta.q_ids) : null;
   const chip = (on, label, call, title) =>
     `<button class="badge ${on ? 'bd-ok' : 'bd-gen'}" style="cursor:pointer;padding:.18rem .45rem"` +
     ` onclick="${call}" aria-pressed="${on}"${title ? ` title="${title}"` : ''}>${label}</button>`;
   const out = [chip(auto, 'Auto', `setAutoQ(${attr(item.path)})`,
     'Draw automatically, and let each version walk the bank')];
   for (let i = 0; i < n; i++) {
-    out.push(chip(sel.has(i), `Q${i+1}`, `toggleQ(${attr(item.path)},${i})`));
+    const b = chip(sel.has(i), `Q${i+1}`, `toggleQ(${attr(item.path)},${i})`);
+    // Auto stays a bare button: it is not a question and has no state to report,
+    // and flex-start keeps its top edge level with the buttons beside it.
+    out.push(tiers ? `<span class="ci-qcell">${b}${qStatusHTML(tiers[i])}</span>` : b);
   }
   return `<div class="ci-qchips">${out.join('')}</div>`;
 }
