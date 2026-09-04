@@ -666,9 +666,192 @@
   function submit() {
     if (!Q) return;
     Q.graded = true;
+    /* Snapshot either side of the write. recordAttempts() applies the records to
+       the local map synchronously, before its first await, so the second read is
+       already current - and comparing the two is what makes this a transition
+       rather than a splash on every submit once a bank is finished. */
+    const before = completedBanks(Q.cart);
     record(Q.items, true);
+    const after = completedBanks(Q.cart);
+    const won = (Q.cart || []).filter(c => after.has(c.path) && !before.has(c.path));
     render();
     document.getElementById('qz-scroll').scrollTop = 0;
+    if (won.length) celebrate(won.map(c => (c.meta && c.meta.title) || 'this bank'));
+  }
+
+  /* ── completion splash ─────────────────────────────────────────────────────
+     A bank going from "not every question correct" to "every question correct"
+     is worth marking, and submit() is the only moment it can happen, because it
+     is the only moment attempts change.
+
+     Nothing fires logged out. The attempt map is the only record of what a
+     student got right before today; recordAttempts() no-ops without a user, so
+     completedBanks() reads an empty set both times and the transition can never
+     appear. A session-local substitute would congratulate someone for a bank
+     they finished in this sitting and would repeat it on the next reload, which
+     is the same reason the card rail falls back rather than guessing. */
+  function completedBanks(cart) {
+    const auth = global.EstelaAuth;
+    const done = new Set();
+    if (!auth || !auth.bankTiers) return done;
+    for (const item of cart || []) {
+      // Positional and unfiltered, the same list the rail and the cart chips
+      // read, so "every tier is 2" means every question in the bank.
+      const tiers = auth.bankTiers(item.path, item.meta && item.meta.q_ids);
+      if (tiers && tiers.length && tiers.every(t => t === 2)) done.add(item.path);
+    }
+    return done;
+  }
+
+  const FW_MS = 3000;   // how long the splash holds before it fades itself out
+  let fwQueue = [];
+  let fwBusy = false;
+
+  /* Queued rather than stacked: a cart can finish two banks on one submit, and
+     two full-screen splashes at once would just be one unreadable one. */
+  function celebrate(titles) {
+    fwQueue = fwQueue.concat(titles);
+    if (!fwBusy) showSplash();
+  }
+
+  function showSplash() {
+    const title = fwQueue.shift();
+    if (title === undefined) { fwBusy = false; return; }
+    fwBusy = true;
+
+    const el = document.createElement('div');
+    el.className = 'qz-fw';
+    el.innerHTML = `<canvas class="qz-fw-cv" aria-hidden="true"></canvas>`
+      + `<div class="qz-fw-msg" role="status" aria-live="polite">`
+      + `<div class="qz-fw-em" aria-hidden="true">\uD83C\uDF86</div>`
+      + `<div class="qz-fw-txt">All questions in ${esc(title)} completed!</div></div>`;
+    document.body.appendChild(el);
+
+    const stop = fireworks(el.querySelector('canvas'));
+    let done = false;
+    /* Teardown hangs off setTimeout, not off the animation's own frame count:
+       rAF stops in a background tab, and a splash that waits for frames that
+       never come would still be covering the quiz when the student came back. */
+    const end = () => {
+      if (done) return;
+      done = true;
+      clearTimeout(timer);
+      stop();
+      el.classList.remove('qz-fw-in');
+      setTimeout(() => { el.remove(); showSplash(); }, 300);
+    };
+    const timer = setTimeout(end, FW_MS);
+    el.addEventListener('click', end);   // a student who has read it can move on
+    requestAnimationFrame(() => el.classList.add('qz-fw-in'));
+  }
+
+  /* Canvas, not CSS keyframes: a shell is a hundred particles under gravity with
+     independent lifetimes and fade, which is a loop rather than a transition. No
+     library either - this is the whole physics, and the page already carries
+     three CDN dependencies it cannot render without.
+
+     Returns its own stop(), so the caller never has to know what it started. */
+  function fireworks(cv) {
+    /* Reduced motion gets the message and the scrim and no animation at all.
+       The text is the content; the fireworks are the celebration around it. */
+    let reduce = false;
+    try {
+      reduce = !!(global.matchMedia && global.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    } catch (_e) { /* older Safari throws on an unsupported query */ }
+    const ctx = cv.getContext && cv.getContext('2d');
+    if (reduce || !ctx) return () => {};
+
+    const G = 0.00028;                                  // px/ms^2, so a burst falls within the splash
+    const HUES = [8, 42, 96, 150, 200, 268, 320];
+    let w = 0, h = 0, raf = 0, last = 0, elapsed = 0, nextShell = 0;
+    const shells = [], parts = [];
+
+    function size() {
+      const dpr = Math.min(global.devicePixelRatio || 1, 2);
+      w = cv.clientWidth; h = cv.clientHeight;
+      cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    size();
+    global.addEventListener('resize', size);
+
+    function launch() {
+      shells.push({
+        x: w * (0.12 + Math.random() * 0.76),
+        y: h + 6,
+        vx: (Math.random() - 0.5) * 0.05,
+        /* Both scale with the viewport, so the display fills a Chromebook and a
+           27" display alike. Tuned together: rise is vy*fuse - G*fuse^2/2, which
+           puts a burst between roughly 40% and 60% of the way up. */
+        vy: -(h * 0.00075 + Math.random() * h * 0.00025),
+        fuse: 520 + Math.random() * 260,
+        hue: HUES[(Math.random() * HUES.length) | 0],
+      });
+    }
+
+    function burst(s) {
+      const n = 44 + ((Math.random() * 30) | 0);
+      const speed = 0.12 + Math.random() * 0.1;
+      for (let i = 0; i < n; i++) {
+        // Ring plus jitter, so the burst reads as a sphere rather than a spray.
+        const a = (i / n) * Math.PI * 2 + Math.random() * 0.14;
+        const v = speed * (0.5 + Math.random() * 0.5);
+        parts.push({
+          x: s.x, y: s.y, vx: Math.cos(a) * v, vy: Math.sin(a) * v,
+          hue: s.hue + (Math.random() * 26 - 13), life: 0,
+          max: 650 + Math.random() * 520,
+        });
+      }
+    }
+
+    function frame(t) {
+      if (!last) last = t;
+      const dt = Math.min(t - last, 48);   // clamped, or a dropped frame teleports everything
+      last = t; elapsed += dt;
+
+      /* Trails come from fading what is already there rather than clearing it.
+         destination-out is what does that on a transparent canvas - a fillRect
+         in a background colour would paint over the scrim. */
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.fillStyle = 'rgba(0,0,0,.16)';
+      ctx.fillRect(0, 0, w, h);
+      ctx.globalCompositeOperation = 'lighter';
+
+      // Stop launching before the end so the last burst has time to fall.
+      nextShell -= dt;
+      if (elapsed < FW_MS - 1100 && nextShell <= 0) {
+        launch();
+        if (elapsed < 120) launch();     // two at once, so it opens rather than starts
+        nextShell = 170 + Math.random() * 170;
+      }
+
+      for (let i = shells.length - 1; i >= 0; i--) {
+        const s = shells[i];
+        s.vy += G * dt; s.x += s.vx * dt; s.y += s.vy * dt; s.fuse -= dt;
+        if (s.fuse <= 0 || s.vy >= 0) { burst(s); shells.splice(i, 1); continue; }
+        ctx.fillStyle = `hsla(${s.hue},95%,72%,.95)`;
+        ctx.beginPath(); ctx.arc(s.x, s.y, 2, 0, Math.PI * 2); ctx.fill();
+      }
+
+      for (let i = parts.length - 1; i >= 0; i--) {
+        const pt = parts[i];
+        pt.life += dt;
+        if (pt.life >= pt.max) { parts.splice(i, 1); continue; }
+        pt.vy += G * dt; pt.x += pt.vx * dt; pt.y += pt.vy * dt;
+        const k = 1 - pt.life / pt.max;
+        ctx.fillStyle = `hsla(${pt.hue},92%,${58 + k * 22}%,${k})`;
+        ctx.beginPath(); ctx.arc(pt.x, pt.y, 1.6 + k * 1.1, 0, Math.PI * 2); ctx.fill();
+      }
+
+      raf = global.requestAnimationFrame(frame);
+    }
+    raf = global.requestAnimationFrame(frame);
+
+    return () => {
+      if (raf) global.cancelAnimationFrame(raf);
+      raf = 0;
+      global.removeEventListener('resize', size);
+    };
   }
 
   /* "Try again" asks first, because the useful answer depends on how many fresh
@@ -892,6 +1075,23 @@
      squeezed to a few characters on a phone */
   .qz-cat-row{flex-direction:column;align-items:stretch;gap:.3rem;padding:.45rem 0;}
   .qz-cat-sel{max-width:100%;width:100%;}
+  .qz-fw-em{font-size:2.1rem;}
+}
+/* The completion splash. Above the help and retry dialogs (1400) because it is
+   a full-screen moment rather than another panel, and click-anywhere-to-dismiss
+   because it is an announcement, not a decision. The scrim is dark in both
+   themes: the message is printed over fireworks, not over the page, so the text
+   is white either way. */
+.qz-fw{position:fixed;inset:0;z-index:1500;display:flex;align-items:center;justify-content:center;background:rgba(16,14,26,.66);opacity:0;transition:opacity .24s ease;cursor:pointer;}
+.qz-fw.qz-fw-in{opacity:1;}
+.qz-fw-cv{position:absolute;inset:0;width:100%;height:100%;}
+.qz-fw-msg{position:relative;text-align:center;padding:1rem 1.4rem;max-width:min(680px,88vw);transform:scale(.94);transition:transform .32s cubic-bezier(.2,.9,.3,1.25);}
+.qz-fw.qz-fw-in .qz-fw-msg{transform:scale(1);}
+.qz-fw-em{font-size:2.8rem;line-height:1;margin-bottom:.45rem;}
+.qz-fw-txt{font-family:var(--font-d);font-size:clamp(1.3rem,4.2vw,2.05rem);line-height:1.25;color:#fff;text-shadow:0 2px 20px rgba(0,0,0,.6);}
+@media (prefers-reduced-motion:reduce){
+  .qz-fw,.qz-fw-msg{transition:none;}
+  .qz-fw-msg{transform:none;}
 }`;
     document.head.appendChild(style);
 
