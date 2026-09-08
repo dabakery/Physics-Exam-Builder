@@ -18,8 +18,14 @@ fails. scripts/check_kdf_parity.sh proves they agree.
     # forgotten password: new temporary one, every session dropped
     python3 scripts/make_users.py --reset --pin S1001 > reset.sql
 
-SQL goes to stdout; the temporary passwords go to stderr, because they are the
-one output that must reach paper and never reach a file you might commit.
+    # a roster, plus a printable file of the temporary passwords
+    python3 scripts/make_users.py --csv roster.csv --passwords-csv slips.csv > seed.sql
+
+SQL goes to stdout and the temporary passwords go to stderr, because they are
+the one output that has to reach paper. --passwords-csv also writes them to a
+file you name, which is worth it for a whole class. That file is the only thing
+this script produces that holds a password in the clear, so point it outside the
+repository and delete it once the slips are printed.
 """
 from __future__ import annotations
 
@@ -29,6 +35,7 @@ import csv
 import getpass
 import hashlib
 import hmac
+import os
 import secrets
 import sys
 
@@ -40,11 +47,27 @@ DKLEN = 32
 ALPHABET = "abcdefghjkmnpqrstuvwxyz23456789"
 GROUPS, GROUP_LEN = 3, 4
 
+PW_COLUMN = "temp_password"
+
 
 def temp_password() -> str:
     groups = ["".join(secrets.choice(ALPHABET) for _ in range(GROUP_LEN))
               for _ in range(GROUPS)]
     return "-".join(groups)
+
+
+def write_password_csv(path: str, fields: list[str], slips: list[dict]) -> None:
+    """Write the temporary passwords out for printing.
+
+    Opened 0600 before a byte is written rather than chmod'ed afterwards, so the
+    passwords are never briefly readable by another account on the machine.
+    """
+    cols = list(fields) + ([] if PW_COLUMN in fields else [PW_COLUMN])
+    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    with open(fd, "w", newline="", encoding="utf-8") as fh:
+        writer = csv.DictWriter(fh, fieldnames=cols, extrasaction="ignore")
+        writer.writeheader()
+        writer.writerows(slips)
 
 
 def derive(password: str, salt: bytes, iterations: int, pepper: str) -> bytes:
@@ -115,25 +138,42 @@ def main() -> int:
     ap.add_argument("--csv", help="roster file with a pin,first_name,last_name header")
     ap.add_argument("--reset", action="store_true",
                     help="reset existing accounts instead of creating them")
+    ap.add_argument("--passwords-csv", metavar="PATH",
+                    help="also write the temporary passwords to this CSV, for printing")
     args = ap.parse_args()
 
     if bool(args.pin) == bool(args.csv):
         ap.error("give exactly one of --pin or --csv")
     if args.reset and args.admin:
         ap.error("--admin sets a users column and means nothing on a reset")
+    # Writing the slips over the roster would destroy the input, and on a reset
+    # the roster is the only record of who the pins belong to.
+    if args.passwords_csv and args.csv and \
+            os.path.realpath(args.passwords_csv) == os.path.realpath(args.csv):
+        ap.error("--passwords-csv would overwrite the roster it is reading")
 
-    people: list[tuple[str, str, str, bool]] = []
+    # Each person carries the row they came from, so --passwords-csv can reprint
+    # every column the roster had rather than only the three this script reads.
+    people: list[tuple[str, str, str, bool, dict]] = []
+    fields = ["pin", "first_name", "last_name"]
     if args.pin:
-        people.append((args.pin.strip(), args.first.strip(), args.last.strip(), args.admin))
+        row = {"pin": args.pin.strip(), "first_name": args.first.strip(),
+               "last_name": args.last.strip()}
+        people.append((row["pin"], row["first_name"], row["last_name"], args.admin, row))
     else:
         with open(args.csv, newline="", encoding="utf-8") as fh:
-            for i, row in enumerate(csv.DictReader(fh), start=2):
+            reader = csv.DictReader(fh)
+            # A short row leaves None values and a long one collects them under
+            # a None key; DictWriter chokes on both.
+            fields = [c for c in (reader.fieldnames or fields) if c]
+            for i, row in enumerate(reader, start=2):
                 pin = (row.get("pin") or "").strip()
                 if not pin:
                     print(f"{args.csv}:{i}: missing pin, skipped", file=sys.stderr)
                     continue
+                clean = {k: (v or "") for k, v in row.items() if k}
                 people.append((pin, (row.get("first_name") or "").strip(),
-                               (row.get("last_name") or "").strip(), False))
+                               (row.get("last_name") or "").strip(), False, clean))
 
     if not people:
         print("nothing to do", file=sys.stderr)
@@ -158,7 +198,8 @@ def main() -> int:
 
     print("PIN                  TEMPORARY PASSWORD   NAME", file=sys.stderr)
     print("-" * 62, file=sys.stderr)
-    for pin, first, last, is_admin in people:
+    slips: list[dict] = []
+    for pin, first, last, is_admin, row in people:
         if args.reset:
             sql, password = reset_rows_for(pin, pepper)
             flag = ""
@@ -167,6 +208,7 @@ def main() -> int:
             flag = "  [admin]" if is_admin else ""
         print(sql)
         print(f"{pin:<20} {password:<20} {first} {last}{flag}", file=sys.stderr)
+        slips.append(dict(row, **{PW_COLUMN: password}))
 
     # A reset touches rows that must already exist. Print a check the operator
     # can paste after, so a typo'd pin shows up as a missing line rather than as
@@ -179,6 +221,14 @@ def main() -> int:
     print("-" * 62, file=sys.stderr)
     print("Each account must change its password on first login (must_change = 1).",
           file=sys.stderr)
+
+    # Written last, so a failure anywhere above leaves no plaintext behind.
+    if args.passwords_csv:
+        write_password_csv(args.passwords_csv, fields, slips)
+        print(f"\nTemporary passwords written to {args.passwords_csv} (mode 600).",
+              file=sys.stderr)
+        print("That file holds them in the clear. Print it, then delete it.",
+              file=sys.stderr)
     return 0
 
 
