@@ -498,7 +498,7 @@
       body.innerHTML = `
         <h2 class="au-h">${A.mustChange ? 'Choose your password' : 'Change password'}</h2>
         <p class="au-p">${A.mustChange
-          ? 'This account is still using the temporary password you were given. Set your own before you carry on.'
+          ? 'This account is still using the temporary password you were given and must be changed before you can log in.'
           : 'You will be signed out on every other device.'}</p>
         <label class="au-lbl" for="au-cur">Current password</label>
         <input class="au-inp" id="au-cur" type="password" autocomplete="current-password">
