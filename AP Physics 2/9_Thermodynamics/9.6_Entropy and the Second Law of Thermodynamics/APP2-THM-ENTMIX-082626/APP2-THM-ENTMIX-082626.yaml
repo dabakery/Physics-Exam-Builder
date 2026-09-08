@@ -481,7 +481,8 @@ questions:
       mug is then left on the table for an hour, by which time the drink has cooled to
       <latex>20</latex> °C.
 
-      Which of the following describes the entropy of the liquid in the mug over that hour?
+      Which of the following describes the entropy of the liquid in the mug from the moment
+      the milk is poured until the drink reaches room temperature?
     answers:
     - answer:
         text: |
